@@ -8,45 +8,28 @@ export const translations = {
     nav_planner: "Exercises",
     nav_nutrition: "Nutrition",
     nav_journal: "Journal",
-    
+
     // Hero
-    hero_badge: "Gemini 2.5 Powered Analysis",
     hero_title_1: "Scientific Growth.",
-    hero_title_2: "AI Precision.",
-    hero_subtitle: "Stop guessing. NeuroLift uses advanced AI to generate hypertrophy programs based on biomechanics and your specific anatomy.",
-    btn_generate: "Generate Protocol",
+    hero_title_2: "Precision Training.",
+    hero_subtitle: "Stop guessing. NeuroLift uses biomechanical analysis to help you build hypertrophy programs based on your specific anatomy.",
     btn_learn: "Learn the Science",
-    
+
     // Features
     feat_title: "Engineered for Results",
     feat_subtitle: "Optimization at every step of your journey.",
     feat_1_title: "Biomechanics First",
     feat_1_desc: "Exercises selected based on muscle fiber orientation and leverage mechanics, not bro-science.",
     feat_2_title: "Adaptive Volume",
-    feat_2_desc: "AI analyzes your recovery capacity and adjusts set volume to maximize protein synthesis.",
+    feat_2_desc: "Analyze your recovery capacity and adjust set volume to maximize protein synthesis.",
     feat_3_title: "Progressive Overload",
     feat_3_desc: "Structured pathways to increase mechanical tension over time, the primary driver of growth.",
-    
-    // AI Generator
-    gen_title: "Targeted Hypertrophy",
-    gen_desc: "Select a muscle group. Our AI constructs a session based on EMG data and fiber composition.",
-    gen_loading: "Synthesizing Protocol...",
-    gen_btn: "Generate Workout",
-    gen_system_ready: "System Ready. Awaiting Input.",
-    gen_custom_focus_label: "Specific Focus (Optional)",
-    gen_custom_focus_placeholder: "e.g., Focus on upper chest, weak rear delts, avoiding wrist pain...",
-    
-    // Testimonials
-    test_title: "Community Validated",
-    role_bodybuilder: "Bodybuilder",
-    role_powerlifter: "Powerlifter",
-    role_beginner: "Beginner",
-    
+
     // Footer
     footer_title: "Ready to optimize?",
     footer_desc: "Join thousands of lifters using data, not guessing, to build their dream physique.",
     footer_btn: "Start Your Transformation",
-    footer_copy: "NeuroLift AI. All rights reserved.",
+    footer_copy: "NeuroLift. All rights reserved.",
 
     // Existing & Functional
     timer_start: "Start",
@@ -54,20 +37,10 @@ export const translations = {
     timer_reset: "Reset",
     planner_title: "Science-Based Library",
     planner_desc: "Explore the most effective exercises based on EMG analysis.",
-    nutrition_title: "AI Nutritionist",
-    nutrition_chat_placeholder: "Ask about diet or upload a food image...",
-    nutrition_analyze_btn: "Analyze Label",
-    nutrition_send: "Send",
-    nutrition_tip_title: "AI Tip:",
-    nutrition_tip_text: "Upload a photo of your meal and ask the AI to 'Estimate calories for this'. It can help you populate your tracker!",
-    nutrition_image_attached: "Image attached",
-    nutrition_analyzing: "AI is analyzing...",
-
-    journal_title: "Body Metrics",
-    journal_add_entry: "New Entry",
+    nutrition_title: "Nutrition Tracker",
     save: "Save",
-    loading: "Thinking...",
-    
+    loading: "Saving...",
+
     // Tracker
     tracker_select_muscle: "Select Target Muscle",
     tracker_select_exercises: "Select Exercises",
@@ -84,7 +57,7 @@ export const translations = {
     tracker_header_kg: "KG",
     tracker_header_reps: "REPS",
     tracker_quote: "Success is the sum of small efforts, repeated day in and day out.",
-    
+
     // Journal Fields
     field_weight: "Weight (kg)",
     field_neck: "Neck",
@@ -98,7 +71,7 @@ export const translations = {
     field_calves: "Calves",
     field_custom: "Custom Measurement",
     add_custom: "Add Custom Field",
-    
+
     modal_watch_video: "Watch Tutorial",
     modal_close: "Close",
 
@@ -106,8 +79,7 @@ export const translations = {
     cal_title: "Calorie Tracker",
     cal_consumed: "Consumed Today",
     cal_add: "Add Calories",
-    cal_reset: "Reset Day",
-    img_upload_tip: "Upload food or label"
+    cal_reset: "Reset Day"
   },
   fr: {
     // Nav
@@ -118,63 +90,36 @@ export const translations = {
     nav_journal: "Journal",
 
     // Hero
-    hero_badge: "Analysé par Gemini 2.5",
     hero_title_1: "Croissance Scientifique.",
-    hero_title_2: "Précision IA.",
-    hero_subtitle: "Arrêtez de deviner. NeuroLift utilise une IA avancée pour générer des programmes d'hypertrophie basés sur la biomécanique.",
-    btn_generate: "Générer Protocole",
+    hero_title_2: "Entraînement Précis.",
+    hero_subtitle: "Arrêtez de deviner. NeuroLift utilise l'analyse biomécanique pour créer des programmes d'hypertrophie basés sur votre anatomie.",
     btn_learn: "La Science",
 
     // Features
     feat_title: "Conçu pour les Résultats",
     feat_subtitle: "Optimisation à chaque étape de votre parcours.",
     feat_1_title: "Biomécanique d'abord",
-    feat_1_desc: "Exercices sélectionnés selon l'orientation des fibres et la mécanique, pas la 'bro-science'.",
+    feat_1_desc: "Exercices sélectionnés selon l'orientation des fibres et la mécanique.",
     feat_2_title: "Volume Adaptatif",
-    feat_2_desc: "L'IA analyse votre récupération et ajuste le volume pour maximiser la synthèse protéique.",
+    feat_2_desc: "Analysez votre récupération et ajustez le volume pour maximiser la synthèse protéique.",
     feat_3_title: "Surcharge Progressive",
-    feat_3_desc: "Parcours structurés pour augmenter la tension mécanique, moteur principal de la croissance.",
-
-    // AI Generator
-    gen_title: "Hypertrophie Ciblée",
-    gen_desc: "Choisissez un muscle. Notre IA construit une séance basée sur l'EMG et la composition des fibres.",
-    gen_loading: "Synthèse en cours...",
-    gen_btn: "Générer Séance",
-    gen_system_ready: "Système Prêt. En attente.",
-    gen_custom_focus_label: "Focus Spécifique (Optionnel)",
-    gen_custom_focus_placeholder: "ex: Focus haut de pec, deltoïdes arrière faibles...",
-
-    // Testimonials
-    test_title: "Validé par la Communauté",
-    role_bodybuilder: "Culturiste",
-    role_powerlifter: "Powerlifter",
-    role_beginner: "Débutant",
+    feat_3_desc: "Parcours structurés pour augmenter la tension mécanique, moteur de la croissance.",
 
     // Footer
     footer_title: "Prêt à optimiser ?",
     footer_desc: "Rejoignez des milliers d'athlètes utilisant les données pour bâtir leur physique.",
     footer_btn: "Commencer la Transformation",
-    footer_copy: "NeuroLift AI. Tous droits réservés.",
+    footer_copy: "NeuroLift. Tous droits réservés.",
 
     timer_start: "Démarrer",
     timer_stop: "Arrêter",
     timer_reset: "Réinitialiser",
     planner_title: "Bibliothèque Scientifique",
     planner_desc: "Explorez les exercices les plus efficaces.",
-    nutrition_title: "Nutritionniste IA",
-    nutrition_chat_placeholder: "Posez une question ou envoyez une photo...",
-    nutrition_analyze_btn: "Analyser l'étiquette",
-    nutrition_send: "Envoyer",
-    nutrition_tip_title: "Astuce IA :",
-    nutrition_tip_text: "Téléchargez une photo et demandez 'Estime les calories'. Cela aide à remplir votre journal !",
-    nutrition_image_attached: "Image jointe",
-    nutrition_analyzing: "Analyse en cours...",
-
-    journal_title: "Métriques Corporelles",
-    journal_add_entry: "Nouvelle Entrée",
+    nutrition_title: "Suivi Nutrition",
     save: "Enregistrer",
-    loading: "Réflexion...",
-    
+    loading: "Enregistrement...",
+
     tracker_select_muscle: "Choisir le muscle",
     tracker_select_exercises: "Choisir les exercices",
     tracker_select_specific: "Choisir exercices pour",
@@ -210,8 +155,7 @@ export const translations = {
     cal_title: "Compteur Calories",
     cal_consumed: "Consommé Aujourd'hui",
     cal_add: "Ajouter",
-    cal_reset: "Réinitialiser",
-    img_upload_tip: "Photo de plat ou étiquette"
+    cal_reset: "Réinitialiser"
   },
   ar: {
     // Nav
@@ -222,11 +166,9 @@ export const translations = {
     nav_journal: "السجل",
 
     // Hero
-    hero_badge: "تحليل مدعوم بـ Gemini 2.5",
     hero_title_1: "نمو علمي.",
-    hero_title_2: "دقة الذكاء الاصطناعي.",
-    hero_subtitle: "توقف عن التخمين. يستخدم NeuroLift الذكاء الاصطناعي المتقدم لإنشاء برامج تضخم بناءً على الميكانيكا الحيوية.",
-    btn_generate: "إنشاء بروتوكول",
+    hero_title_2: "تدريب دقيق.",
+    hero_subtitle: "توقف عن التخمين. يستخدم NeuroLift التحليل الميكانيكي الحيوي لإنشاء برامج تضخم بناءً على تشريحك الخاص.",
     btn_learn: "تعلم العلم",
 
     // Features
@@ -235,49 +177,24 @@ export const translations = {
     feat_1_title: "الميكانيكا الحيوية أولاً",
     feat_1_desc: "يتم اختيار التمارين بناءً على اتجاه الألياف العضلية والرافعة الميكانيكية.",
     feat_2_title: "الحجم التكيفي",
-    feat_2_desc: "يحلل الذكاء الاصطناعي قدرتك على التعافي ويعدل حجم المجموعات لتعظيم تخليق البروتين.",
+    feat_2_desc: "حلل قدرتك على التعافي وعدل حجم المجموعات لتعظيم تخليق البروتين.",
     feat_3_title: "زيادة الحمل التدريجي",
     feat_3_desc: "مسارات منظمة لزيادة التوتر الميكانيكي بمرور الوقت، المحرك الأساسي للنمو.",
 
-    // AI Generator
-    gen_title: "تضخم مستهدف",
-    gen_desc: "اختر عضلة. يقوم الذكاء الاصطناعي ببناء جلسة بناءً على بيانات تخطيط العضلات وتكوين الألياف.",
-    gen_loading: "جاري المعالجة...",
-    gen_btn: "إنشاء تمرين",
-    gen_system_ready: "النظام جاهز. في انتظار الإدخال.",
-    gen_custom_focus_label: "تركيز محدد (اختياري)",
-    gen_custom_focus_placeholder: "مثلاً: التركيز على الصدر العلوي، ضعف الأكتاف الخلفية...",
-
-    // Testimonials
-    test_title: "موثوق من المجتمع",
-    role_bodybuilder: "كمال أجسام",
-    role_powerlifter: "رافع أثقال",
-    role_beginner: "مبتدئ",
-
     // Footer
     footer_title: "جاهز للتحسين؟",
-    footer_desc: "انضم إلى آلاف الرياضيين الذين يستخدمون البيانات، وليس التخمين، لبناء جسم أحلامهم.",
+    footer_desc: "انضم إلى آلاف الرياضيين لبناء جسم أحلامهم.",
     footer_btn: "ابدأ تحولك",
-    footer_copy: "NeuroLift AI. جميع الحقوق محفوظة.",
+    footer_copy: "NeuroLift. جميع الحقوق محفوظة.",
 
     timer_start: "بدء",
     timer_stop: "توقف",
     timer_reset: "إعادة ضبط",
     planner_title: "المكتبة العلمية",
     planner_desc: "اكتشف التمارين الأكثر فعالية بناءً على التحليل.",
-    nutrition_title: "خبير التغذية",
-    nutrition_chat_placeholder: "اسأل أو حمل صورة طعام...",
-    nutrition_analyze_btn: "تحليل الملصق",
-    nutrition_send: "إرسال",
-    nutrition_tip_title: "نصيحة الذكاء الاصطناعي:",
-    nutrition_tip_text: "حمل صورة لوجبتك واطلب تقدير السعرات. سيساعدك هذا في تعبئة السجل!",
-    nutrition_image_attached: "تم إرفاق صورة",
-    nutrition_analyzing: "جاري التحليل...",
-
-    journal_title: "قياسات الجسم",
-    journal_add_entry: "إدخال جديد",
+    nutrition_title: "متتبع التغذية",
     save: "حفظ",
-    loading: "جاري التفكير...",
+    loading: "جاري الحفظ...",
 
     tracker_select_muscle: "اختر العضلة",
     tracker_select_exercises: "اختر التمارين",
@@ -314,8 +231,7 @@ export const translations = {
     cal_title: "عداد السعرات",
     cal_consumed: "المستهلك اليوم",
     cal_add: "إضافة سعرات",
-    cal_reset: "إعادة تعيين",
-    img_upload_tip: "صورة طعام أو ملصق"
+    cal_reset: "إعادة تعيين"
   }
 };
 

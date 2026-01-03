@@ -12,26 +12,18 @@ export const Hero: React.FC = () => {
       <div className="absolute -top-40 left-1/2 h-[500px] w-[500px] -translate-x-1/2 rounded-full bg-teal-500/20 blur-[120px] filter animate-pulse-slow"></div>
 
       <div className="relative z-10 max-w-4xl px-6">
-        <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-zinc-800 bg-zinc-900/50 px-3 py-1 text-xs text-zinc-400 backdrop-blur-md">
-          <span className="relative flex h-2 w-2">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-teal-400 opacity-75"></span>
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-teal-500"></span>
-          </span>
-          {t('hero_badge')}
-        </div>
-        
         <h1 className="bg-gradient-to-b from-white via-zinc-200 to-zinc-500 bg-clip-text text-5xl font-bold tracking-tight text-transparent sm:text-7xl">
           {t('hero_title_1')} <br />
           <span className="text-white">{t('hero_title_2')}</span>
         </h1>
-        
+
         <p className="mx-auto mt-6 max-w-2xl text-lg text-zinc-400">
           {t('hero_subtitle')}
         </p>
 
         <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-          <SpotlightButton onClick={() => document.getElementById('generator')?.scrollIntoView({ behavior: 'smooth' })}>
-            {t('btn_generate')}
+          <SpotlightButton onClick={() => document.getElementById('tracker')?.scrollIntoView({ behavior: 'smooth' })}>
+            {t('nav_workout')}
             <svg className="h-4 w-4 rtl:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
@@ -41,8 +33,7 @@ export const Hero: React.FC = () => {
           </SpotlightButton>
         </div>
       </div>
-      
-      {/* Abstract Parallax Shape simulated with CSS animation */}
+
       <div className="absolute bottom-0 right-0 -z-10 h-64 w-64 translate-y-1/2 rounded-full bg-gradient-to-br from-indigo-500/10 to-teal-500/10 blur-3xl animate-float"></div>
     </section>
   );

@@ -20,11 +20,8 @@ export const FooterCTA: React.FC = () => {
         <SpotlightButton
           className="h-12 px-8 text-base"
           onClick={() => {
-            const el = document.getElementById('generator');
+            const el = document.getElementById('features');
             el?.scrollIntoView({ behavior: 'smooth' });
-            setTimeout(() => {
-              document.getElementById('focus-input')?.focus();
-            }, 600);
           }}
         >
           {t('footer_btn')}
