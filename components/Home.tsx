@@ -2,7 +2,6 @@ import React from 'react';
 import { Hero } from './Hero';
 import { Features } from './Features';
 import { AIWorkoutGenerator } from './AIWorkoutGenerator';
-import { Testimonials } from './Testimonials';
 import { FooterCTA } from './FooterCTA';
 
 export const Home: React.FC = () => {
@@ -11,7 +10,6 @@ export const Home: React.FC = () => {
       <Hero />
       <Features />
       <AIWorkoutGenerator />
-      <Testimonials />
       <FooterCTA />
     </div>
   );

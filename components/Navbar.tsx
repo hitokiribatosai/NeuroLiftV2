@@ -32,7 +32,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) =
       <div className="mx-auto flex max-w-7xl items-center gap-4 px-4 py-3 sm:px-6">
         {/* Logo */}
         <div className="flex shrink-0 items-center gap-2 cursor-pointer" onClick={() => setCurrentView('home')}>
-          <img src="/logo.png" alt="NeuroLift" className="h-10 w-auto" />
+          <img src="/logo.png" alt="NeuroLift" className="h-10 w-auto rounded-xl" />
         </div>
 
         {/* Navigation Items - Scrollable on mobile */}

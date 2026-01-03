@@ -25,7 +25,7 @@ export const AIWorkoutGenerator: React.FC = () => {
     if (selectedMuscles.length === 0) return;
     setLoading(true);
     setWorkout(null);
-    
+
     // Pass array of selected muscles
     const plan = await generateAIWorkout(selectedMuscles, "Intermediate", focusDescription);
     setWorkout(plan);
@@ -34,8 +34,8 @@ export const AIWorkoutGenerator: React.FC = () => {
 
   return (
     <section id="generator" className="relative border-y border-zinc-800 bg-zinc-900/30 py-24">
-       {/* Background Grid Accent */}
-       <div className="absolute inset-0 -z-10 grid-bg opacity-10" />
+      {/* Background Grid Accent */}
+      <div className="absolute inset-0 -z-10 grid-bg opacity-10" />
 
       <div className="mx-auto grid max-w-7xl gap-12 px-6 lg:grid-cols-2">
         {/* Left: Interactive Controls */}
@@ -51,8 +51,8 @@ export const AIWorkoutGenerator: React.FC = () => {
                 key={muscle}
                 onClick={() => toggleMuscle(muscle)}
                 className={`group relative overflow-hidden rounded-md border p-4 text-left transition-all duration-200
-                  ${selectedMuscles.includes(muscle) 
-                    ? 'border-teal-500 bg-teal-500/10 text-teal-300 shadow-[0_0_15px_rgba(20,184,166,0.3)]' 
+                  ${selectedMuscles.includes(muscle)
+                    ? 'border-teal-500 bg-teal-500/10 text-teal-300 shadow-[0_0_15px_rgba(20,184,166,0.3)]'
                     : 'border-zinc-800 bg-zinc-900/50 text-zinc-400 hover:border-zinc-600 hover:text-zinc-200'
                   }`}
               >
@@ -67,7 +67,8 @@ export const AIWorkoutGenerator: React.FC = () => {
 
           <div className="space-y-2">
             <label className="text-sm font-medium text-zinc-400">{t('gen_custom_focus_label')}</label>
-            <textarea 
+            <textarea
+              id="focus-input"
               value={focusDescription}
               onChange={(e) => setFocusDescription(e.target.value)}
               placeholder={t('gen_custom_focus_placeholder')}
@@ -77,8 +78,8 @@ export const AIWorkoutGenerator: React.FC = () => {
           </div>
 
           <div className="pt-2">
-             <SpotlightButton 
-              onClick={handleGenerate} 
+            <SpotlightButton
+              onClick={handleGenerate}
               disabled={loading || selectedMuscles.length === 0}
               className={`w-full justify-center sm:w-auto ${loading ? 'opacity-70 cursor-wait' : ''}`}
             >
@@ -109,14 +110,14 @@ export const AIWorkoutGenerator: React.FC = () => {
 
           <div className="p-6">
             {!workout && !loading && (
-               <div className="flex h-full flex-col items-center justify-center space-y-4 pt-20 opacity-50">
-                 <div className="h-16 w-16 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center">
-                    <svg className="h-8 w-8 text-zinc-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
-                    </svg>
-                 </div>
-                 <p className="text-sm font-mono text-zinc-500">{t('gen_system_ready')}</p>
-               </div>
+              <div className="flex h-full flex-col items-center justify-center space-y-4 pt-20 opacity-50">
+                <div className="h-16 w-16 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center">
+                  <svg className="h-8 w-8 text-zinc-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+                  </svg>
+                </div>
+                <p className="text-sm font-mono text-zinc-500">{t('gen_system_ready')}</p>
+              </div>
             )}
 
             {workout && (
@@ -134,17 +135,17 @@ export const AIWorkoutGenerator: React.FC = () => {
                 <div className="space-y-4">
                   {workout.exercises.map((ex, idx) => (
                     <div key={idx} className="group relative rounded-lg border border-zinc-800 bg-zinc-900/50 p-4 transition-all hover:bg-zinc-800/80">
-                       <div className="absolute left-0 top-0 bottom-0 w-1 bg-teal-500 rounded-l-lg opacity-0 transition-opacity group-hover:opacity-100"></div>
-                       <div className="flex justify-between items-start">
-                          <div>
-                            <h4 className="font-semibold text-zinc-200">{ex.name}</h4>
-                            <p className="text-xs text-zinc-500 mt-1 font-mono">{ex.notes}</p>
-                          </div>
-                          <div className="text-right">
-                            <div className="text-sm font-bold text-white">{ex.sets} Sets</div>
-                            <div className="text-xs text-teal-400">{ex.reps}</div>
-                          </div>
-                       </div>
+                      <div className="absolute left-0 top-0 bottom-0 w-1 bg-teal-500 rounded-l-lg opacity-0 transition-opacity group-hover:opacity-100"></div>
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h4 className="font-semibold text-zinc-200">{ex.name}</h4>
+                          <p className="text-xs text-zinc-500 mt-1 font-mono">{ex.notes}</p>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-sm font-bold text-white">{ex.sets} Sets</div>
+                          <div className="text-xs text-teal-400">{ex.reps}</div>
+                        </div>
+                      </div>
                     </div>
                   ))}
                 </div>
