@@ -93,7 +93,11 @@ export const translations = {
     timer_resume: "Resume",
     timer_lap: "Lap",
     tracker_front: "Front",
-    tracker_rear: "Rear"
+    tracker_back: "Rear",
+    muscle_triceps: "Triceps",
+    clock_stopwatch: "Stopwatch",
+    clock_timer: "Timer",
+    timer_set: "Set Timer"
   },
   fr: {
     // Nav
@@ -183,7 +187,11 @@ export const translations = {
     timer_resume: "Reprendre",
     timer_lap: "Tour",
     tracker_front: "Avant",
-    tracker_rear: "Arrière"
+    tracker_back: "Arrière",
+    muscle_triceps: "Triceps",
+    clock_stopwatch: "Chronomètre",
+    clock_timer: "Minuteur",
+    timer_set: "Régler"
   },
   ar: {
     // Nav
@@ -273,7 +281,11 @@ export const translations = {
     timer_resume: "استئناف",
     timer_lap: "جولة",
     tracker_front: "الأمامي",
-    tracker_rear: "الخلفي"
+    tracker_back: "الخلفي",
+    muscle_triceps: "ترايسبس",
+    clock_stopwatch: "ساعة إيقاف",
+    clock_timer: "مؤقت",
+    timer_set: "ضبط"
   }
 };
 
