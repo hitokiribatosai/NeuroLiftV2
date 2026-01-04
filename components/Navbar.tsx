@@ -37,7 +37,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) =
         </div>
 
         {/* Navigation Items - Scrollable on mobile */}
-        <div className="flex flex-1 items-center justify-between overflow-hidden">
+        <div className="flex flex-1 items-center justify-between min-w-0">
           <div className="flex items-center gap-4 sm:gap-6 text-sm font-medium text-zinc-400 overflow-x-auto whitespace-nowrap scrollbar-hide py-1 px-2">
             {navItems.map((item) => (
               <button
@@ -48,14 +48,16 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) =
                 {item.label}
               </button>
             ))}
+            {/* Mobile Spacer to ensure last items aren't cut off */}
+            <div className="w-12 shrink-0 sm:hidden" />
           </div>
 
           {/* Language Switcher */}
-          <div className="flex shrink-0 items-center gap-2 ml-2">
+          <div className="flex shrink-0 items-center gap-2 ml-4">
             <select
               value={language}
               onChange={(e) => setLanguage(e.target.value as Language)}
-              className="bg-zinc-900 border border-zinc-800 text-xs text-zinc-300 rounded px-2 py-1 focus:outline-none focus:border-teal-500"
+              className="bg-zinc-900 border border-zinc-800 text-[10px] sm:text-xs text-zinc-300 rounded px-2 py-1 focus:outline-none focus:border-teal-400"
             >
               <option value="en">EN</option>
               <option value="fr">FR</option>
