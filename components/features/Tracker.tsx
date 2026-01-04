@@ -206,63 +206,92 @@ export const Tracker: React.FC = () => {
 
   if (phase === 'setup') {
     return (
-      <div className="mx-auto max-w-6xl px-6 py-24">
-        <div className="text-center mb-12">
+      <div className="mx-auto max-w-4xl px-6 py-24 text-center">
+        <div className="mb-12">
           <h2 className="text-4xl font-black text-white mb-2 uppercase tracking-tight">{t('tracker_select_muscle')}</h2>
-          <div className="h-1 w-20 bg-teal-500 mx-auto rounded-full mb-4"></div>
-          <p className="text-zinc-500 text-sm uppercase tracking-widest">Select muscles and exercises to begin</p>
+          <div className="h-1 w-20 bg-teal-500 mx-auto rounded-full mb-8"></div>
+
+          {selectedMuscles.length > 0 && (
+            <div className="flex flex-wrap justify-center gap-2 mb-4 animate-in fade-in zoom-in duration-300">
+              {selectedMuscles.map(m => (
+                <span key={m} className="px-4 py-1.5 bg-teal-500/10 border border-teal-500/30 text-teal-400 text-xs font-bold rounded-full uppercase tracking-widest">
+                  {getLocalizedMuscleName(m, language)}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-          <div>
-            <MuscleMap />
-          </div>
+        <MuscleMap />
 
-          <div className="space-y-6">
-            {selectedMuscles.length === 0 ? (
-              <div className="h-64 flex flex-col items-center justify-center border border-dashed border-zinc-800 rounded-3xl bg-zinc-900/20 text-zinc-500">
-                <svg className="w-12 h-12 mb-4 opacity-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <p className="text-sm font-medium uppercase tracking-widest">Select a muscle group to see exercises</p>
-              </div>
-            ) : (
-              <div className="space-y-6 animate-in fade-in slide-in-from-right-4">
-                {selectedMuscles.map(muscle => (
-                  <Card key={muscle} className="p-6 bg-zinc-900/40 border-zinc-800">
-                    <h3 className="text-lg font-bold text-teal-400 mb-4 uppercase tracking-widest flex items-center gap-2">
-                      <span className="w-1 h-4 bg-teal-500 rounded-full"></span>
-                      {getLocalizedMuscleName(muscle, language)}
-                    </h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      {exercisesByMuscle[muscle]?.map(ex => (
-                        <label key={ex} className={`flex items-center gap-3 p-3 border rounded-xl cursor-pointer transition-all ${selectedExercises.includes(ex) ? 'bg-teal-500/10 border-teal-500/50 text-white' : 'bg-black/40 border-zinc-800 text-zinc-400 hover:border-zinc-700'}`}>
-                          <input
-                            type="checkbox"
-                            checked={selectedExercises.includes(ex)}
-                            onChange={() => toggleExercise(ex)}
-                            className="hidden"
-                          />
-                          <span className={`w-4 h-4 rounded border flex items-center justify-center ${selectedExercises.includes(ex) ? 'bg-teal-500 border-teal-500' : 'border-zinc-600'}`}>
-                            {selectedExercises.includes(ex) && <svg className="w-3 h-3 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 13l4 4L19 7" /></svg>}
-                          </span>
-                          <span className="text-xs font-semibold">{ex}</span>
-                        </label>
-                      ))}
+        {selectedMuscles.length > 0 && (
+          <div className="mt-12 animate-in slide-in-from-bottom-6 duration-500">
+            <SpotlightButton onClick={() => setPhase('selection')} className="px-16 py-4 text-lg">
+              {t('tracker_select_exercises')} ({selectedMuscles.length})
+            </SpotlightButton>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  if (phase === 'selection') {
+    return (
+      <div className="mx-auto max-w-4xl px-6 py-24">
+        <div className="flex justify-between items-end mb-12 border-b border-zinc-800 pb-8">
+          <div>
+            <h2 className="text-3xl font-black text-white uppercase tracking-tight mb-2">
+              {t('tracker_select_specific')}
+            </h2>
+            <div className="flex gap-2">
+              {selectedMuscles.map(m => (
+                <span key={m} className="text-[10px] text-teal-500 font-bold uppercase tracking-widest px-2 py-0.5 bg-teal-500/10 rounded">
+                  {getLocalizedMuscleName(m, language)}
+                </span>
+              ))}
+            </div>
+          </div>
+          <button onClick={() => setPhase('setup')} className="text-xs text-zinc-500 hover:text-white uppercase tracking-widest font-bold flex items-center gap-2">
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+            {t('tracker_back')}
+          </button>
+        </div>
+
+        <div className="space-y-12 mb-16">
+          {selectedMuscles.map(muscle => (
+            <div key={muscle} className="animate-in fade-in slide-in-from-bottom-4">
+              <h3 className="text-xl font-black text-white mb-6 uppercase tracking-widest flex items-center gap-3">
+                <span className="w-1.5 h-6 bg-teal-500 rounded-full"></span>
+                {getLocalizedMuscleName(muscle, language)}
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {exercisesByMuscle[muscle]?.map(ex => (
+                  <label key={ex} className={`flex items-center gap-4 p-5 border rounded-2xl cursor-pointer transition-all ${selectedExercises.includes(ex) ? 'bg-teal-500/10 border-teal-500/50 text-white shadow-[0_0_20px_rgba(20,184,166,0.05)]' : 'bg-zinc-900/30 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:bg-zinc-900/50'}`}>
+                    <input
+                      type="checkbox"
+                      checked={selectedExercises.includes(ex)}
+                      onChange={() => toggleExercise(ex)}
+                      className="hidden"
+                    />
+                    <div className={`w-6 h-6 rounded-lg border flex items-center justify-center transition-all ${selectedExercises.includes(ex) ? 'bg-teal-500 border-teal-500 text-black' : 'border-zinc-700'}`}>
+                      {selectedExercises.includes(ex) && <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 13l4 4L19 7" /></svg>}
                     </div>
-                  </Card>
+                    <span className="text-sm font-bold tracking-wide">{ex}</span>
+                  </label>
                 ))}
               </div>
-            )}
+            </div>
+          ))}
+        </div>
 
-            {selectedExercises.length > 0 && (
-              <div className="sticky bottom-0 pt-6 pb-2 bg-gradient-to-t from-black via-black to-transparent">
-                <SpotlightButton onClick={handleStartWorkout} className="w-full py-4 text-lg">
-                  {t('tracker_start')} ({selectedExercises.length} {selectedExercises.length === 1 ? 'Exercise' : 'Exercises'})
-                </SpotlightButton>
-              </div>
-            )}
+        <div className="sticky bottom-8 bg-black/90 backdrop-blur-xl p-6 rounded-3xl border border-zinc-800 shadow-2xl flex items-center justify-between">
+          <div className="hidden md:block">
+            <div className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mb-1">{selectedExercises.length} Exercises Picked</div>
+            <div className="text-xs text-zinc-400 max-w-[300px] truncate">{selectedExercises.join(', ')}</div>
           </div>
+          <SpotlightButton onClick={handleStartWorkout} disabled={selectedExercises.length === 0} className="px-12 py-4">
+            {t('tracker_start')}
+          </SpotlightButton>
         </div>
       </div>
     );
@@ -317,8 +346,8 @@ export const Tracker: React.FC = () => {
               <button
                 onClick={() => setTimerActive(!timerActive)}
                 className={`p-2 rounded-lg border transition-all ${timerActive
-                    ? 'bg-amber-500/10 border-amber-500/50 text-amber-500'
-                    : 'bg-emerald-500/10 border-emerald-500/50 text-emerald-500'
+                  ? 'bg-amber-500/10 border-amber-500/50 text-amber-500'
+                  : 'bg-emerald-500/10 border-emerald-500/50 text-emerald-500'
                   }`}
               >
                 {timerActive ? <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" /></svg> : <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>}
