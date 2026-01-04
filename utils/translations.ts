@@ -90,15 +90,18 @@ export const translations = {
     nutrition_history: "7-Day History",
     nutrition_calories_unit: "kcal",
 
-    // Advanced Timer & Map
+    clock_timer: "Timer",
+    timer_set: "Set Timer",
+    plate_calc_title: "Plate Calculator",
+    plate_calc_barbell: "Barbell Weight",
+    plate_calc_per_side: "Per Side",
+    plate_calc_total: "Total Weight",
     timer_resume: "Resume",
     timer_lap: "Lap",
     tracker_front: "Front",
-    tracker_back: "Rear",
+    tracker_rear: "Rear",
     muscle_triceps: "Triceps",
-    clock_stopwatch: "Stopwatch",
-    clock_timer: "Timer",
-    timer_set: "Set Timer"
+    clock_stopwatch: "Stopwatch"
   },
   fr: {
     // Nav
@@ -185,15 +188,18 @@ export const translations = {
     nutrition_history: "Historique (7 jours)",
     nutrition_calories_unit: "kcal",
 
-    // Advanced Timer & Map
+    clock_timer: "Minuteur",
+    timer_set: "Régler",
+    plate_calc_title: "Calculateur de disques",
+    plate_calc_barbell: "Poids de la barre",
+    plate_calc_per_side: "Par côté",
+    plate_calc_total: "Poids total",
     timer_resume: "Reprendre",
     timer_lap: "Tour",
     tracker_front: "Avant",
-    tracker_back: "Arrière",
+    tracker_rear: "Arrière",
     muscle_triceps: "Triceps",
-    clock_stopwatch: "Chronomètre",
-    clock_timer: "Minuteur",
-    timer_set: "Régler"
+    clock_stopwatch: "Chronomètre"
   },
   ar: {
     // Nav
@@ -280,15 +286,18 @@ export const translations = {
     nutrition_history: "سجل 7 أيام",
     nutrition_calories_unit: "سعرة",
 
-    // Advanced Timer & Map
+    clock_timer: "مؤقت",
+    timer_set: "ضبط",
+    plate_calc_title: "حاسبة الأوزان",
+    plate_calc_barbell: "وزن البار",
+    plate_calc_per_side: "لكل جانب",
+    plate_calc_total: "الوزن الكلي",
     timer_resume: "استئناف",
     timer_lap: "جولة",
     tracker_front: "الأمامي",
-    tracker_back: "الخلفي",
+    tracker_rear: "الخلفي",
     muscle_triceps: "ترايسبس",
-    clock_stopwatch: "ساعة إيقاف",
-    clock_timer: "مؤقت",
-    timer_set: "ضبط"
+    clock_stopwatch: "ساعة إيقاف"
   }
 };
 

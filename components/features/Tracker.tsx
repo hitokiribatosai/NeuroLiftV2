@@ -12,6 +12,8 @@ export const Tracker: React.FC = () => {
   const [selectedMuscles, setSelectedMuscles] = useState<string[]>([]);
   const [selectedExercises, setSelectedExercises] = useState<string[]>([]);
   const [tutorialExercise, setTutorialExercise] = useState<string | null>(null);
+  const [plateCalcWeight, setPlateCalcWeight] = useState<number | null>(null);
+  const [barWeight, setBarWeight] = useState<number>(20);
 
   // Active Session State
   const [activeExercises, setActiveExercises] = useState<ActiveExercise[]>([]);
@@ -48,6 +50,22 @@ export const Tracker: React.FC = () => {
     const m = Math.floor(secs / 60);
     const s = secs % 60;
     return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+  };
+
+  const calculatePlates = (target: number, bar: number) => {
+    const availablePlates = [25, 20, 15, 10, 5, 2.5, 1.25];
+    let weightPerSide = (target - bar) / 2;
+    const result: number[] = [];
+
+    if (weightPerSide <= 0) return result;
+
+    for (const plate of availablePlates) {
+      while (weightPerSide >= plate) {
+        result.push(plate);
+        weightPerSide -= plate;
+      }
+    }
+    return result;
   };
 
   const toggleMuscle = (m: string) => {
@@ -199,7 +217,7 @@ export const Tracker: React.FC = () => {
       <div className="w-full max-w-3xl mx-auto mb-16 px-4">
         <div className="flex flex-col sm:flex-row gap-12 sm:gap-8 md:gap-16">
           <Skeleton muscles={frontMuscles} label={t('tracker_front')} />
-          <Skeleton muscles={rearMuscles} label={t('tracker_back')} />
+          <Skeleton muscles={rearMuscles} label={t('tracker_rear')} />
         </div>
       </div>
     );
@@ -485,7 +503,7 @@ export const Tracker: React.FC = () => {
                 {ex.sets.map((set, setIdx) => (
                   <div key={set.id} className={`grid grid-cols-12 gap-1 sm:gap-2 items-center p-1.5 sm:p-2 rounded-lg transition-all ${set.completed ? 'bg-teal-500/10 border border-teal-500/20' : 'bg-black/40 border border-zinc-800/50'}`}>
                     <div className="col-span-2 text-zinc-500 font-mono text-center text-xs">{setIdx + 1}</div>
-                    <div className="col-span-4">
+                    <div className="col-span-4 relative group/plate">
                       <input
                         type="number"
                         placeholder="0"
@@ -493,6 +511,13 @@ export const Tracker: React.FC = () => {
                         onChange={(e) => updateSet(exIdx, setIdx, 'weight', e.target.value)}
                         className="w-full bg-transparent text-white text-center outline-none"
                       />
+                      <button
+                        onClick={() => setPlateCalcWeight(set.weight || 0)}
+                        className="absolute right-0 top-1/2 -translate-y-1/2 p-1 text-zinc-700 hover:text-teal-500 transition-colors"
+                        title={t('plate_calc_title')}
+                      >
+                        <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="2" /></svg>
+                      </button>
                     </div>
                     <div className="col-span-4">
                       <input
@@ -523,6 +548,106 @@ export const Tracker: React.FC = () => {
             </Card>
           ))}
         </div>
+
+        {/* Plate Calculator Modal */}
+        {plateCalcWeight !== null && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-md p-4 animate-in fade-in duration-300">
+            <div className="relative w-full max-w-md rounded-[2.5rem] border border-zinc-800 bg-zinc-950 p-8 shadow-[0_0_50px_rgba(20,184,166,0.1)]">
+              <button
+                onClick={() => setPlateCalcWeight(null)}
+                className="absolute right-8 top-8 text-zinc-500 hover:text-white transition-colors"
+                title={t('modal_close')}
+              >
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+              </button>
+
+              <div className="mb-8">
+                <h3 className="text-2xl font-black text-white uppercase tracking-tighter mb-2 flex items-center gap-3">
+                  <div className="w-2 h-8 bg-teal-500 rounded-full"></div>
+                  {t('plate_calc_title')}
+                </h3>
+                <div className="h-1 w-12 bg-teal-500/20 rounded-full"></div>
+              </div>
+
+              <div className="space-y-6">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-2">{t('plate_calc_total')} (KG)</label>
+                    <input
+                      type="number"
+                      value={plateCalcWeight}
+                      step="0.5"
+                      onChange={(e) => setPlateCalcWeight(parseFloat(e.target.value) || 0)}
+                      className="w-full bg-zinc-900 border border-zinc-800 rounded-2xl px-4 py-3 text-white font-mono focus:border-teal-500/50 outline-none transition-all"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-2">{t('plate_calc_barbell')} (KG)</label>
+                    <input
+                      type="number"
+                      value={barWeight}
+                      step="0.5"
+                      onChange={(e) => setBarWeight(parseFloat(e.target.value) || 0)}
+                      className="w-full bg-zinc-900 border border-zinc-800 rounded-2xl px-4 py-3 text-white font-mono focus:border-teal-500/50 outline-none transition-all"
+                    />
+                  </div>
+                </div>
+
+                <div className="p-6 rounded-3xl bg-teal-500/5 border border-teal-500/10 text-center">
+                  <div className="text-[10px] font-black text-teal-500/50 uppercase tracking-[0.2em] mb-1">{t('plate_calc_per_side')}</div>
+                  <div className="text-4xl font-black text-teal-400 font-mono">
+                    {Math.max(0, (plateCalcWeight - barWeight) / 2)} <span className="text-sm">KG</span>
+                  </div>
+                </div>
+
+                <div className="relative h-28 w-full flex items-center justify-center gap-1.5 overflow-hidden rounded-2xl bg-zinc-900/50 border border-zinc-800 px-4">
+                  <div className="absolute h-2 w-full bg-zinc-800 rounded-full opacity-20"></div>
+                  {calculatePlates(plateCalcWeight, barWeight).map((plate, i) => {
+                    const height = 30 + (plate * 1.5);
+                    const color =
+                      plate >= 25 ? 'bg-red-600' :
+                        plate >= 20 ? 'bg-blue-600' :
+                          plate >= 15 ? 'bg-yellow-500' :
+                            plate >= 10 ? 'bg-green-600' :
+                              plate >= 5 ? 'bg-zinc-200' : 'bg-zinc-500';
+                    return (
+                      <div
+                        key={i}
+                        className={`w-4 rounded-md transition-all duration-500 ${color} shadow-[0_0_15px_rgba(0,0,0,0.3)] flex flex-col items-center justify-center group relative`}
+                        style={{ height: `${height}%` }}
+                      >
+                        <div className="absolute -top-10 scale-0 group-hover:scale-100 transition-transform origin-bottom bg-zinc-800 text-white text-[8px] font-bold px-1.5 py-0.5 rounded pointer-events-none z-50 shadow-xl border border-zinc-700">
+                          {plate}kg
+                        </div>
+                      </div>
+                    );
+                  })}
+                  {calculatePlates(plateCalcWeight, barWeight).length === 0 && (
+                    <div className="text-zinc-700 text-[10px] font-bold uppercase tracking-widest italic animate-pulse">Load Weights</div>
+                  )}
+                </div>
+
+                <div className="flex flex-wrap gap-2 justify-center">
+                  {Array.from(new Set(calculatePlates(plateCalcWeight, barWeight))).map(plate => {
+                    const count = calculatePlates(plateCalcWeight, barWeight).filter(p => p === plate).length;
+                    return (
+                      <div key={plate} className="px-3 py-1 bg-zinc-900 border border-zinc-800 rounded-full text-[10px] font-bold text-zinc-400">
+                        <span className="text-teal-400 mr-1">{count}x</span> {plate}kg
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <button
+                  onClick={() => setPlateCalcWeight(null)}
+                  className="w-full py-4 bg-zinc-900 hover:bg-zinc-800 text-[10px] text-zinc-400 font-bold uppercase tracking-widest rounded-2xl transition-colors border border-zinc-800"
+                >
+                  {t('modal_close')}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
