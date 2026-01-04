@@ -11,6 +11,7 @@ export const Tracker: React.FC = () => {
   const [phase, setPhase] = useState<'setup' | 'active' | 'summary'>('setup');
   const [selectedMuscles, setSelectedMuscles] = useState<string[]>([]);
   const [selectedExercises, setSelectedExercises] = useState<string[]>([]);
+  const [tutorialExercise, setTutorialExercise] = useState<string | null>(null);
 
   // Active Session State
   const [activeExercises, setActiveExercises] = useState<ActiveExercise[]>([]);
@@ -278,18 +279,34 @@ export const Tracker: React.FC = () => {
                       </h4>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                         {exercises.map(ex => (
-                          <label key={ex} className={`flex items-center gap-4 p-4 border rounded-xl cursor-pointer transition-all ${selectedExercises.includes(ex) ? 'bg-teal-500/10 border-teal-500/50 text-white shadow-[0_0_20px_rgba(20,184,166,0.05)]' : 'bg-zinc-900/30 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:bg-zinc-900/50'}`}>
-                            <input
-                              type="checkbox"
-                              checked={selectedExercises.includes(ex)}
-                              onChange={() => toggleExercise(ex)}
-                              className="hidden"
-                            />
-                            <div className={`w-5 h-5 rounded-lg border flex items-center justify-center transition-all ${selectedExercises.includes(ex) ? 'bg-teal-500 border-teal-500 text-black' : 'border-zinc-700'}`}>
-                              {selectedExercises.includes(ex) && <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 13l4 4L19 7" /></svg>}
-                            </div>
-                            <span className="text-xs font-bold tracking-wide">{ex}</span>
-                          </label>
+                          <div key={ex} className="relative group">
+                            <label className={`flex items-center gap-4 p-4 border rounded-xl cursor-pointer transition-all ${selectedExercises.includes(ex) ? 'bg-teal-500/10 border-teal-500/50 text-white shadow-[0_0_20px_rgba(20,184,166,0.05)]' : 'bg-zinc-900/30 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:bg-zinc-900/50'}`}>
+                              <input
+                                type="checkbox"
+                                checked={selectedExercises.includes(ex)}
+                                onChange={() => toggleExercise(ex)}
+                                className="hidden"
+                              />
+                              <div className={`w-5 h-5 rounded-lg border flex items-center justify-center transition-all ${selectedExercises.includes(ex) ? 'bg-teal-500 border-teal-500 text-black' : 'border-zinc-700'}`}>
+                                {selectedExercises.includes(ex) && <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 13l4 4L19 7" /></svg>}
+                              </div>
+                              <span className="text-xs font-bold tracking-wide flex-1">{ex}</span>
+                            </label>
+
+                            <button
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                setTutorialExercise(ex);
+                              }}
+                              className="absolute right-3 top-1/2 -translate-y-1/2 p-2 text-zinc-600 hover:text-teal-400 opacity-0 group-hover:opacity-100 transition-all z-10"
+                              title={t('modal_watch_video')}
+                            >
+                              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              </svg>
+                            </button>
+                          </div>
                         ))}
                       </div>
                     </div>
@@ -309,6 +326,59 @@ export const Tracker: React.FC = () => {
             {t('tracker_start')}
           </SpotlightButton>
         </div>
+
+        {/* Tutorial Modal */}
+        {tutorialExercise && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+            <div className="relative w-full max-w-xl rounded-[2rem] border border-zinc-800 bg-zinc-900/90 p-8 shadow-2xl backdrop-blur-xl">
+              <button
+                onClick={() => setTutorialExercise(null)}
+                className="absolute right-6 top-6 text-zinc-500 hover:text-white transition-colors"
+                title={t('modal_close')}
+              >
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-2 h-8 bg-teal-500 rounded-full"></div>
+                <h3 className="text-xl font-black text-white uppercase tracking-tight pr-10 leading-tight">
+                  {tutorialExercise}
+                </h3>
+              </div>
+
+              <div className="aspect-video w-full rounded-2xl bg-black/60 mb-8 overflow-hidden relative group border border-zinc-800">
+                <div className="absolute inset-0 bg-gradient-to-br from-teal-500/10 to-transparent"></div>
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                  <div className="w-16 h-16 rounded-full bg-teal-500/20 border border-teal-500/30 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-500 backdrop-blur-sm">
+                    <svg className="h-8 w-8 text-teal-400 ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+                  </div>
+                  <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-[0.2em]">{t('modal_watch_video')}</p>
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-3">
+                <a
+                  href={`https://www.youtube.com/results?search_query=${tutorialExercise}+exercise+technique`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="w-full"
+                >
+                  <SpotlightButton className="w-full py-4 text-xs font-black uppercase tracking-widest">
+                    {t('modal_watch_video')}
+                  </SpotlightButton>
+                </a>
+                <button
+                  onClick={() => setTutorialExercise(null)}
+                  className="w-full py-3 text-[10px] text-zinc-500 hover:text-zinc-300 font-bold uppercase tracking-widest transition-colors"
+                >
+                  {t('modal_close')}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
