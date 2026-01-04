@@ -47,43 +47,47 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) =
               {item.label}
             </button>
           ))}
-          <div className="w-8 shrink-0 sm:hidden" />
-        </div>
 
-        {/* Language Switcher Dropdown */}
-        <div className="relative group shrink-0 hidden sm:block">
-          <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-800 bg-zinc-900/50 text-[10px] font-black text-zinc-400 uppercase tracking-widest hover:text-white hover:border-zinc-700 transition-all">
-            {language}
-            <svg className="w-3 h-3 text-zinc-600 group-hover:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 9l-7 7-7-7" /></svg>
-          </button>
-
-          <div className="absolute top-full right-0 mt-2 w-20 bg-zinc-950 border border-zinc-800 rounded-xl overflow-hidden opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-200 shadow-2xl z-50">
-            {(['en', 'fr', 'ar'] as Language[]).map((lang) => (
-              <button
-                key={lang}
-                onClick={() => setLanguage(lang)}
-                className={`w-full px-4 py-2 text-left text-[10px] font-black uppercase tracking-widest hover:bg-teal-500 hover:text-black transition-colors ${language === lang ? 'text-teal-400 bg-teal-500/10' : 'text-zinc-500'}`}
-              >
-                {lang}
+          {/* Integrated Language Switcher */}
+          <div className="flex shrink-0 items-center gap-2 border-l border-zinc-800 pl-4 ml-2">
+            {/* Desktop/Tablet Hover Dropdown */}
+            <div className="relative group hidden sm:block">
+              <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-800 bg-zinc-900/50 text-[10px] font-black text-zinc-400 uppercase tracking-widest hover:text-white hover:border-zinc-700 transition-all">
+                {language}
+                <svg className="w-3 h-3 text-zinc-600 group-hover:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 9l-7 7-7-7" /></svg>
               </button>
-            ))}
-          </div>
-        </div>
 
-        {/* Mobile Language Switcher (Tap to Expand) */}
-        <div className="sm:hidden shrink-0 relative">
-          <select
-            value={language}
-            onChange={(e) => setLanguage(e.target.value as Language)}
-            className="appearance-none bg-zinc-900 border border-zinc-800 text-[10px] font-black text-teal-400 uppercase tracking-widest px-3 py-1.5 rounded-lg pr-8 focus:outline-none focus:border-teal-500/50"
-          >
-            <option value="en">EN</option>
-            <option value="fr">FR</option>
-            <option value="ar">AR</option>
-          </select>
-          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-zinc-600">
-            <svg className="h-3 w-3 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" /></svg>
+              <div className="absolute bottom-full mb-2 right-0 w-20 bg-zinc-950 border border-zinc-800 rounded-xl overflow-hidden opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-200 shadow-2xl z-50">
+                {(['en', 'fr', 'ar'] as Language[]).map((lang) => (
+                  <button
+                    key={lang}
+                    onClick={() => setLanguage(lang)}
+                    className={`w-full px-4 py-2 text-left text-[10px] font-black uppercase tracking-widest hover:bg-teal-500 hover:text-black transition-colors ${language === lang ? 'text-teal-400 bg-teal-500/10' : 'text-zinc-500'}`}
+                  >
+                    {lang}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Mobile Dropdown (Tap) */}
+            <div className="sm:hidden relative">
+              <select
+                value={language}
+                onChange={(e) => setLanguage(e.target.value as Language)}
+                className="appearance-none bg-zinc-900 border border-zinc-800 text-[10px] font-black text-teal-400 uppercase tracking-widest px-3 py-1.5 rounded-lg pr-7 focus:outline-none focus:border-teal-500/50"
+              >
+                <option value="en">EN</option>
+                <option value="fr">FR</option>
+                <option value="ar">AR</option>
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-1.5 text-zinc-600">
+                <svg className="h-2.5 w-2.5 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" /></svg>
+              </div>
+            </div>
           </div>
+
+          <div className="w-8 shrink-0 sm:hidden" />
         </div>
       </div>
     </nav>
