@@ -159,6 +159,7 @@ export const Tracker: React.FC = () => {
   const MuscleMap = () => {
     const frontMuscles = [
       { id: 'Chest', path: 'M 100 80 Q 150 70 200 80 L 200 120 Q 150 130 100 120 Z' },
+      { id: 'Core', path: 'M 110 130 Q 150 140 190 130 L 185 195 Q 150 205 115 195 Z' },
       { id: 'Shoulders', path: 'M 70 80 Q 85 70 100 80 L 100 100 Q 85 110 70 100 Z M 200 80 Q 215 70 230 80 L 230 100 Q 215 110 200 100 Z' },
       { id: 'Quads', path: 'M 110 200 L 145 200 L 145 300 L 110 300 Z M 155 200 L 190 200 L 190 300 L 155 300 Z' },
       { id: 'Biceps', path: 'M 82 110 L 98 110 L 98 160 L 82 160 Z M 202 110 L 218 110 L 218 160 L 202 160 Z' },
