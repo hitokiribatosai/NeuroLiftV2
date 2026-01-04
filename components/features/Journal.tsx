@@ -11,25 +11,63 @@ export const Journal: React.FC = () => {
   const [customFields, setCustomFields] = useState<CustomMeasurement[]>([]);
   const [showCustomInput, setShowCustomInput] = useState(false);
   const [newCustomField, setNewCustomField] = useState({ name: '', value: '', unit: 'cm' });
+  const [editingId, setEditingId] = useState<string | null>(null);
 
   useEffect(() => {
     const saved = localStorage.getItem('neuroLift_journal');
     if (saved) setEntries(JSON.parse(saved));
   }, []);
 
-  const handleSave = () => {
-    const newEntry: JournalEntry = {
-      id: crypto.randomUUID(),
-      date: new Date().toLocaleDateString(),
-      ...formData,
-      customMeasurements: customFields
-    } as JournalEntry;
-
-    const updated = [newEntry, ...entries];
-    setEntries(updated);
-    localStorage.setItem('neuroLift_journal', JSON.stringify(updated));
+  const resetFormContent = () => {
     setFormData({});
     setCustomFields([]);
+    setEditingId(null);
+  };
+
+  const handleSelectEntry = (entry: JournalEntry) => {
+    setEditingId(entry.id);
+    const { id, date, customMeasurements, ...rest } = entry;
+    setFormData(rest);
+    setCustomFields(customMeasurements || []);
+  };
+
+  const handleDeleteEntry = (e: React.MouseEvent, id: string) => {
+    e.stopPropagation();
+    const updated = entries.filter(ent => ent.id !== id);
+    setEntries(updated);
+    localStorage.setItem('neuroLift_journal', JSON.stringify(updated));
+    if (editingId === id) resetFormContent();
+  };
+
+  const handleSave = () => {
+    if (editingId) {
+      // Update existing
+      const updatedEntries = entries.map(ent => {
+        if (ent.id === editingId) {
+          return {
+            ...ent,
+            ...formData,
+            customMeasurements: customFields
+          };
+        }
+        return ent;
+      });
+      setEntries(updatedEntries);
+      localStorage.setItem('neuroLift_journal', JSON.stringify(updatedEntries));
+    } else {
+      // Create new
+      const newEntry: JournalEntry = {
+        id: crypto.randomUUID(),
+        date: new Date().toLocaleDateString(),
+        ...formData,
+        customMeasurements: customFields
+      } as JournalEntry;
+
+      const updated = [newEntry, ...entries];
+      setEntries(updated);
+      localStorage.setItem('neuroLift_journal', JSON.stringify(updated));
+    }
+    resetFormContent();
   };
 
   const handleChange = (field: keyof JournalEntry, value: string) => {
@@ -68,10 +106,24 @@ export const Journal: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Input Form */}
         <div className="lg:col-span-1 space-y-4">
-          <Card className="p-6 space-y-6 bg-zinc-900/80">
+          <Card className={`p-6 space-y-6 ${editingId ? 'ring-1 ring-teal-500/50 bg-teal-500/5' : 'bg-zinc-900/80'}`}>
             <div className="flex items-center justify-between">
-              <h3 className="font-semibold text-white">{t('journal_add_entry')}</h3>
-              <span className="text-xs text-zinc-500">{new Date().toLocaleDateString()}</span>
+              <div>
+                <h3 className="font-semibold text-white">
+                  {editingId ? 'Edit Entry' : t('journal_add_entry')}
+                </h3>
+                {editingId && (
+                  <button
+                    onClick={resetFormContent}
+                    className="text-[10px] text-teal-400 hover:text-teal-300 font-bold uppercase tracking-wider"
+                  >
+                    + Create New
+                  </button>
+                )}
+              </div>
+              <span className="text-xs text-zinc-500">
+                {editingId ? entries.find(e => e.id === editingId)?.date : new Date().toLocaleDateString()}
+              </span>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
@@ -93,9 +145,19 @@ export const Journal: React.FC = () => {
             {customFields.length > 0 && (
               <div className="space-y-2 pt-2 border-t border-zinc-800">
                 {customFields.map(f => (
-                  <div key={f.id} className="flex justify-between text-sm text-zinc-300 bg-zinc-900 p-2 rounded">
+                  <div key={f.id} className="flex justify-between items-center text-sm text-zinc-300 bg-zinc-900 p-2 rounded group">
                     <span>{f.name}</span>
-                    <span>{f.value} {f.unit}</span>
+                    <div className="flex items-center gap-2">
+                      <span>{f.value} {f.unit}</span>
+                      <button
+                        onClick={() => setCustomFields(customFields.filter(cf => cf.id !== f.id))}
+                        className="text-zinc-600 hover:text-red-400 transition-colors"
+                      >
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -143,7 +205,7 @@ export const Journal: React.FC = () => {
             )}
 
             <SpotlightButton onClick={handleSave} className="w-full justify-center mt-4">
-              {t('save')}
+              {editingId ? 'Update Entry' : t('save')}
             </SpotlightButton>
           </Card>
         </div>
@@ -156,7 +218,25 @@ export const Journal: React.FC = () => {
             </div>
           ) : (
             entries.map(entry => (
-              <div key={entry.id} className="p-5 rounded-xl border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-900 transition-all">
+              <div
+                key={entry.id}
+                onClick={() => handleSelectEntry(entry)}
+                className={`p-5 rounded-xl border transition-all cursor-pointer group relative ${editingId === entry.id
+                    ? 'border-teal-500 bg-teal-500/5 shadow-[0_0_20px_rgba(20,184,166,0.1)]'
+                    : 'border-zinc-800 bg-zinc-900/30 hover:bg-zinc-900 hover:border-zinc-700'
+                  }`}
+              >
+                {/* Delete button */}
+                <button
+                  onClick={(e) => handleDeleteEntry(e, entry.id)}
+                  className="absolute top-4 right-4 p-2 rounded-lg bg-zinc-800/50 text-zinc-500 hover:bg-red-500/10 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all z-10"
+                  title="Delete entry"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                </button>
+
                 <div className="flex justify-between items-center mb-4 border-b border-zinc-800 pb-2">
                   <span className="text-teal-400 font-mono font-bold">{entry.date}</span>
                   {entry.weight && <span className="text-white font-bold">{entry.weight} kg</span>}
@@ -174,6 +254,12 @@ export const Journal: React.FC = () => {
                     </div>
                   ))}
                 </div>
+                {editingId === entry.id && (
+                  <div className="mt-4 flex items-center gap-2 text-[10px] text-teal-400 font-bold uppercase tracking-widest">
+                    <div className="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse"></div>
+                    Currently Editing
+                  </div>
+                )}
               </div>
             ))
           )}
