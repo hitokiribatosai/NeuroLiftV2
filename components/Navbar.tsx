@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Language, MuscleGroup } from '../types';
-import { useTheme } from '../contexts/ThemeContext';
 
 interface NavbarProps {
   currentView: string;
@@ -10,8 +9,8 @@ interface NavbarProps {
 
 export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) => {
   const [scrolled, setScrolled] = useState(false);
+  const [isLangOpen, setIsLangOpen] = useState(false);
   const { language, setLanguage, t, dir } = useLanguage();
-  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -20,6 +19,20 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) =
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (!target.closest('.lang-dropdown-container')) {
+        setIsLangOpen(false);
+      }
+    };
+    if (isLangOpen) {
+      document.addEventListener('click', handleClickOutside);
+    }
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, [isLangOpen]);
 
   const navItems = [
     { id: 'home', label: t('nav_home') },
@@ -30,7 +43,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) =
   ];
 
   return (
-    <nav className={`fixed top-0 z-50 w-full transition-all duration-300 ${scrolled ? 'bg-white/80 dark:bg-[#0a0a0a]/80 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800 shadow-sm' : 'bg-transparent'}`} dir={dir}>
+    <nav className={`fixed top-0 z-50 w-full transition-all duration-300 ${scrolled ? 'bg-[#0a0a0a]/80 backdrop-blur-md border-b border-zinc-800 shadow-sm' : 'bg-transparent'}`} dir={dir}>
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
         {/* Logo */}
         <div className="flex shrink-0 items-center gap-2 cursor-pointer" onClick={() => setCurrentView('home')}>
@@ -39,13 +52,13 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) =
 
         {/* Navigation Wrapper */}
         <div className="flex flex-1 items-center justify-end gap-2 sm:gap-6">
-          {/* Navigation Items - Scrollable if needed */}
-          <div className="flex items-center gap-4 sm:gap-6 text-sm font-bold text-zinc-500 dark:text-zinc-400 overflow-x-auto whitespace-nowrap scrollbar-hide py-1 px-2">
+          {/* Navigation Items */}
+          <div className="flex items-center gap-4 sm:gap-6 text-sm font-bold text-zinc-400 overflow-x-auto whitespace-nowrap scrollbar-hide py-1 px-2">
             {navItems.map((item) => (
               <button
                 key={item.id}
                 onClick={() => setCurrentView(item.id)}
-                className={`transition-colors hover:text-teal-600 dark:hover:text-white shrink-0 uppercase tracking-widest text-[10px] sm:text-xs ${currentView === item.id ? 'text-teal-600 dark:text-teal-400' : ''}`}
+                className={`transition-colors hover:text-white shrink-0 uppercase tracking-widest text-[10px] sm:text-xs ${currentView === item.id ? 'text-teal-400' : ''}`}
               >
                 {item.label}
               </button>
@@ -53,37 +66,24 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) =
           </div>
 
           {/* Controls - Fixed to right side */}
-          <div className="flex shrink-0 items-center gap-2 sm:gap-3 border-l border-zinc-200 dark:border-zinc-800 pl-3 sm:pl-6 ml-2">
-            {/* Theme Toggle */}
-            <button
-              onClick={toggleTheme}
-              className="p-2 sm:p-2.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/50 text-zinc-500 dark:text-zinc-400 hover:text-teal-600 dark:hover:text-teal-400 transition-all shadow-sm hover:shadow-md"
-              aria-label="Toggle Theme"
-            >
-              {theme === 'light' ? (
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                </svg>
-              ) : (
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M14 12a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-              )}
-            </button>
+          <div className="flex shrink-0 items-center gap-2 sm:gap-3 border-l border-zinc-800 pl-3 sm:pl-6 ml-2">
 
             {/* Language Switcher */}
-            <div className="relative group hidden sm:block">
-              <button className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/50 text-[10px] font-black text-zinc-500 dark:text-zinc-400 uppercase tracking-widest hover:text-teal-600 dark:hover:text-white hover:border-zinc-300 dark:hover:border-zinc-700 transition-all shadow-sm">
+            <div className="relative lang-dropdown-container hidden sm:block">
+              <button
+                onClick={(e) => { e.stopPropagation(); setIsLangOpen(!isLangOpen); }}
+                className={`flex items-center gap-1.5 px-3 py-2.5 rounded-xl border transition-all shadow-sm text-[10px] font-black uppercase tracking-widest ${isLangOpen ? 'bg-zinc-800 border-zinc-700 text-white' : 'bg-zinc-900/50 border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700'}`}
+              >
                 {language}
-                <svg className="w-3 h-3 text-zinc-400 dark:text-zinc-600 group-hover:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 9l-7 7-7-7" /></svg>
+                <svg className={`w-3 h-3 text-zinc-600 transition-transform duration-300 ${isLangOpen ? 'rotate-180 text-teal-400' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 9l-7 7-7-7" /></svg>
               </button>
 
-              <div className="absolute top-full mt-2 right-0 w-32 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl overflow-hidden opacity-0 -translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-300 shadow-2xl z-[100]">
+              <div className={`absolute top-full mt-2 right-0 w-32 bg-zinc-950 border border-zinc-800 rounded-2xl overflow-hidden transition-all duration-200 shadow-2xl z-[100] ${isLangOpen ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 -translate-y-2 pointer-events-none'}`}>
                 {(['en', 'fr', 'ar'] as Language[]).map((lang) => (
                   <button
                     key={lang}
-                    onClick={() => setLanguage(lang)}
-                    className={`w-full px-5 py-3 text-left text-[10px] font-black uppercase tracking-widest transition-colors ${language === lang ? 'text-teal-600 bg-teal-50 dark:bg-teal-500/10' : 'text-zinc-500 hover:bg-zinc-50 dark:hover:bg-zinc-900'}`}
+                    onClick={() => { setLanguage(lang); setIsLangOpen(false); }}
+                    className={`w-full px-5 py-3 text-left text-[10px] font-black uppercase tracking-widest transition-colors ${language === lang ? 'text-teal-400 bg-teal-500/10' : 'text-zinc-500 hover:bg-zinc-900 hover:text-zinc-300'}`}
                   >
                     {lang === 'en' ? 'English' : lang === 'fr' ? 'Français' : 'العربية'}
                   </button>
@@ -96,7 +96,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) =
               <select
                 value={language}
                 onChange={(e) => setLanguage(e.target.value as Language)}
-                className="appearance-none bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-[10px] font-black text-teal-600 dark:text-teal-400 uppercase tracking-widest px-4 py-2 rounded-xl pr-9 focus:outline-none focus:border-teal-500 shadow-sm"
+                className="appearance-none bg-zinc-900 border border-zinc-800 text-[10px] font-black text-teal-400 uppercase tracking-widest px-4 py-2 rounded-xl pr-9 focus:outline-none focus:border-teal-500 shadow-sm"
               >
                 <option value="en">EN</option>
                 <option value="fr">FR</option>
