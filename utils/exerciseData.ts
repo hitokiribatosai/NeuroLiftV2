@@ -10,6 +10,7 @@ export const getLocalizedMuscleName = (muscle: string, lang: Language): string =
     "Shoulders": { en: "Shoulders", fr: "Épaules", ar: "الأكتاف" },
     "Biceps": { en: "Biceps", fr: "Biceps", ar: "البايسبس" },
     "Triceps": { en: "Triceps", fr: "Triceps", ar: "الترايسبس" },
+    "Forearms": { en: "Forearms", fr: "Avant-bras", ar: "الساعدين" },
     "Glutes": { en: "Glutes", fr: "Fessiers", ar: "البنش" },
     "Core": { en: "Core", fr: "Abdominaux", ar: "عضلات البطن" },
     "Full Body": { en: "Full Body", fr: "Corps Complet", ar: "كامل الجسم" }
@@ -245,6 +246,25 @@ export const getExerciseDatabase = (lang: Language): ExerciseDatabase => {
         { en: "Bench Dips", fr: "Dips Banc", ar: "غطس بنش" },
         { en: "Tiger Bend Push-ups", fr: "Tiger Bend Push-ups", ar: "ضغط تايجر بند" },
         { en: "Tricep Extensions (Floor)", fr: "Extension Sol", ar: "تراي أرضي" }
+      ]
+    },
+    "Forearms": {
+      weightlifting: [
+        { en: "Barbell Wrist Curls", fr: "Flexion Poignets Barre", ar: "ثني الرسغ بالبار" },
+        { en: "Dumbbell Wrist Curls", fr: "Flexion Poignets Haltères", ar: "ثني الرسغ بالدمبل" },
+        { en: "Barbell Reverse Curls", fr: "Curl Inversé Barre", ar: "تبادل بايسبس معكوس بالبار" },
+        { en: "Hammer Curls", fr: "Curl Marteau", ar: "بايسبس مطرقة" },
+        { en: "Behind the Back Barbell Wrist Curls", fr: "Flexion Poignets Barre Derrière Dos", ar: "ثني الرسغ خلف الظهر" }
+      ],
+      cables: [
+        { en: "Cable Wrist Curls", fr: "Flexion Poignets Poulie", ar: "ثني الرسغ كابل" },
+        { en: "Cable Reverse Curls", fr: "Curl Inversé Poulie", ar: "تبادل بايسبس معكوس كابل" },
+        { en: "Cable Wrist Extension", fr: "Extension Poignets Poulie", ar: "تمديد الرسغ كابل" }
+      ],
+      bodyweight: [
+        { en: "Dead Hang", fr: "Suspension", ar: "تعليق حر" },
+        { en: "Fingertip Push-ups", fr: "Pompes sur les Doigts", ar: "ضغط على الأصابع" },
+        { en: "Towel Pull-ups", fr: "Tractions avec Serviette", ar: "عقلة بالفوطة" }
       ]
     },
     "Calves": {

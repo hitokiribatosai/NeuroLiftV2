@@ -163,6 +163,7 @@ export const Tracker: React.FC = () => {
       { id: 'Shoulders', path: 'M 70 80 Q 85 70 100 80 L 100 100 Q 85 110 70 100 Z M 200 80 Q 215 70 230 80 L 230 100 Q 215 110 200 100 Z' },
       { id: 'Quads', path: 'M 110 200 L 145 200 L 145 300 L 110 300 Z M 155 200 L 190 200 L 190 300 L 155 300 Z' },
       { id: 'Biceps', path: 'M 82 110 L 98 110 L 98 160 L 82 160 Z M 202 110 L 218 110 L 218 160 L 202 160 Z' },
+      { id: 'Forearms', path: 'M 82 165 L 98 165 L 95 200 L 85 200 Z M 202 165 L 218 165 L 215 200 L 205 200 Z' },
     ];
 
     const rearMuscles = [
@@ -171,6 +172,7 @@ export const Tracker: React.FC = () => {
       { id: 'Hamstrings', path: 'M 110 215 L 145 215 L 145 290 L 110 290 Z M 155 215 L 190 215 L 190 290 L 155 290 Z' },
       { id: 'Calves', path: 'M 115 300 L 140 300 L 140 370 L 115 370 Z M 160 300 L 185 300 L 185 370 L 160 370 Z' },
       { id: 'Triceps', path: 'M 75 105 L 90 105 L 90 155 L 75 155 Z M 210 105 L 225 105 L 225 155 L 210 155 Z' },
+      { id: 'Forearms', path: 'M 75 160 L 90 160 L 85 195 L 80 195 Z M 210 160 L 225 160 L 220 195 L 215 195 Z' },
     ];
 
     const Skeleton = ({ muscles, label }: { muscles: any[], label: string }) => (
