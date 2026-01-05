@@ -305,7 +305,9 @@ export const getExerciseDatabase = (lang: Language): ExerciseDatabase => {
         ],
         machines: [
           { en: "Leg Press Machine", fr: "Presse à Cuisses", ar: "ماكينة ضغط الساق" },
-          { en: "Hack Squat Machine", fr: "Hack Squat", ar: "ماكينة هاك سكوات" }
+          { en: "Hack Squat Machine", fr: "Hack Squat", ar: "ماكينة هاك سكوات" },
+          { en: "Pendulum Squat", fr: "Pendulum Squat", ar: "بندوليوم سكوات" },
+          { en: "Leg Extension Machine", fr: "Leg Extension Machine", ar: "ماكينة رفرفة أرجل أمامية" }
         ]
       },
       "Hamstrings": {
@@ -330,7 +332,9 @@ export const getExerciseDatabase = (lang: Language): ExerciseDatabase => {
         ],
         machines: [
           { en: "Lying Leg Curl Machine", fr: "Machine Leg Curl Couché", ar: "ماكينة رفرفة خلفي نائم" },
-          { en: "Seated Leg Curl Machine", fr: "Machine Leg Curl Assis", ar: "ماكينة رفرفة خلفي جالس" }
+          { en: "Seated Leg Curl Machine", fr: "Machine Leg Curl Assis", ar: "ماكينة رفرفة خلفي جالس" },
+          { en: "Standing Leg Curl Machine", fr: "Leg Curl Debout", ar: "ماكينة رفرفة خلفي واقف" },
+          { en: "Glute-Ham Raise Machine", fr: "Machine GHR", ar: "جهاز جي إتش آر" }
         ]
       },
       "Glutes": {
