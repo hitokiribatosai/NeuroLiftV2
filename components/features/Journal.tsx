@@ -3,9 +3,10 @@ import { useLanguage } from '../../contexts/LanguageContext';
 import { JournalEntry, CustomMeasurement, CompletedWorkout, ActiveExercise } from '../../types';
 import { Card } from '../ui/Card';
 import { SpotlightButton } from '../ui/SpotlightButton';
+import { getMuscleForExercise, getLocalizedMuscleName } from '../../utils/exerciseData';
 
 export const Journal: React.FC = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [entries, setEntries] = useState<JournalEntry[]>([]);
   const [formData, setFormData] = useState<Partial<JournalEntry>>({});
   const [customFields, setCustomFields] = useState<CustomMeasurement[]>([]);
@@ -13,6 +14,8 @@ export const Journal: React.FC = () => {
   const [newCustomField, setNewCustomField] = useState({ name: '', value: '', unit: 'cm' });
   const [editingId, setEditingId] = useState<string | null>(null);
   const [history, setHistory] = useState<CompletedWorkout[]>([]);
+  const [editingWorkoutId, setEditingWorkoutId] = useState<string | null>(null);
+  const [selectedMuscleChart, setSelectedMuscleChart] = useState<string>('Total');
 
   useEffect(() => {
     const saved = localStorage.getItem('neuroLift_journal');
@@ -37,6 +40,7 @@ export const Journal: React.FC = () => {
 
   const handleDeleteEntry = (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
+    if (!window.confirm(t('tracker_reset') + '?')) return;
     const updated = entries.filter(ent => ent.id !== id);
     setEntries(updated);
     localStorage.setItem('neuroLift_journal', JSON.stringify(updated));
@@ -89,6 +93,33 @@ export const Journal: React.FC = () => {
     }
   };
 
+  const handleDeleteWorkout = (id: string) => {
+    if (!window.confirm(t('tracker_reset') + '?')) return;
+    const updated = history.filter(w => w.id !== id);
+    setHistory(updated);
+    localStorage.setItem('neuroLift_history', JSON.stringify(updated));
+  };
+
+  const handleUpdateWorkoutSet = (workoutId: string, exIdx: number, setIdx: number, field: 'weight' | 'reps', val: number) => {
+    const updatedHistory = history.map(w => {
+      if (w.id === workoutId) {
+        const newExs = [...w.exercises];
+        const newSets = [...newExs[exIdx].sets];
+        (newSets[setIdx] as any)[field] = val;
+        newExs[exIdx].sets = newSets;
+
+        const newVolume = newExs.reduce((acc, ex) => {
+          return acc + ex.sets.reduce((sAcc, s) => s.completed ? sAcc + (s.weight * s.reps) : sAcc, 0);
+        }, 0);
+
+        return { ...w, exercises: newExs, totalVolume: newVolume };
+      }
+      return w;
+    });
+    setHistory(updatedHistory);
+    localStorage.setItem('neuroLift_history', JSON.stringify(updatedHistory));
+  };
+
   const handleShareWorkout = (exercises: ActiveExercise[]) => {
     try {
       const exerciseNames = exercises.map(ex => ex.name);
@@ -111,15 +142,38 @@ export const Journal: React.FC = () => {
 
     return (
       <div className="space-y-6">
-        <h3 className="text-xl font-black text-zinc-900 dark:text-white uppercase tracking-tight mb-4 flex items-center gap-3">
-          <span className="w-2 h-6 bg-teal-500 rounded-full"></span>
-          Workout Sessions
-        </h3>
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-xl font-black text-zinc-900 dark:text-white uppercase tracking-tight flex items-center gap-3">
+            <span className="w-2 h-6 bg-teal-500 rounded-full"></span>
+            Workout Sessions
+          </h3>
+        </div>
         {history.map((workout) => (
-          <Card key={workout.id} className="p-8 bg-white dark:bg-zinc-900/60 border-zinc-200 dark:border-zinc-800 rounded-[2.5rem] shadow-sm hover:shadow-md transition-all group overflow-hidden">
+          <Card key={workout.id} className="p-8 bg-white dark:bg-zinc-900/60 border-zinc-200 dark:border-zinc-800 rounded-[2.5rem] shadow-sm hover:shadow-md transition-all group overflow-hidden relative">
+            <div className="absolute top-6 right-6 flex gap-2 opacity-0 group-hover:opacity-100 transition-all">
+              <button
+                onClick={() => setEditingWorkoutId(editingWorkoutId === workout.id ? null : workout.id)}
+                className="p-2.5 rounded-xl bg-zinc-100 dark:bg-zinc-800 text-zinc-500 hover:text-teal-500 transition-colors shadow-sm"
+                title="Edit workout"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+              </button>
+              <button
+                onClick={() => handleDeleteWorkout(workout.id)}
+                className="p-2.5 rounded-xl bg-zinc-100 dark:bg-zinc-800 text-zinc-500 hover:text-rose-500 transition-colors shadow-sm"
+                title="Delete workout"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+              </button>
+            </div>
+
             <div className="flex justify-between items-start mb-6 pb-4 border-b border-zinc-100 dark:border-zinc-800">
               <div>
-                <h4 className="text-2xl font-black text-zinc-900 dark:text-white uppercase tracking-tighter mb-1">
+                <h4 className="text-2xl font-black text-zinc-900 dark:text-white uppercase tracking-tighter mb-1 pr-20">
                   {workout.name || t('tracker_summary')}
                 </h4>
                 <div className="flex gap-4 items-center">
@@ -136,17 +190,35 @@ export const Journal: React.FC = () => {
             </div>
 
             <div className="space-y-6 mb-8">
-              {workout.exercises.map((ex, idx) => (
-                <div key={idx} className="bg-zinc-50 dark:bg-zinc-950/40 p-5 rounded-3xl border border-zinc-100 dark:border-zinc-800/50">
+              {workout.exercises.map((ex, exIdx) => (
+                <div key={exIdx} className="bg-zinc-50 dark:bg-zinc-950/40 p-5 rounded-3xl border border-zinc-100 dark:border-zinc-800/50">
                   <div className="text-xs font-black text-teal-600 dark:text-teal-400 uppercase tracking-widest mb-3 flex items-center gap-2">
                     <span className="w-1 h-1 bg-teal-500 rounded-full"></span>
                     {ex.name}
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {ex.sets.filter(s => s.completed).map((set, sIdx) => (
-                      <div key={set.id} className="px-3 py-1.5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl text-[10px] font-bold shadow-sm">
+                      <div key={set.id} className="px-3 py-1.5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl text-[10px] font-bold shadow-sm flex items-center gap-1">
                         <span className="text-zinc-400 dark:text-zinc-600 mr-1">S{sIdx + 1}:</span>
-                        <span className="text-zinc-900 dark:text-white">{set.weight}kg × {set.reps}</span>
+                        {editingWorkoutId === workout.id ? (
+                          <div className="flex items-center gap-1">
+                            <input
+                              type="number"
+                              className="w-10 bg-zinc-100 dark:bg-black rounded px-1 outline-none text-teal-500"
+                              value={set.weight}
+                              onChange={(e) => handleUpdateWorkoutSet(workout.id, exIdx, sIdx, 'weight', parseInt(e.target.value) || 0)}
+                            />
+                            <span>kg ×</span>
+                            <input
+                              type="number"
+                              className="w-8 bg-zinc-100 dark:bg-black rounded px-1 outline-none text-teal-500"
+                              value={set.reps}
+                              onChange={(e) => handleUpdateWorkoutSet(workout.id, exIdx, sIdx, 'reps', parseInt(e.target.value) || 0)}
+                            />
+                          </div>
+                        ) : (
+                          <span className="text-zinc-900 dark:text-white">{set.weight}kg × {set.reps}</span>
+                        )}
                       </div>
                     ))}
                   </div>
@@ -182,7 +254,13 @@ export const Journal: React.FC = () => {
     <div className="mx-auto max-w-6xl px-6 py-24">
       <h2 className="text-4xl font-black text-zinc-900 dark:text-white mb-8 uppercase tracking-tight">{t('journal_title')}</h2>
 
-      <VolumeChart history={history} t={t} />
+      <VolumeChart
+        history={history}
+        t={t}
+        selectedMuscle={selectedMuscleChart}
+        onMuscleChange={setSelectedMuscleChart}
+        language={language}
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
         <div className="lg:col-span-1 space-y-8">
@@ -357,25 +435,52 @@ export const Journal: React.FC = () => {
 };
 
 // Extracted VolumeChart for cleaner organization
-const VolumeChart = ({ history, t }: { history: CompletedWorkout[], t?: any }) => {
+const VolumeChart = ({ history, t, selectedMuscle, onMuscleChange, language }: { history: CompletedWorkout[], t: any, selectedMuscle: string, onMuscleChange: (m: string) => void, language: any }) => {
+  const muscleGroups = ['Total', 'Chest', 'Back', 'Shoulders', 'Legs', 'Arms', 'Core'];
+
+  const getVolumeForPoint = (workout: CompletedWorkout) => {
+    if (selectedMuscle === 'Total') return workout.totalVolume;
+
+    return workout.exercises.reduce((acc, ex) => {
+      const muscle = getMuscleForExercise(ex.name);
+      if (muscle === selectedMuscle) {
+        return acc + ex.sets.reduce((sAcc, s) => s.completed ? sAcc + (s.weight * s.reps) : sAcc, 0);
+      }
+      return acc;
+    }, 0);
+  };
+
   const data = [...history].reverse().slice(-10);
   if (data.length < 2) return null;
 
-  const maxVolume = Math.max(...data.map(d => d.totalVolume), 1);
+  const chartData = data.map(d => getVolumeForPoint(d));
+  const maxVolume = Math.max(...chartData, 1);
   const chartHeight = 100;
   const chartWidth = 300;
   const padding = 20;
 
-  const points = data.map((d, i) => ({
+  const points = chartData.map((v, i) => ({
     x: (i / (data.length - 1)) * (chartWidth - padding * 2) + padding,
-    y: chartHeight - (d.totalVolume / maxVolume) * (chartHeight - padding * 2) - padding
+    y: chartHeight - (v / maxVolume) * (chartHeight - padding * 2) - padding
   }));
 
   const pathData = `M ${points.map(p => `${p.x},${p.y}`).join(' L ')}`;
 
   return (
     <Card className="p-8 bg-zinc-900/40 border-zinc-800 rounded-[2.5rem] shadow-sm mb-12">
-      <h3 className="text-[10px] font-black text-zinc-500 mb-8 uppercase tracking-[0.3em]">Volume Progression</h3>
+      <div className="flex justify-between items-center mb-8">
+        <h3 className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.3em]">Volume Progression</h3>
+        <select
+          value={selectedMuscle}
+          onChange={(e) => onMuscleChange(e.target.value)}
+          className="bg-black/40 border border-zinc-800 rounded-xl px-4 py-2 text-[10px] font-black uppercase tracking-widest text-teal-400 outline-none focus:border-teal-500 transition-all"
+        >
+          {muscleGroups.map(m => (
+            <option key={m} value={m}>{m === 'Total' ? 'Overall Volume' : getLocalizedMuscleName(m, language)}</option>
+          ))}
+        </select>
+      </div>
+
       <div className="relative w-full overflow-hidden">
         <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} className="w-full h-32 drop-shadow-[0_0_8px_rgba(20,184,166,0.2)]">
           {[0, 0.5, 1].map(v => (

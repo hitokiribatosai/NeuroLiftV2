@@ -22,12 +22,38 @@ interface ClockContextType {
 const ClockContext = createContext<ClockContextType | undefined>(undefined);
 
 export const ClockProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    const [mode, setMode] = useState<ClockMode>('stopwatch');
-    const [timerActive, setTimerActive] = useState(false);
-    const [duration, setDuration] = useState(0);
-    const [countdownRemaining, setCountdownRemaining] = useState<number | null>(null);
-    const [countdownInput, setCountdownInput] = useState('60');
-    const [laps, setLaps] = useState<number[]>([]);
+    const [mode, setMode] = useState<ClockMode>(() => {
+        const saved = localStorage.getItem('neuroLift_clock_mode');
+        return (saved as ClockMode) || 'stopwatch';
+    });
+    const [timerActive, setTimerActive] = useState(() => {
+        const saved = localStorage.getItem('neuroLift_clock_active');
+        return saved === 'true';
+    });
+    const [duration, setDuration] = useState(() => {
+        const saved = localStorage.getItem('neuroLift_clock_duration');
+        return saved ? parseInt(saved) : 0;
+    });
+    const [countdownRemaining, setCountdownRemaining] = useState<number | null>(() => {
+        const saved = localStorage.getItem('neuroLift_clock_countdown');
+        return saved ? parseInt(saved) : null;
+    });
+    const [countdownInput, setCountdownInput] = useState(() => {
+        return localStorage.getItem('neuroLift_clock_input') || '60';
+    });
+    const [laps, setLaps] = useState<number[]>(() => {
+        const saved = localStorage.getItem('neuroLift_clock_laps');
+        return saved ? JSON.parse(saved) : [];
+    });
+
+    useEffect(() => {
+        localStorage.setItem('neuroLift_clock_mode', mode);
+        localStorage.setItem('neuroLift_clock_active', timerActive.toString());
+        localStorage.setItem('neuroLift_clock_duration', duration.toString());
+        localStorage.setItem('neuroLift_clock_countdown', countdownRemaining?.toString() || '');
+        localStorage.setItem('neuroLift_clock_input', countdownInput);
+        localStorage.setItem('neuroLift_clock_laps', JSON.stringify(laps));
+    }, [mode, timerActive, duration, countdownRemaining, countdownInput, laps]);
 
     useEffect(() => {
         let interval: any;

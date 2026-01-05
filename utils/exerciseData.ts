@@ -472,3 +472,21 @@ export const getExerciseDatabase = (lang: Language): ExerciseDatabase => {
 
   return localizedDB;
 };
+
+export const getMuscleForExercise = (exerciseName: string): string => {
+  const db = getExerciseDatabase('en'); // Use 'en' as stable keys
+  for (const [muscle, subGroups] of Object.entries(db)) {
+    for (const subGroup of Object.values(subGroups)) {
+      const allExercises = [
+        ...subGroup.weightlifting,
+        ...subGroup.cables,
+        ...subGroup.bodyweight,
+        ...subGroup.machines
+      ];
+      if (allExercises.includes(exerciseName)) {
+        return muscle;
+      }
+    }
+  }
+  return 'Other';
+};

@@ -8,9 +8,17 @@ import { useClock } from '../../contexts/ClockContext';
 
 export const Tracker: React.FC = () => {
   const { t, language } = useLanguage();
-  const [phase, setPhase] = useState<'setup' | 'active' | 'summary'>('setup');
-  const [selectedMuscles, setSelectedMuscles] = useState<string[]>([]);
-  const [selectedExercises, setSelectedExercises] = useState<string[]>([]);
+  const [phase, setPhase] = useState<'setup' | 'selection' | 'active' | 'summary'>(() => {
+    return (localStorage.getItem('neuroLift_tracker_phase') as any) || 'setup';
+  });
+  const [selectedMuscles, setSelectedMuscles] = useState<string[]>(() => {
+    const saved = localStorage.getItem('neuroLift_tracker_muscles');
+    return saved ? JSON.parse(saved) : [];
+  });
+  const [selectedExercises, setSelectedExercises] = useState<string[]>(() => {
+    const saved = localStorage.getItem('neuroLift_tracker_selected_exercises');
+    return saved ? JSON.parse(saved) : [];
+  });
   const [tutorialExercise, setTutorialExercise] = useState<string | null>(null);
   const [plateCalcWeight, setPlateCalcWeight] = useState<number | null>(null); // This will now represent "Per Side" input
   const [barWeight, setBarWeight] = useState<number>(20);
@@ -19,7 +27,10 @@ export const Tracker: React.FC = () => {
 
 
   // Active Session State
-  const [activeExercises, setActiveExercises] = useState<ActiveExercise[]>([]);
+  const [activeExercises, setActiveExercises] = useState<ActiveExercise[]>(() => {
+    const saved = localStorage.getItem('neuroLift_tracker_active_exercises');
+    return saved ? JSON.parse(saved) : [];
+  });
   const [completedWorkout, setCompletedWorkout] = useState<CompletedWorkout | null>(null);
   const [restRemaining, setRestRemaining] = useState<number | null>(null);
 
@@ -82,6 +93,12 @@ export const Tracker: React.FC = () => {
     }
   }, []);
 
+  useEffect(() => {
+    localStorage.setItem('neuroLift_tracker_phase', phase);
+    localStorage.setItem('neuroLift_tracker_muscles', JSON.stringify(selectedMuscles));
+    localStorage.setItem('neuroLift_tracker_selected_exercises', JSON.stringify(selectedExercises));
+    localStorage.setItem('neuroLift_tracker_active_exercises', JSON.stringify(activeExercises));
+  }, [phase, selectedMuscles, selectedExercises, activeExercises]);
 
   const formatTime = (secs: number) => {
     const m = Math.floor(secs / 60);
@@ -174,6 +191,12 @@ export const Tracker: React.FC = () => {
 
     setCompletedWorkout(record);
     setPhase('summary');
+    // Clear persistence on completion
+    localStorage.removeItem('neuroLift_tracker_phase');
+    localStorage.removeItem('neuroLift_tracker_muscles');
+    localStorage.removeItem('neuroLift_tracker_selected_exercises');
+    localStorage.removeItem('neuroLift_tracker_active_exercises');
+    resetClock();
   };
 
   const reset = () => {
@@ -183,6 +206,12 @@ export const Tracker: React.FC = () => {
     setCompletedWorkout(null);
     setRestRemaining(null);
     setTimerActive(false);
+    // Clear persistence on reset
+    localStorage.removeItem('neuroLift_tracker_phase');
+    localStorage.removeItem('neuroLift_tracker_muscles');
+    localStorage.removeItem('neuroLift_tracker_selected_exercises');
+    localStorage.removeItem('neuroLift_tracker_active_exercises');
+    resetClock();
   };
 
   const resetCurrentTimer = () => {
