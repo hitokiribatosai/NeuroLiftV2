@@ -9,6 +9,7 @@ import { Clock } from './components/features/Clock';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { ClockProvider } from './contexts/ClockContext';
 import { ThemeProvider } from './contexts/ThemeContext';
+import { Analytics } from '@vercel/analytics/react';
 
 function App() {
   const [currentView, setCurrentView] = useState('home');
@@ -35,6 +36,7 @@ function App() {
             <main className="pt-16">
               {renderView()}
             </main>
+            <Analytics />
           </div>
         </ClockProvider>
       </LanguageProvider>
