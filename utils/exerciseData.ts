@@ -40,17 +40,17 @@ export const getExerciseDatabase = (lang: Language): ExerciseDatabase => {
     "Chest": {
       "Upper Chest": {
         weightlifting: [
-          { en: "Incline Barbell Bench Press", fr: "DC Incliné Barre", ar: "بنش برس مائل بالبار" },
           { en: "Incline Dumbbell Press", fr: "DC Incliné Haltères", ar: "بنش برس مائل بالدمبل" },
+          { en: "Incline Barbell Bench Press", fr: "DC Incliné Barre", ar: "بنش برس مائل بالبار" },
           { en: "Dumbbell Incline Fly", fr: "Écarté Incliné Haltères", ar: "تجميع مائل بالدمبل" },
           { en: "Incline Hammer Strength Press", fr: "Presse Inclinée Hammer", ar: "ضغط مائل هامر" },
           { en: "Reverse Grip BB Bench Press", fr: "DC Prise Inversée", ar: "بنش برس قبضة معكوسة" }
         ],
         cables: [
           { en: "Low-to-High Cable Fly", fr: "Poulie Bas en Haut", ar: "تجميع كابل من الأسفل" },
-          { en: "Single Arm Low Cable Fly", fr: "Poulie Unilatérale Bas", ar: "تجميع كابل فردي من الأسفل" },
-          { en: "Incline Cable Press", fr: "DC Incliné Poulie", ar: "ضغط مائل كابل" },
           { en: "Cable Incline Fly", fr: "Écarté Incliné Poulie", ar: "تجميع مائل كابل" },
+          { en: "Incline Cable Press", fr: "DC Incliné Poulie", ar: "ضغط مائل كابل" },
+          { en: "Single Arm Low Cable Fly", fr: "Poulie Unilatérale Bas", ar: "تجميع كابل فردي من الأسفل" },
           { en: "Cable Y-Raise (Upper Chest Focus)", fr: "Élévations en Y", ar: "رفرفة كابل Y" }
         ],
         bodyweight: [
@@ -60,8 +60,8 @@ export const getExerciseDatabase = (lang: Language): ExerciseDatabase => {
         ],
         machines: [
           { en: "Incline Machine Press", fr: "Presse Poitrine Inclinée", ar: "ماكينة ضغط مائل" },
-          { en: "Machine Incline Fly", fr: "Écarté Machine Incliné", ar: "ماكينة تجميع مائل" },
-          { en: "Smith Machine Incline Press", fr: "DC Incliné Smith", ar: "ضغط مائل سميث" }
+          { en: "Smith Machine Incline Press", fr: "DC Incliné Smith", ar: "ضغط مائل سميث" },
+          { en: "Machine Incline Fly", fr: "Écarté Machine Incliné", ar: "ماكينة تجميع مائل" }
         ]
       },
       "Middle Chest": {
@@ -74,9 +74,9 @@ export const getExerciseDatabase = (lang: Language): ExerciseDatabase => {
         ],
         cables: [
           { en: "Middle Cable Fly", fr: "Écarté Poulie Vis-à-vis", ar: "تجميع كابل مستوي" },
-          { en: "Single Arm Cable Press", fr: "DC Unilatéral Poulie", ar: "ضغط كابل فردي" },
-          { en: "Standing Cable Chest Press", fr: "DC Debout Poulie", ar: "ضغط صدر كابل واقف" },
           { en: "Cable Crossover (Middle)", fr: "Crossover Poulie", ar: "تجميع كابل متوسط" },
+          { en: "Standing Cable Chest Press", fr: "DC Debout Poulie", ar: "ضغط صدر كابل واقف" },
+          { en: "Single Arm Cable Press", fr: "DC Unilatéral Poulie", ar: "ضغط كابل فردي" },
           { en: "Flat Cable Bench Press", fr: "DC Couché Poulie", ar: "بنش برس كابل مستوي" }
         ],
         bodyweight: [
@@ -92,27 +92,27 @@ export const getExerciseDatabase = (lang: Language): ExerciseDatabase => {
       },
       "Lower Chest": {
         weightlifting: [
+          { en: "Weighted Dips (Chest Focus)", fr: "Dips Lestés", ar: "متوازي بأوزان للصدر" },
           { en: "Decline Barbell Bench Press", fr: "DC Décliné Barre", ar: "بنش برس مائل للأسفل بالبار" },
           { en: "Decline Dumbbell Press", fr: "DC Décliné Haltères", ar: "بنش برس مائل للأسفل دمبل" },
-          { en: "Weighted Dips (Chest Focus)", fr: "Dips Lestés", ar: "متوازي بأوزان للصدر" },
-          { en: "Dumbbell Pullover", fr: "Pull-over Haltère", ar: "بلوفر دمبل" },
-          { en: "Decline Hammer Strength Press", fr: "Presse Déclinée Hammer", ar: "ضغط مائل للأسفل هامر" }
+          { en: "Decline Hammer Strength Press", fr: "Presse Déclinée Hammer", ar: "ضغط مائل للأسفل هامر" },
+          { en: "Dumbbell Pullover", fr: "Pull-over Haltère", ar: "بلوفر دمبل" }
         ],
         cables: [
           { en: "High-to-Low Cable Fly", fr: "Poulie Haut en Bas", ar: "تجميع كابل من الأعلى" },
-          { en: "Single Arm High Cable Fly", fr: "Poulie Unilatérale Haut", ar: "تجميع كابل فردي علوي" },
           { en: "Decline Cable Fly", fr: "Écarté Décliné Poulie", ar: "تجميع مائل للأسفل كابل" },
+          { en: "Single Arm High Cable Fly", fr: "Poulie Unilatérale Haut", ar: "تجميع كابل فردي علوي" },
           { en: "Standing Decline Cable Press", fr: "Presse Déclinée Debout", ar: "ضغط مائل للأسفل كابل واقف" },
           { en: "Cable Pullover (Lower Chest)", fr: "Pull-over Poulie", ar: "بلوفر كابل" }
         ],
         bodyweight: [
-          { en: "Incline Push-ups", fr: "Pompes Inclinées", ar: "ضغط مائل" },
           { en: "Parallel Bar Dips", fr: "Dips Barres Parallèles", ar: "متوازي" },
+          { en: "Incline Push-ups", fr: "Pompes Inclinées", ar: "ضغط مائل" },
           { en: "Bench Dips", fr: "Dips Banc", ar: "غطس بنش" }
         ],
         machines: [
-          { en: "Decline Chest Press Machine", fr: "Presse Déclinée Machine", ar: "ماكينة ضغط مائل للأسفل" },
-          { en: "Machine Dip Station", fr: "Machine à Dips", ar: "ماكينة المتوازي" }
+          { en: "Machine Dip Station", fr: "Machine à Dips", ar: "ماكينة المتوازي" },
+          { en: "Decline Chest Press Machine", fr: "Presse Déclinée Machine", ar: "ماكينة ضغط مائل للأسفل" }
         ]
       }
     },
@@ -121,18 +121,19 @@ export const getExerciseDatabase = (lang: Language): ExerciseDatabase => {
         weightlifting: [
           { en: "Barbell Rows (Underhand)", fr: "Rowing Barre Supination", ar: "تجديف بالبار قبضة معكوسة" },
           { en: "Bent Over BB Row", fr: "Rowing Barre Pronation", ar: "تجديف بالبار" },
-          { en: "DB Pullover (Lat Focus)", fr: "Pull-over Haltère", ar: "بلوفر دمبل للمجنص" },
           { en: "One-Arm Dumbbell Row", fr: "Rowing Unilatéral Haltère", ar: "تجديف دمبل فردي" },
-          { en: "Meadows Rows", fr: "Rowing Meadows", ar: "تجديف ميدوز" }
+          { en: "Meadows Rows", fr: "Rowing Meadows", ar: "تجديف ميدوز" },
+          { en: "DB Pullover (Lat Focus)", fr: "Pull-over Haltère", ar: "بلوفر دمبل للمجنص" }
         ],
         cables: [
           { en: "Wide Grip Lat Pulldown", fr: "Tirage Large", ar: "سحب عالي قبضة واسعة" },
-          { en: "Straight Arm Pulldown", fr: "Pull-over Poulie Haute", ar: "سحب ذراع مستقيم" },
+          { en: "V-Bar Lat Pulldown", fr: "Tirage Triangle", ar: "سحب عالي قبضة ضيقة" },
           { en: "Single Arm Lat Pulldown", fr: "Tirage Unilatéral", ar: "سحب عالي فردي" },
           { en: "Underhand Cable Row", fr: "Rowing Bas Supination", ar: "تجديف كابل معكوس" },
-          { en: "V-Bar Lat Pulldown", fr: "Tirage Triangle", ar: "سحب عالي قبضة ضيقة" }
+          { en: "Straight Arm Pulldown", fr: "Pull-over Poulie Haute", ar: "سحب ذراع مستقيم" }
         ],
         bodyweight: [
+          { en: "Pull-ups", fr: "Tractions", ar: "تمرين العقلة" },
           { en: "Wide Grip Pull-ups", fr: "Tractions Prise Large", ar: "عقلة قبضة واسعة" },
           { en: "Chin-ups", fr: "Tractions Supination", ar: "عقلة قبضة معكوسة" },
           { en: "Neutral Grip Pull-ups", fr: "Tractions Prise Neutre", ar: "عقلة قبضة متوازية" }
@@ -152,10 +153,10 @@ export const getExerciseDatabase = (lang: Language): ExerciseDatabase => {
         ],
         cables: [
           { en: "Face Pulls", fr: "Face Pulls", ar: "سحب للوجه" },
-          { en: "Single Arm Rear Delt Fly", fr: "Oiseau Unilatéral Poulie", ar: "رفرفة خلفي فردي" },
           { en: "Rope Face Pull", fr: "Face Pull Corde", ar: "سحب للوجه بالحبل" },
-          { en: "Overhead Cable Face Pull", fr: "Face Pull Over-head", ar: "سحب للوجه علوي" },
-          { en: "Cable Shrugs", fr: "Shrugs Poulie", ar: "هزات أكتاف كابل" }
+          { en: "Cable Shrugs", fr: "Shrugs Poulie", ar: "هزات أكتاف كابل" },
+          { en: "Single Arm Rear Delt Fly", fr: "Oiseau Unilatéral Poulie", ar: "رفرفة خلفي فردي" },
+          { en: "Overhead Cable Face Pull", fr: "Face Pull Over-head", ar: "سحب للوجه علوي" }
         ],
         bodyweight: [
           { en: "Scapular Pull-ups", fr: "Tractions Scapulaires", ar: "عقلة لوح الكتف" },
@@ -163,29 +164,29 @@ export const getExerciseDatabase = (lang: Language): ExerciseDatabase => {
           { en: "Rear Delt Pushups", fr: "Pompes Deltoïde Postérieur", ar: "ضغط كتف خلفي" }
         ],
         machines: [
-          { en: "Upper Back Row Machine", fr: "Machine Rowing Haut", ar: "ماكينة تجديف علوي" },
-          { en: "Rear Delt Machine", fr: "Machine Oiseau", ar: "ماكينة كتف خلفي" }
+          { en: "Rear Delt Machine", fr: "Machine Oiseau", ar: "ماكينة كتف خلفي" },
+          { en: "Upper Back Row Machine", fr: "Machine Rowing Haut", ar: "ماكينة تجديف علوي" }
         ]
       },
       "Mid Back": {
         weightlifting: [
+          { en: "Bent Over BB Row", fr: "Rowing Barre Pronation", ar: "تجديف بالبار" },
           { en: "T-Bar Rows", fr: "Rowing T-Bar", ar: "تجديف تي بار" },
           { en: "Pendlay Rows", fr: "Rowing Pendlay", ar: "تجديف بيندلاي" },
-          { en: "Yates Rows", fr: "Rowing Yates", ar: "تجديف ييتس" },
-          { en: "Seal Row", fr: "Rowing Seal", ar: "تجديف سيل" },
-          { en: "Dumbbell Seated Row", fr: "Rowing Haltères Assis", ar: "تجديف بالدمبل جالس" }
+          { en: "One-Arm Dumbbell Row", fr: "Rowing Unilatéral Haltère", ar: "تجديف دمبل فردي" },
+          { en: "Seal Row", fr: "Rowing Seal", ar: "تجديف سيل" }
         ],
         cables: [
           { en: "Seated Cable Rows", fr: "Rowing Poulie Basse", ar: "تجديف كابل جالس" },
-          { en: "Single Arm Seated Row", fr: "Rowing Unilatéral Poulie", ar: "تجديف كابل فردي جالس" },
           { en: "Neutral Grip Cable Row", fr: "Rowing Prise Neutre", ar: "تجديف كابل قبضة متوازية" },
+          { en: "Single Arm Seated Row", fr: "Rowing Unilatéral Poulie", ar: "تجديف كابل فردي جالس" },
           { en: "Standing Cable Row", fr: "Rowing Debout Poulie", ar: "تجديف كابل واقف" },
           { en: "Cable Face Away Row", fr: "Rowing Inversé Poulie", ar: "تجديف كابل عكسي" }
         ],
         bodyweight: [
           { en: "Inverted Rows", fr: "Tractions Australiennes", ar: "تجديف مقلوب" },
-          { en: "Superman", fr: "Superman", ar: "تمرين سوبرمان" },
-          { en: "Bodyweight Row (Rings)", fr: "Traction Anneaux", ar: "تجديف بوزن الجسم حلقات" }
+          { en: "Bodyweight Row (Rings)", fr: "Traction Anneaux", ar: "تجديف بوزن الجسم حلقات" },
+          { en: "Superman", fr: "Superman", ar: "تمرين سوبرمان" }
         ],
         machines: [
           { en: "Seated Row Machine", fr: "Machine Rowing Assis", ar: "ماكينة تجديف جالس" },
@@ -196,16 +197,16 @@ export const getExerciseDatabase = (lang: Language): ExerciseDatabase => {
         weightlifting: [
           { en: "Deadlifts", fr: "Soulevé de Terre", ar: "رفعة مميتة" },
           { en: "Rack Pulls", fr: "Rack Pulls", ar: "راك بول" },
+          { en: "Stiff Leg Deadlift", fr: "DL Jambes Tendues", ar: "رفعة أرجل مستقيمة" },
           { en: "Good Mornings", fr: "Good Mornings", ar: "جود مورنينج" },
-          { en: "Straight Leg Deadlift", fr: "Soulevé de Terre Jambes Tendues", ar: "رفعة مميتة أرجل مستقيمة" },
           { en: "Snatch Grip DL", fr: "Deadlift Prise Large", ar: "رفعة مميتة قبضة واسعة" }
         ],
         cables: [
           { en: "Cable Good Morning", fr: "Good Morning Poulie", ar: "جود مورنينج كابل" },
           { en: "Cable Deadlift", fr: "Deadlift Poulie", ar: "رفعة مميتة كابل" },
           { en: "Cable Pull-through", fr: "Pull-through Poulie", ar: "سحب كابل خلفي" },
-          { en: "Single Leg Cable DL", fr: "Deadlift Unilatéral Poulie", ar: "رفعة مميتة فردية كابل" },
-          { en: "Cable Back Extension", fr: "Banc à Lombaire Poulie", ar: "تمديد الظهر كابل" }
+          { en: "Cable Back Extension", fr: "Banc à Lombaire Poulie", ar: "تمديد الظهر كابل" },
+          { en: "Single Leg Cable DL", fr: "Deadlift Unilatéral Poulie", ar: "رفعة مميتة فردية كابل" }
         ],
         bodyweight: [
           { en: "Hyper-extensions", fr: "Extensions au Banc", ar: "تمديد الظهر" },
@@ -224,8 +225,8 @@ export const getExerciseDatabase = (lang: Language): ExerciseDatabase => {
           { en: "Barbell Overhead Press", fr: "Overhead Press Barre", ar: "ضغط أكتاف بالبار" },
           { en: "Dumbbell Shoulder Press", fr: "Overhead Press Haltères", ar: "ضغط أكتاف بالدمبل" },
           { en: "Arnold Press", fr: "Développé Arnold", ar: "ضغط أرنولد" },
-          { en: "Dumbbell Front Raise", fr: "Élévations Frontales Haltères", ar: "رفرفة أمامي بالدمبل" },
-          { en: "Smith Machine Press", fr: "Shoulder Press Smith", ar: "ضغط أكتاف سميث" }
+          { en: "Smith Machine Press", fr: "Shoulder Press Smith", ar: "ضغط أكتاف سميث" },
+          { en: "Dumbbell Front Raise", fr: "Élévations Frontales Haltères", ar: "رفرفة أمامي بالدمبل" }
         ],
         cables: [
           { en: "Cable Front Raise", fr: "Élévations Frontales Poulie", ar: "رفرفة أمامي كابل" },
@@ -245,14 +246,14 @@ export const getExerciseDatabase = (lang: Language): ExerciseDatabase => {
       "Side Delts": {
         weightlifting: [
           { en: "Dumbbell Lateral Raise", fr: "Élévations Latérales Haltères", ar: "رفرفة جانبي بالدمبل" },
+          { en: "Lean-Away DB Raise", fr: "Élévations Latérales Appui", ar: "رفرفة جانبي مائل" },
           { en: "Barbell Upright Row", fr: "Tirage Menton Barre", ar: "سحب للذقن بالبار" },
-          { en: "Behind the Back Raise", fr: "Élévations Arrière Dos", ar: "رفرفة خلف الظهر" },
-          { en: "Lean-Away DB Raise", fr: "Élévations Latérales Appui", ar: "رفرفة جانبي مائل" }
+          { en: "Behind the Back Raise", fr: "Élévations Arrière Dos", ar: "رفرفة خلف الظهر" }
         ],
         cables: [
           { en: "Cable Lateral Raise", fr: "Élévations Latérales Poulie", ar: "رفرفة جانبي كابل" },
-          { en: "Cable Upright Row", fr: "Tirage Menton Poulie", ar: "سحب للذقن كابل" },
           { en: "Single Arm Cable Lateral", fr: "Poulie Unilatérale Latérale", ar: "رفرفة جانبي فردي كابل" },
+          { en: "Cable Upright Row", fr: "Tirage Menton Poulie", ar: "سحب للذقن كابل" },
           { en: "Behind the Back Cable Raise", fr: "Poulie Arrière Dos", ar: "رفرفة جانبي خلف الظهر كابل" }
         ],
         bodyweight: [
@@ -294,13 +295,13 @@ export const getExerciseDatabase = (lang: Language): ExerciseDatabase => {
         cables: [
           { en: "Cable Squat", fr: "Squat Poulie", ar: "سكوات كابل" },
           { en: "Cable Leg Extension", fr: "Extension Poulie Jambe", ar: "رفرفة رجل كابل" },
-          { en: "Cable Lunge", fr: "Fentes Poulie", ar: "طعن كابل" },
           { en: "Cable Step Up", fr: "Step-up Poulie", ar: "صعود الدرج كابل" },
+          { en: "Cable Lunge", fr: "Fentes Poulie", ar: "طعن كابل" },
           { en: "Cable Sissy Squat", fr: "Sissy Squat Poulie", ar: "سيسي سكوات كابل" }
         ],
         bodyweight: [
-          { en: "Bodyweight Squats", fr: "Squats Poids de Corps", ar: "سكوات بوزن الجسم" },
           { en: "Pistol Squats", fr: "Squat Unilatéral", ar: "سكوات فردي" },
+          { en: "Bodyweight Squats", fr: "Squats Poids de Corps", ar: "سكوات بوزن الجسم" },
           { en: "Sissy Squats", fr: "Sissy Squat", ar: "سيسي سكوات" }
         ],
         machines: [
@@ -314,14 +315,14 @@ export const getExerciseDatabase = (lang: Language): ExerciseDatabase => {
         weightlifting: [
           { en: "Romanian Deadlift", fr: "Soulevé de Terre Roumain", ar: "رفعة رومانية" },
           { en: "Stiff Leg Deadlift", fr: "DL Jambes Tendues", ar: "رفعة أرجل مستقيمة" },
-          { en: "Lying Leg Curl (DB)", fr: "Leg Curl Haltère", ar: "رفرفة أرجل خلفي دمبل" },
           { en: "Sumo Deadlift", fr: "Deadlift Sumo", ar: "رفعة مميتة سومو" },
+          { en: "Lying Leg Curl (DB)", fr: "Leg Curl Haltère", ar: "رفرفة أرجل خلفي دمبل" },
           { en: "DB RDL", fr: "RDL Haltères", ar: "رفعة رومانية دمبل" }
         ],
         cables: [
           { en: "Cable Pull Through", fr: "Pull Through Poulie", ar: "سحب كابل خلفي" },
-          { en: "Cable SLDL", fr: "DL Unilatéral Poulie", ar: "سحب كابل أرجل مستقيمة" },
           { en: "Single Leg Cable Curl", fr: "Leg Curl Unilatéral Poulie", ar: "رفرفة فردية كابل" },
+          { en: "Cable SLDL", fr: "DL Unilatéral Poulie", ar: "سحب كابل أرجل مستقيمة" },
           { en: "Cable Hamstring Walkout", fr: "Marche Ischio Poulie", ar: "مشي الهمسترينج كابل" },
           { en: "Cable Glute-Ham Raise", fr: "Glute-Ham Raise Poulie", ar: "جي إتش آر كابل" }
         ],
@@ -347,8 +348,8 @@ export const getExerciseDatabase = (lang: Language): ExerciseDatabase => {
         ],
         cables: [
           { en: "Cable Glute Kickback", fr: "Kickback Poulie", ar: "ركلة كابل خلفية" },
-          { en: "Cable Abduction", fr: "Abduction Poulie", ar: "ابعاد الأرجل كابل" },
           { en: "Cable Pull Through", fr: "Cable Pull Through", ar: "سحب كابل خلفي" },
+          { en: "Cable Abduction", fr: "Abduction Poulie", ar: "ابعاد الأرجل كابل" },
           { en: "Cable Squat (Wide)", fr: "Squat Large Poulie", ar: "سكوات كابل واسع" },
           { en: "Cable Curtsy Lunge", fr: "Fentes Croisées Poulie", ar: "طعن منحني كابل" }
         ],
@@ -372,8 +373,8 @@ export const getExerciseDatabase = (lang: Language): ExerciseDatabase => {
         ],
         cables: [
           { en: "Cable Standing Calf Raise", fr: "Extensions Debout Poulie", ar: "سمانة كابل واقف" },
-          { en: "Cable Seated Calf Raise", fr: "Extensions Assis Poulie", ar: "سمانة كابل جالس" },
           { en: "Cable Single Leg Raise", fr: "Extensions Unilatérale Poulie", ar: "سمانة فردية كابل" },
+          { en: "Cable Seated Calf Raise", fr: "Extensions Assis Poulie", ar: "سمانة كابل جالس" },
           { en: "Cable Leg Press Calf Raise", fr: "Extensions Presse Poulie", ar: "سمانة ضغط كابل" },
           { en: "Cable Calf Stretch", fr: "Stretch Mollet Poulie", ar: "تمديد سمانة كابل" }
         ],
@@ -445,8 +446,8 @@ export const getExerciseDatabase = (lang: Language): ExerciseDatabase => {
           { en: "Cable Crunches", fr: "Crunch Poulie", ar: "طحن كابل" }
         ],
         bodyweight: [
-          { en: "Plank", fr: "Gainage", ar: "بلانك" },
           { en: "Hanging Leg Raises", fr: "Relevés de Jambes", ar: "رفع الأرجل معلق" },
+          { en: "Plank", fr: "Gainage", ar: "بلانك" },
           { en: "Ab Wheel Rollouts", fr: "Roulette Abdo", ar: "عجلة البطن" }
         ],
         machines: [
