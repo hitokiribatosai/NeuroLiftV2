@@ -285,7 +285,7 @@ export const Tracker: React.FC = () => {
     return (
       <div className="mx-auto max-w-5xl px-6 py-24 text-center">
         <div className="mb-16">
-          <h2 className="text-4xl md:text-5xl font-black text-zinc-900 dark:text-white mb-2 uppercase tracking-tight">{t('tracker_select_muscle')}</h2>
+          <h2 className="text-4xl md:text-5xl font-black text-white mb-2 uppercase tracking-tight">{t('tracker_select_muscle')}</h2>
           <div className="h-1.5 w-24 bg-teal-500 mx-auto rounded-full mb-8"></div>
 
           {selectedMuscles.length > 0 && (
@@ -337,8 +337,8 @@ export const Tracker: React.FC = () => {
       <div className="mx-auto max-w-4xl px-6 py-24">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 border-b border-zinc-200 dark:border-zinc-800 pb-8">
           <div>
-            <h2 className="text-3xl font-black text-zinc-900 dark:text-white uppercase tracking-tight mb-2">
-              {t('tracker_select_specific')}
+            <h2 className="text-3xl font-black text-white uppercase tracking-tight mb-2">
+              {t('tracker_summary')}
             </h2>
             <div className="flex flex-wrap gap-2">
               {selectedMuscles.map(m => (
@@ -358,8 +358,8 @@ export const Tracker: React.FC = () => {
               onClick={handleShareWorkout}
               disabled={selectedExercises.length === 0}
               className={`text-xs uppercase tracking-widest font-black flex items-center gap-2 transition-all px-3 py-1.5 rounded-xl border ${shareFeedback
-                ? 'bg-teal-500/20 border-teal-500 text-teal-600 dark:text-teal-400'
-                : 'text-zinc-500 hover:text-teal-600 dark:hover:text-white border-zinc-200 dark:border-zinc-800 hover:border-teal-500/50'
+                ? 'bg-teal-500/20 border-teal-500 text-teal-400'
+                : 'text-zinc-500 hover:text-white border-zinc-800 hover:border-teal-500/50'
                 }`}
             >
               <svg className={`w-4 h-4 ${shareFeedback ? 'text-teal-500' : 'text-zinc-500'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -379,7 +379,7 @@ export const Tracker: React.FC = () => {
           {selectedMuscles.map(majorMuscle => (
             <div key={majorMuscle} className="space-y-12">
               {/* Show Major Group Header */}
-              <h3 className="text-3xl font-black text-zinc-900 dark:text-white uppercase tracking-tighter flex items-center gap-4">
+              <h3 className="text-3xl font-black text-white uppercase tracking-tighter flex items-center gap-4">
                 <span className="w-4 h-12 bg-teal-500 rounded-full"></span>
                 {getLocalizedMuscleName(majorMuscle, language)}
               </h3>
@@ -387,7 +387,7 @@ export const Tracker: React.FC = () => {
               {/* Render functional sub-groups */}
               {Object.keys(exercisesByMuscle[majorMuscle] || {}).map(subGroup => (
                 <div key={subGroup} className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                  <h4 className="text-xl font-black text-zinc-800 dark:text-zinc-200 mb-8 uppercase tracking-widest flex items-center gap-4 ml-4">
+                  <h4 className="text-xl font-black text-zinc-200 mb-8 uppercase tracking-widest flex items-center gap-4 ml-4">
                     <span className="w-1.5 h-6 bg-teal-500/50 rounded-full"></span>
                     {getLocalizedMuscleName(subGroup, language)}
                   </h4>
@@ -401,7 +401,7 @@ export const Tracker: React.FC = () => {
                         <div key={category}>
                           <h5 className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.4em] mb-6 ml-1 flex items-center gap-4">
                             {category}
-                            <div className="h-px flex-1 bg-zinc-200 dark:bg-zinc-800"></div>
+                            <div className="h-px flex-1 bg-zinc-800"></div>
                           </h5>
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {exercises.map(ex => (
@@ -415,7 +415,7 @@ export const Tracker: React.FC = () => {
                                     onChange={() => toggleExercise(ex)}
                                     className="hidden"
                                   />
-                                  <div className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all ${selectedExercises.includes(ex) ? 'bg-teal-500 border-teal-500 text-white shadow-lg shadow-teal-500/20' : 'border-zinc-200 dark:border-zinc-700'}`}>
+                                  <div className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all ${selectedExercises.includes(ex) ? 'bg-teal-500 border-teal-500 text-white shadow-lg shadow-teal-500/20' : 'border-zinc-700'}`}>
                                     {selectedExercises.includes(ex) && <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 13l4 4L19 7" /></svg>}
                                   </div>
                                   <span className="text-sm font-black tracking-wide flex-1 uppercase">{ex}</span>
@@ -427,7 +427,7 @@ export const Tracker: React.FC = () => {
                                     e.stopPropagation();
                                     setTutorialExercise(ex);
                                   }}
-                                  className="absolute right-4 top-1/2 -translate-y-1/2 p-2.5 text-zinc-400 dark:text-zinc-600 hover:text-teal-600 dark:hover:text-teal-400 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all z-10"
+                                  className="absolute right-4 top-1/2 -translate-y-1/2 p-2.5 text-zinc-600 hover:text-teal-400 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all z-10"
                                   title={t('modal_watch_video')}
                                 >
                                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -447,16 +447,16 @@ export const Tracker: React.FC = () => {
           ))}
         </div>
 
-        <div className="sticky bottom-6 bg-white/80 dark:bg-black/80 backdrop-blur-2xl p-6 md:p-8 rounded-[2.5rem] border border-zinc-200 dark:border-zinc-800 shadow-2xl flex items-center justify-between z-40">
+        <div className="sticky bottom-6 bg-black/80 backdrop-blur-2xl p-6 md:p-8 rounded-[2.5rem] border border-zinc-800 shadow-2xl flex items-center justify-between z-40">
           <div className="hidden md:block">
-            <div className="text-[10px] text-zinc-400 dark:text-zinc-500 font-black uppercase tracking-[0.3em] mb-1">{selectedExercises.length} Exercises Picked</div>
-            <div className="text-sm text-zinc-600 dark:text-zinc-400 font-bold max-w-[400px] truncate">{selectedExercises.join(', ')}</div>
+            <div className="text-[10px] text-zinc-500 font-black uppercase tracking-[0.3em] mb-1">{selectedExercises.length} Exercises Picked</div>
+            <div className="text-sm text-zinc-400 font-bold max-w-[400px] truncate">{selectedExercises.join(', ')}</div>
           </div>
           <div className="flex gap-4 w-full md:w-auto">
             {activeExercises.length > 0 && (
               <button
                 onClick={() => setPhase('active')}
-                className="flex-1 md:flex-none px-8 py-5 text-xs font-black uppercase tracking-widest text-zinc-500 hover:text-teal-600 dark:text-zinc-400 dark:hover:text-white transition-colors border border-zinc-200 dark:border-zinc-800 rounded-2xl"
+                className="flex-1 md:flex-none px-8 py-5 text-xs font-black uppercase tracking-widest text-zinc-400 hover:text-white transition-colors border border-zinc-800 rounded-2xl"
               >
                 {t('tracker_back')}
               </button>
@@ -469,12 +469,12 @@ export const Tracker: React.FC = () => {
 
         {/* Tutorial Modal */}
         {tutorialExercise && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-zinc-950/20 dark:bg-black/80 backdrop-blur-md p-4 animate-in fade-in duration-300">
-            <div className="relative w-full max-w-xl rounded-[3rem] border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-10 shadow-3xl overflow-hidden">
+          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-in fade-in duration-300">
+            <div className="relative w-full max-w-xl rounded-[3rem] border border-zinc-800 bg-zinc-950 p-10 shadow-3xl overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-2 bg-teal-500"></div>
               <button
                 onClick={() => setTutorialExercise(null)}
-                className="absolute right-8 top-8 text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors"
+                className="absolute right-8 top-8 text-zinc-400 hover:text-white transition-colors"
                 title={t('modal_close')}
               >
                 <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -484,18 +484,18 @@ export const Tracker: React.FC = () => {
 
               <div className="flex items-center gap-4 mb-8">
                 <div className="w-3 h-10 bg-teal-500 rounded-full"></div>
-                <h3 className="text-2xl font-black text-zinc-900 dark:text-white uppercase tracking-tighter leading-tight pr-10">
+                <h3 className="text-2xl font-black text-white uppercase tracking-tighter leading-tight pr-10">
                   {tutorialExercise}
                 </h3>
               </div>
 
-              <div className="aspect-video w-full rounded-2xl bg-zinc-50 dark:bg-black/60 mb-10 overflow-hidden relative group border border-zinc-100 dark:border-zinc-800 shadow-inner">
+              <div className="aspect-video w-full rounded-2xl bg-black/60 mb-10 overflow-hidden relative group border border-zinc-800 shadow-inner">
                 <div className="absolute inset-0 bg-gradient-to-br from-teal-500/5 to-transparent"></div>
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
                   <div className="w-20 h-20 rounded-full bg-teal-500/10 dark:bg-teal-500/20 border-2 border-teal-500/30 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-700 backdrop-blur-sm shadow-xl">
-                    <svg className="h-10 w-10 text-teal-600 dark:text-teal-400 ml-1.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+                    <svg className="h-10 w-10 text-teal-400 ml-1.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
                   </div>
-                  <p className="text-xs text-zinc-400 dark:text-zinc-500 font-black uppercase tracking-[0.3em]">{t('modal_watch_video')}</p>
+                  <p className="text-xs text-zinc-500 font-black uppercase tracking-[0.3em]">{t('modal_watch_video')}</p>
                 </div>
               </div>
 
@@ -512,7 +512,7 @@ export const Tracker: React.FC = () => {
                 </a>
                 <button
                   onClick={() => setTutorialExercise(null)}
-                  className="w-full py-4 text-[10px] text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 font-black uppercase tracking-[0.3em] transition-all"
+                  className="w-full py-4 text-[10px] text-zinc-400 hover:text-zinc-300 font-black uppercase tracking-[0.3em] transition-all"
                 >
                   {t('modal_close')}
                 </button>
@@ -526,18 +526,18 @@ export const Tracker: React.FC = () => {
 
   if (phase === 'active') {
     return (
-      <div className="mx-auto max-w-4xl px-6 py-20 pb-40">
-        <div className="sticky top-20 z-40 bg-white/80 dark:bg-zinc-950/90 backdrop-blur-xl border border-zinc-200 dark:border-zinc-800 py-6 mb-12 px-8 rounded-[2.5rem] shadow-xl">
-          <div className="flex flex-wrap justify-between items-center gap-6">
+      <div className="mx-auto max-w-4xl px-4 md:px-6 py-20 pb-40">
+        <div className="sticky top-20 z-40 bg-zinc-950/90 backdrop-blur-xl border border-zinc-800 py-6 mb-12 px-4 md:px-8 rounded-[2.5rem] shadow-xl">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
             <div className="flex flex-col">
               <div className="flex items-center gap-4">
-                <div className="text-5xl font-mono font-black text-teal-600 dark:text-teal-400 leading-none tracking-tighter">
+                <div className="text-4xl md:text-5xl font-mono font-black text-teal-400 leading-none tracking-tighter">
                   {mode === 'stopwatch' ? formatTime(duration) : formatTime(countdownRemaining || 0)}
                 </div>
                 {/* Add Exercise Button */}
                 <button
                   onClick={() => setPhase('selection')}
-                  className="w-10 h-10 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-500 hover:text-teal-600 dark:hover:text-teal-400 transition-colors shadow-sm"
+                  className="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center text-zinc-500 hover:text-teal-400 transition-colors shadow-sm"
                   title={t('tracker_select_exercises')}
                 >
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" /></svg>
@@ -546,18 +546,18 @@ export const Tracker: React.FC = () => {
               <div className="flex items-center gap-3 mt-4">
                 <button
                   onClick={() => { setMode('stopwatch'); setTimerActive(false); }}
-                  className={`px-3 py-1.5 rounded-full font-black text-[10px] uppercase tracking-widest transition-all ${mode === 'stopwatch' ? 'bg-teal-500 text-white shadow-lg shadow-teal-500/30' : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-500 hover:bg-zinc-200 dark:hover:bg-zinc-700'}`}
+                  className={`px-3 py-1.5 rounded-full font-black text-[10px] uppercase tracking-widest transition-all ${mode === 'stopwatch' ? 'bg-teal-500 text-white shadow-lg shadow-teal-500/30' : 'bg-zinc-800 text-zinc-500 hover:bg-zinc-700'}`}
                 >
                   {t('clock_stopwatch')}
                 </button>
                 <button
                   onClick={() => { setMode('timer'); setTimerActive(false); }}
-                  className={`px-3 py-1.5 rounded-full font-black text-[10px] uppercase tracking-widest transition-all ${mode === 'timer' ? 'bg-teal-500 text-white shadow-lg shadow-teal-500/30' : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-500 hover:bg-zinc-200 dark:hover:bg-zinc-700'}`}
+                  className={`px-3 py-1.5 rounded-full font-black text-[10px] uppercase tracking-widest transition-all ${mode === 'timer' ? 'bg-teal-500 text-white shadow-lg shadow-teal-500/30' : 'bg-zinc-800 text-zinc-500 hover:bg-zinc-700'}`}
                 >
                   {t('clock_timer')}
                 </button>
                 {restRemaining !== null && (
-                  <div className="flex items-center gap-2 text-[10px] font-black text-orange-600 dark:text-orange-400 animate-pulse bg-orange-500/10 px-3 py-1 rounded-full shadow-sm">
+                  <div className="flex items-center gap-2 text-[10px] font-black text-orange-400 animate-pulse bg-orange-500/10 px-3 py-1 rounded-full shadow-sm">
                     <span className="w-1.5 h-1.5 bg-orange-500 rounded-full"></span>
                     {t('tracker_rest_timer')}: {restRemaining}s
                   </div>
@@ -572,7 +572,7 @@ export const Tracker: React.FC = () => {
                     type="number"
                     value={countdownInput}
                     onChange={e => setCountdownInput(e.target.value)}
-                    className="w-20 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl px-4 py-3 text-sm font-bold text-zinc-900 dark:text-white focus:border-teal-500/50 outline-none shadow-inner"
+                    className="w-20 bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3 text-sm font-bold text-white focus:border-teal-500/50 outline-none shadow-inner"
                     placeholder="Sec"
                   />
                   <button onClick={startTimerMode} className="px-4 py-3 bg-teal-600 rounded-xl text-[10px] text-white font-black uppercase tracking-widest shadow-lg shadow-teal-500/20">{t('timer_set')}</button>
@@ -592,26 +592,26 @@ export const Tracker: React.FC = () => {
               <button
                 onClick={mode === 'stopwatch' ? addLap : undefined}
                 disabled={!timerActive || mode !== 'stopwatch'}
-                className="p-4 rounded-2xl border-2 border-zinc-200 dark:border-zinc-800 text-zinc-500 dark:text-zinc-400 hover:text-teal-600 dark:hover:text-white disabled:opacity-30 bg-white dark:bg-transparent shadow-md"
+                className="p-4 rounded-2xl border-2 border-zinc-800 text-zinc-400 hover:text-white disabled:opacity-30 bg-transparent shadow-md"
               >
                 <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
               </button>
 
-              <button onClick={resetCurrentTimer} className="p-4 rounded-2xl border-2 border-zinc-200 dark:border-zinc-800 text-zinc-500 dark:text-zinc-400 hover:text-rose-500 transition-colors bg-white dark:bg-transparent shadow-md">
+              <button onClick={resetCurrentTimer} className="p-4 rounded-2xl border-2 border-zinc-800 text-zinc-400 hover:text-rose-500 transition-colors bg-transparent shadow-md">
                 <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
               </button>
 
-              <SpotlightButton variant="secondary" onClick={finishWorkout} className="h-[60px] px-8 text-xs font-black uppercase tracking-[0.2em] bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20 ml-2 shadow-lg shadow-rose-500/10">
+              <SpotlightButton variant="secondary" onClick={finishWorkout} className="h-[60px] px-6 md:px-8 text-[10px] md:text-xs font-black uppercase tracking-[0.2em] bg-rose-500/10 text-rose-400 border-rose-500/20 ml-0 md:ml-2 shadow-lg shadow-rose-500/10">
                 {t('tracker_finish')}
               </SpotlightButton>
             </div>
           </div>
 
           {mode === 'stopwatch' && laps.length > 0 && (
-            <div className="flex gap-3 overflow-x-auto mt-6 pb-2 scrollbar-hide border-t border-zinc-100 dark:border-zinc-800/50 pt-5">
+            <div className="flex gap-3 overflow-x-auto mt-6 pb-2 scrollbar-hide border-t border-zinc-900 pt-5">
               {laps.map((time, i) => (
-                <div key={i} className="flex-shrink-0 px-4 py-2 bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-full text-[11px] text-zinc-500 dark:text-zinc-400 font-mono shadow-sm">
-                  <span className="text-teal-600 dark:text-teal-400 font-black mr-2">LAP {laps.length - i}</span> {formatTime(time)}
+                <div key={i} className="flex-shrink-0 px-4 py-2 bg-zinc-900/50 border border-zinc-800 rounded-full text-[11px] text-zinc-400 font-mono shadow-sm">
+                  <span className="text-teal-400 font-black mr-2">LAP {laps.length - i}</span> {formatTime(time)}
                 </div>
               ))}
             </div>
@@ -620,13 +620,13 @@ export const Tracker: React.FC = () => {
 
         <div className="space-y-12">
           {activeExercises.map((ex, exIdx) => (
-            <Card key={exIdx} className="p-8 bg-zinc-50 dark:bg-zinc-900/40 border-zinc-200 dark:border-zinc-800 rounded-[3rem] shadow-sm overflow-hidden">
-              <h3 className="text-2xl font-black text-zinc-900 dark:text-white mb-8 flex items-center gap-4 uppercase tracking-tight">
+            <Card key={exIdx} className="p-8 bg-zinc-900/40 border-zinc-800 rounded-[3rem] shadow-sm overflow-hidden">
+              <h3 className="text-2xl font-black text-white mb-8 flex items-center gap-4 uppercase tracking-tight">
                 <span className="w-2.5 h-8 bg-teal-500 rounded-full shadow-lg shadow-teal-500/20"></span>
                 {ex.name}
               </h3>
               <div className="space-y-4">
-                <div className="grid grid-cols-12 gap-3 text-[10px] text-zinc-400 dark:text-zinc-500 mb-2 px-4 font-black uppercase tracking-[0.3em]">
+                <div className="grid grid-cols-12 gap-3 text-[10px] text-zinc-500 mb-2 px-4 font-black uppercase tracking-[0.3em]">
                   <div className="col-span-2 text-center">{t('tracker_header_set')}</div>
                   <div className="col-span-4 text-center">{t('tracker_header_kg')}</div>
                   <div className="col-span-4 text-center">{t('tracker_header_reps')}</div>
@@ -638,8 +638,8 @@ export const Tracker: React.FC = () => {
                   return (
                     <div key={set.id} className={`grid grid-cols-12 gap-3 items-center p-4 rounded-3xl transition-all duration-300 border-2 ${set.completed
                       ? 'bg-teal-500/5 border-teal-500 shadow-md transform scale-[1.01]'
-                      : 'bg-white dark:bg-black/40 border-zinc-100 dark:border-zinc-800 shadow-sm'}`}>
-                      <div className="col-span-2 text-zinc-400 dark:text-zinc-600 font-black font-mono text-lg text-center">{setIdx + 1}</div>
+                      : 'bg-black/40 border-zinc-800 shadow-sm'}`}>
+                      <div className="col-span-2 text-zinc-600 font-black font-mono text-lg text-center">{setIdx + 1}</div>
 
                       {isCardio ? (
                         <>
@@ -653,7 +653,7 @@ export const Tracker: React.FC = () => {
                                 const currentSeconds = (set.durationSeconds || 0) % 60;
                                 updateSet(exIdx, setIdx, 'durationSeconds', (mins * 60 + currentSeconds).toString());
                               }}
-                              className={`w-full bg-transparent text-center outline-none text-xl font-black font-mono ${set.completed ? 'text-teal-600 dark:text-teal-400' : 'text-zinc-900 dark:text-white'}`}
+                              className={`w-full bg-transparent text-center outline-none text-xl font-black font-mono ${set.completed ? 'text-teal-400' : 'text-white'}`}
                             />
                             <div className="text-[8px] text-center text-zinc-500 uppercase font-black">Min</div>
                           </div>
@@ -707,7 +707,7 @@ export const Tracker: React.FC = () => {
                       <div className="col-span-2 flex justify-center">
                         <button
                           onClick={() => toggleSetComplete(exIdx, setIdx)}
-                          className={`w-10 h-10 rounded-2xl border-2 flex items-center justify-center transition-all duration-300 ${set.completed ? 'bg-teal-500 border-teal-500 text-white shadow-lg shadow-teal-500/30 rotate-0' : 'border-zinc-200 dark:border-zinc-700 hover:border-teal-500/50'}`}
+                          className={`w-10 h-10 rounded-2xl border-2 flex items-center justify-center transition-all duration-300 ${set.completed ? 'bg-teal-500 border-teal-500 text-white shadow-lg shadow-teal-500/30 rotate-0' : 'border-zinc-700 hover:border-teal-500/50'}`}
                         >
                           {set.completed && <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 13l4 4L19 7" /></svg>}
                         </button>
