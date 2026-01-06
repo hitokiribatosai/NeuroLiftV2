@@ -2,9 +2,16 @@ import React, { useRef, useState } from 'react';
 
 interface SpotlightButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary';
+  spotlightColor?: string;
 }
 
-export const SpotlightButton: React.FC<SpotlightButtonProps> = ({ children, className = '', variant = 'primary', ...props }) => {
+export const SpotlightButton: React.FC<SpotlightButtonProps> = ({
+  children,
+  className = '',
+  variant = 'primary',
+  spotlightColor = 'rgba(45, 212, 191, 0.15)',
+  ...props
+}) => {
   const divRef = useRef<HTMLButtonElement>(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [opacity, setOpacity] = useState(0);
@@ -34,7 +41,7 @@ export const SpotlightButton: React.FC<SpotlightButtonProps> = ({ children, clas
   const baseClasses = "relative rounded-full px-8 py-3 text-sm font-medium transition-transform active:scale-95 overflow-hidden group";
   const variants = {
     primary: "bg-zinc-900 text-white border border-zinc-800 hover:border-zinc-700",
-    secondary: "bg-transparent text-zinc-400 hover:text-white border border-transparent hover:border-zinc-800"
+    secondary: "bg-transparent border border-transparent hover:border-zinc-800"
   };
 
   return (
@@ -51,12 +58,12 @@ export const SpotlightButton: React.FC<SpotlightButtonProps> = ({ children, clas
       <div
         className="pointer-events-none absolute -inset-px opacity-0 transition-opacity duration-300 group-hover:opacity-100"
         style={{
-          background: `radial-gradient(150px circle at ${position.x}px ${position.y}px, rgba(45, 212, 191, 0.15), transparent 80%)`,
+          background: `radial-gradient(150px circle at ${position.x}px ${position.y}px, ${spotlightColor}, transparent 80%)`,
         }}
       />
       <span className="relative z-10 flex items-center gap-2">{children}</span>
       {variant === 'primary' && (
-         <div className="absolute inset-0 -z-10 bg-gradient-to-r from-teal-500/20 to-cyan-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-teal-500/20 to-cyan-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl" />
       )}
     </button>
   );

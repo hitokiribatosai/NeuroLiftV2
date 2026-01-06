@@ -601,7 +601,12 @@ export const Tracker: React.FC = () => {
                 <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
               </button>
 
-              <SpotlightButton variant="secondary" onClick={finishWorkout} className="h-[60px] px-6 md:px-8 text-[10px] md:text-xs font-black uppercase tracking-[0.2em] bg-rose-500/10 text-rose-400 border-rose-500/20 ml-0 md:ml-2 shadow-lg shadow-rose-500/10">
+              <SpotlightButton
+                variant="secondary"
+                onClick={finishWorkout}
+                spotlightColor="rgba(244, 63, 94, 0.2)"
+                className="h-[60px] px-6 md:px-8 text-[10px] md:text-xs font-black uppercase tracking-[0.2em] bg-rose-500/10 text-rose-400 border-rose-500/20 ml-0 md:ml-2 shadow-lg shadow-rose-500/10"
+              >
                 {t('tracker_finish')}
               </SpotlightButton>
             </div>
