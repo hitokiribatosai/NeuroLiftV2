@@ -6,6 +6,7 @@ import { CompletedWorkout, ActiveExercise, WorkoutSet } from '../../types';
 import { getExerciseDatabase, getLocalizedMuscleName, getMuscleForExercise, getExerciseLinks } from '../../utils/exerciseData';
 import { useClock } from '../../contexts/ClockContext';
 import { playNotificationSound } from '../../utils/audio';
+import { ConfirmModal } from '../ui/ConfirmModal';
 
 export const Tracker: React.FC = () => {
   const { t, language } = useLanguage();
@@ -21,10 +22,11 @@ export const Tracker: React.FC = () => {
     return saved ? JSON.parse(saved) : [];
   });
   const [tutorialExercise, setTutorialExercise] = useState<string | null>(null);
-  const [plateCalcWeight, setPlateCalcWeight] = useState<number | null>(null); // This will now represent "Per Side" input
+  const [plateCalcWeight, setPlateCalcWeight] = useState<number | null>(null);
   const [barWeight, setBarWeight] = useState<number>(20);
   const [activeSetInfo, setActiveSetInfo] = useState<{ exIdx: number, setIdx: number } | null>(null);
   const [shareFeedback, setShareFeedback] = useState(false);
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
 
 
   // Active Session State
@@ -234,9 +236,7 @@ export const Tracker: React.FC = () => {
   };
 
   const resetCurrentTimer = () => {
-    if (window.confirm(t('timer_reset') + '?')) {
-      resetClock();
-    }
+    setShowResetConfirm(true);
   };
 
   const startTimerMode = () => {
@@ -849,6 +849,20 @@ export const Tracker: React.FC = () => {
             </div>
           </div>
         )}
+
+        <ConfirmModal
+          isOpen={showResetConfirm}
+          title={t('confirm_title')}
+          message={t('confirm_reset_timer')}
+          confirmLabel={t('confirm_yes')}
+          cancelLabel={t('confirm_cancel')}
+          onConfirm={() => {
+            resetClock();
+            setShowResetConfirm(false);
+          }}
+          onCancel={() => setShowResetConfirm(false)}
+          isDestructive={true}
+        />
       </div>
     );
   }

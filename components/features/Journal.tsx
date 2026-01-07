@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { JournalEntry, CustomMeasurement, CompletedWorkout, ActiveExercise, WorkoutSet } from '../../types';
 import { Card } from '../ui/Card';
 import { SpotlightButton } from '../ui/SpotlightButton';
 import { getMuscleForExercise, getLocalizedMuscleName } from '../../utils/exerciseData';
+import { ConfirmModal } from '../ui/ConfirmModal';
 
 export const Journal: React.FC = () => {
   const { t, language } = useLanguage();
@@ -16,6 +18,8 @@ export const Journal: React.FC = () => {
   const [history, setHistory] = useState<CompletedWorkout[]>([]);
   const [editingWorkoutId, setEditingWorkoutId] = useState<string | null>(null);
   const [selectedMuscleChart, setSelectedMuscleChart] = useState<string>('Total');
+  const [deleteConfirm, setDeleteConfirm] = useState<{ id: string, type: 'entry' | 'workout' } | null>(null);
+  const [shareFeedback, setShareFeedback] = useState(false);
 
   useEffect(() => {
     const saved = localStorage.getItem('neuroLift_journal');
@@ -40,11 +44,15 @@ export const Journal: React.FC = () => {
 
   const handleDeleteEntry = (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
-    if (!window.confirm(t('tracker_reset') + '?')) return;
+    setDeleteConfirm({ id, type: 'entry' });
+  };
+
+  const performDeleteEntry = (id: string) => {
     const updated = entries.filter(ent => ent.id !== id);
     setEntries(updated);
     localStorage.setItem('neuroLift_journal', JSON.stringify(updated));
     if (editingId === id) resetFormContent();
+    setDeleteConfirm(null);
   };
 
   const handleSave = () => {
@@ -94,10 +102,14 @@ export const Journal: React.FC = () => {
   };
 
   const handleDeleteWorkout = (id: string) => {
-    if (!window.confirm(t('tracker_reset') + '?')) return;
+    setDeleteConfirm({ id, type: 'workout' });
+  };
+
+  const performDeleteWorkout = (id: string) => {
     const updated = history.filter(w => w.id !== id);
     setHistory(updated);
     localStorage.setItem('neuroLift_history', JSON.stringify(updated));
+    setDeleteConfirm(null);
   };
 
   const handleUpdateWorkoutSet = (workoutId: string, exIdx: number, setIdx: number, field: keyof WorkoutSet, val: number) => {
@@ -125,8 +137,8 @@ export const Journal: React.FC = () => {
       const exerciseNames = exercises.map(ex => ex.name);
       const encoded = btoa(JSON.stringify(exerciseNames));
       const shareUrl = `${window.location.origin}${window.location.pathname}?share=${encoded}${window.location.hash}`;
-      navigator.clipboard.writeText(shareUrl);
-      alert(t('save') + '!');
+      setShareFeedback(true);
+      setTimeout(() => setShareFeedback(false), 2000);
     } catch (e) {
       console.error("Failed to generate share link", e);
     }
@@ -465,6 +477,30 @@ export const Journal: React.FC = () => {
           </div>
         </div>
       </div>
+      <ConfirmModal
+        isOpen={deleteConfirm !== null}
+        title={t('confirm_title')}
+        message={deleteConfirm?.type === 'workout' ? t('confirm_delete_workout') : t('confirm_delete_entry')}
+        confirmLabel={t('confirm_yes')}
+        cancelLabel={t('confirm_cancel')}
+        onConfirm={() => {
+          if (deleteConfirm?.type === 'workout') performDeleteWorkout(deleteConfirm.id);
+          else if (deleteConfirm?.type === 'entry') performDeleteEntry(deleteConfirm.id);
+        }}
+        onCancel={() => setDeleteConfirm(null)}
+        isDestructive={true}
+      />
+
+      {/* Share Toast */}
+      <AnimatePresence>
+        {shareFeedback && (
+          <div className="fixed bottom-32 left-1/2 -translate-x-1/2 z-[300] pointer-events-none">
+            <div className="bg-teal-500 text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-2xl shadow-teal-500/40 animate-in fade-in slide-in-from-bottom-4">
+              {t('save')}!
+            </div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

@@ -101,7 +101,14 @@ export const translations = {
     tracker_front: "Front",
     tracker_rear: "Rear",
     muscle_triceps: "Triceps",
-    clock_stopwatch: "Stopwatch"
+    clock_stopwatch: "Stopwatch",
+    confirm_title: "Are you sure?",
+    confirm_yes: "Yes, Proceed",
+    confirm_cancel: "Cancel",
+    confirm_delete_workout: "Do you really want to delete this workout session?",
+    confirm_delete_entry: "Do you really want to delete this journal entry?",
+    confirm_reset_timer: "Do you really want to reset the current timer?",
+    confirm_reset_workout: "Do you really want to reset your current setup?"
   },
   fr: {
     // Nav
@@ -199,7 +206,14 @@ export const translations = {
     tracker_front: "Avant",
     tracker_rear: "Arrière",
     muscle_triceps: "Triceps",
-    clock_stopwatch: "Chronomètre"
+    clock_stopwatch: "Chronomètre",
+    confirm_title: "Êtes-vous sûr ?",
+    confirm_yes: "Oui, Continuer",
+    confirm_cancel: "Annuler",
+    confirm_delete_workout: "Voulez-vous vraiment supprimer cette séance ?",
+    confirm_delete_entry: "Voulez-vous vraiment supprimer cette entrée ?",
+    confirm_reset_timer: "Voulez-vous vraiment réinitialiser le minuteur ?",
+    confirm_reset_workout: "Voulez-vous vraiment réinitialiser votre configuration ?"
   },
   ar: {
     // Nav
@@ -297,7 +311,14 @@ export const translations = {
     tracker_front: "الأمامي",
     tracker_rear: "الخلفي",
     muscle_triceps: "ترايسبس",
-    clock_stopwatch: "ساعة إيقاف"
+    clock_stopwatch: "ساعة إيقاف",
+    confirm_title: "هل أنت متأكد؟",
+    confirm_yes: "نعم، استمر",
+    confirm_cancel: "إلغاء",
+    confirm_delete_workout: "هل تريد حقًا حذف جلسة التمرين هذه؟",
+    confirm_delete_entry: "هل تريد حقًا حذف هذا الإدخال؟",
+    confirm_reset_timer: "هل تريد حقًا إعادة ضبط المؤقت؟",
+    confirm_reset_workout: "هل تريد حقًا إعادة ضبط إعداداتك؟"
   }
 };
 
