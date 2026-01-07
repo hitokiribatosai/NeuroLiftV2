@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Language, MuscleGroup } from '../types';
 
@@ -82,14 +83,21 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) =
 
         {/* Navigation Items - Scrollable Middle */}
         <div className="relative flex flex-1 items-center ms-4 overflow-hidden mask-linear-fade">
-          <div className="flex items-center gap-6 text-sm font-bold text-zinc-400 overflow-x-auto whitespace-nowrap scrollbar-hide py-1 px-2">
+          <div className="flex items-center gap-6 text-sm font-bold text-zinc-400 overflow-x-auto whitespace-nowrap scrollbar-hide py-3 px-2">
             {navItems.map((item) => (
               <button
                 key={item.id}
                 onClick={() => setCurrentView(item.id)}
-                className={`transition-colors hover:text-white shrink-0 uppercase tracking-widest text-[10px] ${currentView === item.id ? 'text-teal-400' : ''}`}
+                className={`relative py-1 transition-colors hover:text-white shrink-0 uppercase tracking-widest text-[10px] ${currentView === item.id ? 'text-teal-400' : ''}`}
               >
-                {item.label}
+                <span className="relative z-10">{item.label}</span>
+                {currentView === item.id && (
+                  <motion.div
+                    layoutId="navbar-indicator"
+                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-teal-500 rounded-full shadow-[0_0_8px_rgba(20,184,166,0.6)]"
+                    transition={{ type: 'spring', bounce: 0.25, duration: 0.5 }}
+                  />
+                )}
               </button>
             ))}
             <div className="w-4 shrink-0 sm:hidden"></div>
