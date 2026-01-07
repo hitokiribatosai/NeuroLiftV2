@@ -502,7 +502,7 @@ const VolumeChart = ({ history, t, selectedMuscle, onMuscleChange, language }: {
   const pathData = `M ${points.map(p => `${p.x},${p.y}`).join(' L ')}`;
 
   return (
-    <Card className="p-8 bg-zinc-900/40 border-zinc-800 rounded-[2.5rem] shadow-sm mb-12">
+    <Card className="p-8 bg-zinc-900/40 border-zinc-800 rounded-[2.5rem] shadow-sm mb-12 backdrop-blur-xl" style={{ WebkitBackdropFilter: 'blur(24px)' }}>
       <div className="flex justify-between items-center mb-8">
         <h3 className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.3em]">Volume Progression</h3>
         <select

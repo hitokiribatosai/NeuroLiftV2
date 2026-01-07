@@ -55,7 +55,7 @@ function App() {
     <ThemeProvider>
       <LanguageProvider>
         <ClockProvider>
-          <div className="min-h-screen bg-[#0a0a0a] text-white transition-colors duration-300 selection:bg-teal-500/30 selection:text-teal-200">
+          <div className="min-h-screen bg-[#0a0a0a] text-white transition-colors duration-300 selection:bg-teal-500/30 selection:text-teal-200 overflow-x-hidden">
             <Navbar currentView={currentView} setCurrentView={handleSetView} />
 
             <main className="pt-16">

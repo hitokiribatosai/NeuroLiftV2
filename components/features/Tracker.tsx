@@ -527,8 +527,8 @@ export const Tracker: React.FC = () => {
   if (phase === 'active') {
     return (
       <div className="mx-auto max-w-4xl px-4 md:px-6 py-20 pb-40">
-        <div className="sticky top-20 z-40 bg-zinc-950/90 backdrop-blur-xl border border-zinc-800 py-6 mb-12 px-4 md:px-8 rounded-[2.5rem] shadow-xl">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+        <div className="sticky top-0 z-50 -mx-6 mb-8 bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-zinc-900 px-6 py-6 ring-1 ring-white/5" style={{ WebkitBackdropFilter: 'blur(24px)' }}>
+          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="flex flex-col">
               <div className="flex items-center gap-4">
                 <div className="text-4xl md:text-5xl font-mono font-black text-teal-400 leading-none tracking-tighter">
@@ -733,7 +733,7 @@ export const Tracker: React.FC = () => {
 
         {/* Plate Calculator Modal */}
         {activeSetInfo !== null && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-zinc-950/20 dark:bg-black/90 backdrop-blur-md p-4 animate-in fade-in duration-300">
+          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-zinc-950/20 dark:bg-black/90 backdrop-blur-md p-4 animate-in fade-in duration-300" style={{ WebkitBackdropFilter: 'blur(12px)' }}>
             <div className="relative w-full max-w-md rounded-[3.5rem] border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-10 shadow-3xl">
               <div className="absolute top-0 left-0 w-full h-2 bg-teal-500"></div>
               <button
