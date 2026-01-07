@@ -5,6 +5,7 @@ import { Card } from '../ui/Card';
 import { CompletedWorkout, ActiveExercise, WorkoutSet } from '../../types';
 import { getExerciseDatabase, getLocalizedMuscleName, getMuscleForExercise } from '../../utils/exerciseData';
 import { useClock } from '../../contexts/ClockContext';
+import { playNotificationSound } from '../../utils/audio';
 
 export const Tracker: React.FC = () => {
   const { t, language } = useLanguage();
@@ -40,7 +41,8 @@ export const Tracker: React.FC = () => {
     timerActive, setTimerActive,
     duration, setDuration,
     countdownRemaining,
-    countdownInput, setCountdownInput,
+    countdownMinutes, setCountdownMinutes,
+    countdownSeconds, setCountdownSeconds,
     laps, addLap,
     resetClock,
     startTimer
@@ -56,6 +58,7 @@ export const Tracker: React.FC = () => {
       interval = setInterval(() => setRestRemaining(r => (r !== null ? r - 1 : null)), 1000);
     } else if (restRemaining === 0) {
       setRestRemaining(null);
+      playNotificationSound();
     }
     return () => clearInterval(interval);
   }, [restRemaining]);
@@ -237,9 +240,10 @@ export const Tracker: React.FC = () => {
   };
 
   const startTimerMode = () => {
-    const secs = parseInt(countdownInput);
-    if (!isNaN(secs) && secs > 0) {
-      startTimer(secs);
+    const mins = parseInt(countdownMinutes) || 0;
+    const secs = parseInt(countdownSeconds) || 0;
+    if (mins > 0 || secs > 0) {
+      startTimer(mins, secs);
     }
   };
 
@@ -567,15 +571,25 @@ export const Tracker: React.FC = () => {
 
             <div className="flex items-center gap-3">
               {mode === 'timer' && countdownRemaining === null && (
-                <div className="flex items-center gap-2 mr-2">
+                <div className="flex gap-2">
                   <input
                     type="number"
-                    value={countdownInput}
-                    onChange={e => setCountdownInput(e.target.value)}
-                    className="w-20 bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3 text-sm font-bold text-white focus:border-teal-500/50 outline-none shadow-inner"
-                    placeholder="Sec"
+                    value={countdownMinutes}
+                    onChange={(e) => setCountdownMinutes(e.target.value)}
+                    placeholder="Min"
+                    className="w-16 bg-zinc-50 dark:bg-black border border-zinc-200 dark:border-zinc-700 rounded-xl px-2 py-3 text-zinc-900 dark:text-white font-bold text-center"
                   />
-                  <button onClick={startTimerMode} className="px-4 py-3 bg-teal-600 rounded-xl text-[10px] text-white font-black uppercase tracking-widest shadow-lg shadow-teal-500/20">{t('timer_set')}</button>
+                  <span className="text-zinc-500 py-3">:</span>
+                  <input
+                    type="number"
+                    value={countdownSeconds}
+                    onChange={(e) => setCountdownSeconds(e.target.value)}
+                    placeholder="Sec"
+                    className="w-16 bg-zinc-50 dark:bg-black border border-zinc-200 dark:border-zinc-700 rounded-xl px-2 py-3 text-zinc-900 dark:text-white font-bold text-center"
+                  />
+                  <SpotlightButton onClick={startTimerMode} className="px-6 rounded-xl font-black uppercase text-[10px] tracking-widest">
+                    {t('timer_set')}
+                  </SpotlightButton>
                 </div>
               )}
 

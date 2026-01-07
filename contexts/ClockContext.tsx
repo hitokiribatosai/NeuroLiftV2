@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { playNotificationSound } from '../utils/audio';
 
 type ClockMode = 'stopwatch' | 'timer';
 
@@ -11,12 +12,14 @@ interface ClockContextType {
     setDuration: React.Dispatch<React.SetStateAction<number>>;
     countdownRemaining: number | null; // For timer (counts down)
     setCountdownRemaining: React.Dispatch<React.SetStateAction<number | null>>;
-    countdownInput: string;
-    setCountdownInput: (input: string) => void;
+    countdownMinutes: string;
+    setCountdownMinutes: (mins: string) => void;
+    countdownSeconds: string;
+    setCountdownSeconds: (secs: string) => void;
     laps: number[];
     addLap: () => void;
     resetClock: () => void;
-    startTimer: (secs: number) => void;
+    startTimer: (mins: number, secs: number) => void;
 }
 
 const ClockContext = createContext<ClockContextType | undefined>(undefined);
@@ -38,8 +41,11 @@ export const ClockProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         const saved = localStorage.getItem('neuroLift_clock_countdown');
         return saved ? parseInt(saved) : null;
     });
-    const [countdownInput, setCountdownInput] = useState(() => {
-        return localStorage.getItem('neuroLift_clock_input') || '60';
+    const [countdownMinutes, setCountdownMinutes] = useState(() => {
+        return localStorage.getItem('neuroLift_clock_mins') || '01';
+    });
+    const [countdownSeconds, setCountdownSeconds] = useState(() => {
+        return localStorage.getItem('neuroLift_clock_secs') || '00';
     });
     const [laps, setLaps] = useState<number[]>(() => {
         const saved = localStorage.getItem('neuroLift_clock_laps');
@@ -51,9 +57,10 @@ export const ClockProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         localStorage.setItem('neuroLift_clock_active', timerActive.toString());
         localStorage.setItem('neuroLift_clock_duration', duration.toString());
         localStorage.setItem('neuroLift_clock_countdown', countdownRemaining?.toString() || '');
-        localStorage.setItem('neuroLift_clock_input', countdownInput);
+        localStorage.setItem('neuroLift_clock_mins', countdownMinutes);
+        localStorage.setItem('neuroLift_clock_secs', countdownSeconds);
         localStorage.setItem('neuroLift_clock_laps', JSON.stringify(laps));
-    }, [mode, timerActive, duration, countdownRemaining, countdownInput, laps]);
+    }, [mode, timerActive, duration, countdownRemaining, countdownMinutes, countdownSeconds, laps]);
 
     useEffect(() => {
         let interval: any;
@@ -66,7 +73,7 @@ export const ClockProvider: React.FC<{ children: ReactNode }> = ({ children }) =
                 } else if (countdownRemaining === 0) {
                     setTimerActive(false);
                     setCountdownRemaining(null);
-                    alert("Time's up!");
+                    playNotificationSound();
                 }
             }, 1000);
         }
@@ -86,10 +93,13 @@ export const ClockProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         setTimerActive(false);
     };
 
-    const startTimer = (secs: number) => {
-        setCountdownRemaining(secs);
-        setTimerActive(true);
-        setMode('timer');
+    const startTimer = (mins: number, secs: number) => {
+        const totalSecs = (mins * 60) + secs;
+        if (totalSecs > 0) {
+            setCountdownRemaining(totalSecs);
+            setTimerActive(true);
+            setMode('timer');
+        }
     };
 
     return (
@@ -98,7 +108,8 @@ export const ClockProvider: React.FC<{ children: ReactNode }> = ({ children }) =
             timerActive, setTimerActive,
             duration, setDuration,
             countdownRemaining, setCountdownRemaining,
-            countdownInput, setCountdownInput,
+            countdownMinutes, setCountdownMinutes,
+            countdownSeconds, setCountdownSeconds,
             laps, addLap,
             resetClock,
             startTimer

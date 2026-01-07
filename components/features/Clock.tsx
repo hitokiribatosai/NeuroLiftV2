@@ -11,7 +11,8 @@ export const Clock: React.FC = () => {
         timerActive, setTimerActive,
         duration,
         countdownRemaining,
-        countdownInput, setCountdownInput,
+        countdownMinutes, setCountdownMinutes,
+        countdownSeconds, setCountdownSeconds,
         laps, addLap,
         resetClock,
         startTimer
@@ -23,7 +24,11 @@ export const Clock: React.FC = () => {
         return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
     };
 
-    const currentDisplay = mode === 'stopwatch' ? duration : (countdownRemaining !== null ? countdownRemaining : parseInt(countdownInput) || 0);
+    const currentDisplay = mode === 'stopwatch'
+        ? duration
+        : (countdownRemaining !== null
+            ? countdownRemaining
+            : (parseInt(countdownMinutes) * 60 + parseInt(countdownSeconds)) || 0);
 
     return (
         <div className="mx-auto max-w-4xl px-6 py-24 min-h-[70vh] flex flex-col items-center">
@@ -58,17 +63,38 @@ export const Clock: React.FC = () => {
 
                     <div className="mt-10 space-y-6">
                         {mode === 'timer' && countdownRemaining === null && (
-                            <div className="flex flex-col items-center gap-3">
-                                <label className="text-[10px] uppercase tracking-[0.2em] text-zinc-500 font-black">
-                                    {t('timer_set')} (Seconds)
-                                </label>
-                                <input
-                                    type="number"
-                                    value={countdownInput}
-                                    onChange={(e) => setCountdownInput(e.target.value)}
-                                    placeholder="60"
-                                    className="w-full max-w-[200px] bg-zinc-50 dark:bg-black border-2 border-zinc-100 dark:border-zinc-800 rounded-2xl px-6 py-4 text-center text-2xl text-zinc-900 dark:text-white font-black font-mono focus:border-teal-500 shadow-inner outline-none transition-all"
-                                />
+                            <div className="flex flex-col items-center gap-6 animate-in fade-in zoom-in duration-500">
+                                <div className="flex items-center gap-4">
+                                    <div className="flex flex-col items-center gap-2">
+                                        <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Mins</span>
+                                        <input
+                                            type="number"
+                                            min="0"
+                                            max="99"
+                                            value={countdownMinutes}
+                                            onChange={(e) => {
+                                                const val = e.target.value.slice(-2);
+                                                setCountdownMinutes(val.padStart(2, '0'));
+                                            }}
+                                            className="w-20 bg-zinc-50 dark:bg-black/50 border-2 border-zinc-100 dark:border-zinc-800 rounded-2xl py-4 text-center text-3xl text-zinc-900 dark:text-white font-black font-mono focus:border-teal-500 shadow-inner outline-none transition-all"
+                                        />
+                                    </div>
+                                    <span className="text-3xl font-black text-zinc-300 dark:text-zinc-700 mt-6">:</span>
+                                    <div className="flex flex-col items-center gap-2">
+                                        <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Secs</span>
+                                        <input
+                                            type="number"
+                                            min="0"
+                                            max="59"
+                                            value={countdownSeconds}
+                                            onChange={(e) => {
+                                                const val = e.target.value.slice(-2);
+                                                setCountdownSeconds(val.padStart(2, '0'));
+                                            }}
+                                            className="w-20 bg-zinc-50 dark:bg-black/50 border-2 border-zinc-100 dark:border-zinc-800 rounded-2xl py-4 text-center text-3xl text-zinc-900 dark:text-white font-black font-mono focus:border-teal-500 shadow-inner outline-none transition-all"
+                                        />
+                                    </div>
+                                </div>
                             </div>
                         )}
 
@@ -76,7 +102,7 @@ export const Clock: React.FC = () => {
                             <button
                                 onClick={() => {
                                     if (mode === 'timer' && countdownRemaining === null) {
-                                        startTimer(parseInt(countdownInput) || 60);
+                                        startTimer(parseInt(countdownMinutes) || 0, parseInt(countdownSeconds) || 0);
                                     } else {
                                         setTimerActive(!timerActive);
                                     }
