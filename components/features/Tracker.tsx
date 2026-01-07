@@ -12,7 +12,9 @@ import { generateId } from '../../utils/id';
 export const Tracker: React.FC = () => {
   const { t, language } = useLanguage();
   const [phase, setPhase] = useState<'setup' | 'selection' | 'active' | 'summary'>(() => {
-    return (localStorage.getItem('neuroLift_tracker_phase') as any) || 'setup';
+    const saved = localStorage.getItem('neuroLift_tracker_phase');
+    const validPhases = ['setup', 'selection', 'active', 'summary'];
+    return (saved && validPhases.includes(saved)) ? (saved as any) : 'setup';
   });
   const [selectedMuscles, setSelectedMuscles] = useState<string[]>(() => {
     const saved = localStorage.getItem('neuroLift_tracker_muscles');
@@ -354,7 +356,7 @@ export const Tracker: React.FC = () => {
             </div>
           </div>
           <div className="flex flex-wrap gap-2">
-            <button onClick={() => setPhase('setup')} className="text-xs text-zinc-500 hover:text-teal-600 dark:hover:text-white uppercase tracking-widest font-black flex items-center gap-2 transition-colors">
+            <button onClick={() => setPhase('setup')} className="text-xs text-zinc-400 hover:text-white uppercase tracking-widest font-black flex items-center gap-2 transition-colors">
               <svg className="w-4 h-4 text-teal-50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
               {t('tracker_back')}
             </button>
