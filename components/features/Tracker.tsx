@@ -3,7 +3,7 @@ import { useLanguage } from '../../contexts/LanguageContext';
 import { SpotlightButton } from '../ui/SpotlightButton';
 import { Card } from '../ui/Card';
 import { CompletedWorkout, ActiveExercise, WorkoutSet } from '../../types';
-import { getExerciseDatabase, getLocalizedMuscleName, getMuscleForExercise } from '../../utils/exerciseData';
+import { getExerciseDatabase, getLocalizedMuscleName, getMuscleForExercise, getExerciseLinks } from '../../utils/exerciseData';
 import { useClock } from '../../contexts/ClockContext';
 import { playNotificationSound } from '../../utils/audio';
 
@@ -472,58 +472,76 @@ export const Tracker: React.FC = () => {
         </div>
 
         {/* Tutorial Modal */}
-        {tutorialExercise && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-in fade-in duration-300">
-            <div className="relative w-full max-w-xl rounded-[3rem] border border-zinc-800 bg-zinc-950 p-10 shadow-3xl overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-2 bg-teal-500"></div>
-              <button
-                onClick={() => setTutorialExercise(null)}
-                className="absolute right-8 top-8 text-zinc-400 hover:text-white transition-colors"
-                title={t('modal_close')}
-              >
-                <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-
-              <div className="flex items-center gap-4 mb-8">
-                <div className="w-3 h-10 bg-teal-500 rounded-full"></div>
-                <h3 className="text-2xl font-black text-white uppercase tracking-tighter leading-tight pr-10">
-                  {tutorialExercise}
-                </h3>
-              </div>
-
-              <div className="aspect-video w-full rounded-2xl bg-black/60 mb-10 overflow-hidden relative group border border-zinc-800 shadow-inner">
-                <div className="absolute inset-0 bg-gradient-to-br from-teal-500/5 to-transparent"></div>
-                <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <div className="w-20 h-20 rounded-full bg-teal-500/10 dark:bg-teal-500/20 border-2 border-teal-500/30 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-700 backdrop-blur-sm shadow-xl">
-                    <svg className="h-10 w-10 text-teal-400 ml-1.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
-                  </div>
-                  <p className="text-xs text-zinc-500 font-black uppercase tracking-[0.3em]">{t('modal_watch_video')}</p>
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-4">
-                <a
-                  href={`https://www.youtube.com/results?search_query=${tutorialExercise}+exercise+technique`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="w-full"
-                >
-                  <SpotlightButton className="w-full py-5 text-sm font-black uppercase tracking-[0.2em] shadow-lg shadow-teal-500/20">
-                    {t('modal_watch_video')}
-                  </SpotlightButton>
-                </a>
+        {tutorialExercise && (() => {
+          const links = getExerciseLinks(tutorialExercise);
+          return (
+            <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-in fade-in duration-300">
+              <div className="relative w-full max-w-xl rounded-[3rem] border border-zinc-800 bg-zinc-950 p-10 shadow-3xl overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-2 bg-teal-500"></div>
                 <button
                   onClick={() => setTutorialExercise(null)}
-                  className="w-full py-4 text-[10px] text-zinc-400 hover:text-zinc-300 font-black uppercase tracking-[0.3em] transition-all"
+                  className="absolute right-8 top-8 text-zinc-400 hover:text-white transition-colors"
+                  title={t('modal_close')}
                 >
-                  {t('modal_close')}
+                  <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
                 </button>
+
+                <div className="flex items-center gap-4 mb-8">
+                  <div className="w-3 h-10 bg-teal-500 rounded-full"></div>
+                  <h3 className="text-2xl font-black text-white uppercase tracking-tighter leading-tight pr-10">
+                    {tutorialExercise}
+                  </h3>
+                </div>
+
+                <a
+                  href={links.tutorial}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="block aspect-video w-full rounded-2xl bg-black/60 mb-10 overflow-hidden relative group border border-zinc-800 shadow-inner"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-br from-teal-500/5 to-transparent"></div>
+                  <div className="absolute inset-0 flex flex-col items-center justify-center transition-transform group-hover:scale-105 duration-500">
+                    <div className="w-20 h-20 rounded-full bg-teal-500/10 dark:bg-teal-500/20 border-2 border-teal-500/30 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-700 backdrop-blur-sm shadow-xl">
+                      <svg className="h-10 w-10 text-teal-400 ml-1.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+                    </div>
+                    <p className="text-xs text-teal-500 font-black uppercase tracking-[0.3em]">{t('modal_watch_video')}</p>
+                  </div>
+                </a>
+
+                <div className="flex flex-col gap-4">
+                  <a
+                    href={links.science}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="w-full"
+                  >
+                    <SpotlightButton className="w-full py-5 text-sm font-black uppercase tracking-[0.2em] shadow-lg shadow-teal-500/20">
+                      🔬 Learn the Science
+                    </SpotlightButton>
+                  </a>
+                  <a
+                    href={links.tutorial}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="w-full"
+                  >
+                    <button className="w-full py-4 text-[10px] text-zinc-500 hover:text-white font-black uppercase tracking-[0.3em] transition-all border border-zinc-800 rounded-2xl bg-zinc-900/40">
+                      {t('modal_watch_video')}
+                    </button>
+                  </a>
+                  <button
+                    onClick={() => setTutorialExercise(null)}
+                    className="w-full py-2 text-[10px] text-zinc-600 hover:text-rose-500 font-black uppercase tracking-[0.3em] transition-all"
+                  >
+                    {t('modal_close')}
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          );
+        })()}
       </div>
     );
   }

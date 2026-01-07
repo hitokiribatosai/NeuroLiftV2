@@ -504,6 +504,37 @@ export const getExerciseDatabase = (lang: Language): ExerciseDatabase => {
   return localizedDB;
 };
 
+export const getExerciseLinks = (exerciseName: string) => {
+  const scienceMap: Record<string, string> = {
+    "Incline Dumbbell Press": "https://www.strengthlog.com/incline-dumbbell-press/",
+    "Flat Barbell Bench Press": "https://www.strengthlog.com/bench-press/",
+    "Deadlifts": "https://www.strengthlog.com/deadlift/",
+    "Back Squat": "https://www.strengthlog.com/squat/",
+    "Pull-ups": "https://www.strengthlog.com/pull-up/",
+    "Barbell Rows": "https://www.strengthlog.com/barbell-row/",
+    "Shoulder Press": "https://www.strengthlog.com/overhead-press/",
+    "Romanian Deadlift": "https://www.strengthlog.com/romanian-deadlift/",
+    "Hip Thrust": "https://www.strengthlog.com/hip-thrust/",
+    "Bulgarian Split Squat": "https://www.strengthlog.com/bulgarian-split-squat/",
+    "Bicep Curls": "https://www.strengthlog.com/barbell-curl/",
+    "Skull Crushers": "https://www.strengthlog.com/triceps-extension/",
+    "Dips": "https://www.strengthlog.com/dips/",
+    "Face Pulls": "https://www.strengthlog.com/face-pull/",
+    "lateral raises": "https://www.strengthlog.com/dumbbell-lateral-raise/"
+  };
+
+  const tutorialMap: Record<string, string> = {
+    // Optional: override default youtube search with specific high-quality vids
+  };
+
+  const cleanName = exerciseName.replace(/\([^)]*\)/g, '').trim();
+
+  return {
+    science: scienceMap[exerciseName] || `https://scholar.google.com/scholar?q=${encodeURIComponent(cleanName)}+exercise+hypertrophy+study`,
+    tutorial: tutorialMap[exerciseName] || `https://www.youtube.com/results?search_query=${encodeURIComponent(cleanName)}+exercise+tutorial`
+  };
+};
+
 export const getMuscleForExercise = (exerciseName: string): string => {
   const db = getExerciseDatabase('en'); // Use 'en' as stable keys
   for (const [muscle, subGroups] of Object.entries(db)) {
