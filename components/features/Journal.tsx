@@ -406,9 +406,14 @@ export const Journal: React.FC = () => {
               </button>
             )}
 
-            <SpotlightButton onClick={handleSave} className="w-full justify-center py-5 text-sm font-black uppercase tracking-widest shadow-xl shadow-teal-500/20">
-              {editingId ? 'Update Entry' : t('save')}
-            </SpotlightButton>
+            <div className="flex justify-center pt-4">
+              <SpotlightButton
+                onClick={handleSave}
+                className="w-full max-w-[240px] justify-center py-4 text-xs font-black uppercase tracking-widest shadow-xl shadow-teal-500/20"
+              >
+                {editingId ? 'Update Entry' : t('save')}
+              </SpotlightButton>
+            </div>
           </Card>
         </div>
 

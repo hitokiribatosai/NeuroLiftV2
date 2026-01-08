@@ -515,7 +515,7 @@ export const Tracker: React.FC = () => {
                                   <div className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all ${selectedExercises.includes(ex) ? 'bg-teal-500 border-teal-500 text-white shadow-lg shadow-teal-500/20' : 'border-zinc-700'}`}>
                                     {selectedExercises.includes(ex) && <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 13l4 4L19 7" /></svg>}
                                   </div>
-                                  <span className="text-sm font-black tracking-wide flex-1 uppercase">{ex}</span>
+                                  <span className="text-sm font-black tracking-wide flex-1 uppercase pr-10 rtl:pr-0 rtl:pl-10">{ex}</span>
                                 </label>
 
                                 <button
@@ -524,11 +524,11 @@ export const Tracker: React.FC = () => {
                                     e.stopPropagation();
                                     setTutorialExercise(ex);
                                   }}
-                                  className="absolute right-4 top-1/2 -translate-y-1/2 p-2.5 text-zinc-600 hover:text-teal-400 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all z-10"
+                                  className="absolute right-4 rtl:right-auto rtl:left-4 top-1/2 -translate-y-1/2 p-2 text-zinc-600 hover:text-teal-400 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all z-10"
                                   title={t('modal_watch_video')}
                                 >
                                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 16v-4m0-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                   </svg>
                                 </button>
                               </div>

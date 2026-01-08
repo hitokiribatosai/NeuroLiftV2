@@ -165,8 +165,21 @@ export const ProgramPlanner: React.FC = () => {
                               <div className="w-10 h-10 rounded-xl bg-zinc-50 dark:bg-zinc-800 flex items-center justify-center text-zinc-400 dark:text-zinc-500 font-black font-mono text-xs border border-zinc-100 dark:border-zinc-700 group-hover:border-teal-500/50 group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-all">
                                 {i + 1}
                               </div>
-                              <span className="text-zinc-900 dark:text-zinc-200 font-black text-xs uppercase tracking-tight">{ex}</span>
+                              <span className="text-zinc-900 dark:text-zinc-200 font-black text-xs uppercase tracking-tight pr-10 rtl:pr-0 rtl:pl-10">{ex}</span>
                             </div>
+
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedExercise(ex);
+                              }}
+                              className="absolute right-6 rtl:right-auto rtl:left-6 top-6 p-2 text-zinc-400 hover:text-teal-500 transition-all"
+                              title={t('modal_watch_video')}
+                            >
+                              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 16v-4m0-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              </svg>
+                            </button>
 
                             <SpotlightButton
                               variant="secondary"
