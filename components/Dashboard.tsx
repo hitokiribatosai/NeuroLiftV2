@@ -69,6 +69,40 @@ export const Dashboard: React.FC<DashboardProps> = ({ setCurrentView }) => {
         return { data, volumes, maxVolume };
     }, [history]);
 
+    /* 
+     * Scientific Score Logic (0-100):
+     * 1. Consistency (30%): Based on the current streak. 4+ day streak = 30 points.
+     * 2. Frequency (30%): Workouts in the last week. 5 sessions = 30 points.
+     * 3. Progression (40%): Comparing last volume to previous average. 
+     *    Progression is key to "Scientific Training" (Overload Principle).
+     */
+    const scientificScore = useMemo(() => {
+        if (history.length === 0) return 0;
+
+        // 1. Consistency Score (max 30)
+        const consistencyScore = Math.min(streak * 7.5, 30);
+
+        // 2. Frequency Score (max 30)
+        const aWeekAgo = new Date();
+        aWeekAgo.setDate(aWeekAgo.getDate() - 7);
+        const recentWorkouts = history.filter(w => new Date(w.date) >= aWeekAgo).length;
+        const frequencyScore = Math.min(recentWorkouts * 6, 30);
+
+        // 3. Progression Score (max 40)
+        let progressionScore = 20; // Base/Neutral
+        if (history.length >= 2) {
+            const lastVolume = history[0].totalVolume;
+            const prevWorkouts = history.slice(1, 4);
+            const avgPrevVolume = prevWorkouts.reduce((acc, w) => acc + w.totalVolume, 0) / prevWorkouts.length;
+
+            if (lastVolume > avgPrevVolume) progressionScore = 40;
+            else if (lastVolume >= avgPrevVolume * 0.9) progressionScore = 25;
+            else progressionScore = 15;
+        }
+
+        return Math.round(consistencyScore + frequencyScore + progressionScore);
+    }, [history, streak]);
+
     return (
         <section className="relative min-h-screen py-24 px-6 overflow-hidden">
             {/* Background Glow */}
@@ -181,7 +215,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ setCurrentView }) => {
                         <div className="space-y-6">
                             <div className="flex justify-between items-center group">
                                 <span className="text-[11px] font-bold text-zinc-400 group-hover:text-white transition-colors uppercase tracking-widest">Scientific Score</span>
-                                <span className="text-lg font-black font-mono text-teal-400">98%</span>
+                                <span className="text-lg font-black font-mono text-teal-400">{scientificScore}%</span>
                             </div>
                             <div className="h-px bg-zinc-800"></div>
                             <div className="flex justify-between items-center group">
