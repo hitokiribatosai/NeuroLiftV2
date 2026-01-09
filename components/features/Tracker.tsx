@@ -11,6 +11,7 @@ import { generateId } from '../../utils/id';
 import { safeStorage } from '../../utils/storage';
 import { App as CapApp } from '@capacitor/app';
 import { Modal } from '../ui/Modal';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export const Tracker: React.FC = () => {
   const { t, language } = useLanguage();
@@ -39,6 +40,9 @@ export const Tracker: React.FC = () => {
   });
   const [completedWorkout, setCompletedWorkout] = useState<CompletedWorkout | null>(null);
   const [restRemaining, setRestRemaining] = useState<number | null>(null);
+  const [direction, setDirection] = useState(0);
+
+  const phaseOrder = ['setup', 'selection', 'active', 'summary'];
 
   // Use Global Clock for Workout Session
   const {
@@ -135,9 +139,12 @@ export const Tracker: React.FC = () => {
       const validPhases = ['setup', 'selection', 'active', 'summary'];
 
       if (urlPhase && validPhases.includes(urlPhase) && urlPhase !== phase) {
+        const oldIdx = phaseOrder.indexOf(phase);
+        const newIdx = phaseOrder.indexOf(urlPhase);
+        setDirection(newIndex < oldIndex ? -1 : 1);
         setPhase(urlPhase as any);
       } else if (!urlPhase && phase !== 'setup') {
-        // If no phase param, assume setup (root of tracker)
+        setDirection(-1);
         setPhase('setup');
       }
     };
@@ -191,12 +198,19 @@ export const Tracker: React.FC = () => {
     const currentHash = window.location.hash;
     const targetHash = `#tracker?phase=${phase}`;
 
-    // Check if URL needs update
     if (!currentHash.includes(`phase=${phase}`)) {
-      // Using pushState creates a history entry, so "Back" will work
+      const oldIdx = phaseOrder.indexOf(phase); // This is actually tricky here as phase already changed
+      // But we can usually infer direction from the setter functions.
       window.history.pushState({ phase }, '', targetHash);
     }
   }, [phase]);
+
+  const handleSetPhase = (newPhase: 'setup' | 'selection' | 'active' | 'summary') => {
+    const oldIdx = phaseOrder.indexOf(phase);
+    const newIdx = phaseOrder.indexOf(newPhase);
+    setDirection(newIdx < oldIdx ? -1 : 1);
+    setPhase(newPhase);
+  };
 
   const formatTime = (secs: number) => {
     const m = Math.floor(secs / 60);

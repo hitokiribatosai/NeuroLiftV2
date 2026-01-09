@@ -162,17 +162,22 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) =
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
           {/* Logo */}
-          <div className="flex shrink-0 items-center gap-2 cursor-pointer" onClick={() => setCurrentView('home')}>
+          <motion.div
+            className="flex shrink-0 items-center gap-2 cursor-pointer"
+            onClick={() => setCurrentView('home')}
+            whileTap={{ scale: 0.95 }}
+          >
             <img src="/logo.png" alt="NeuroLift" className="h-10 w-auto rounded-xl shadow-lg" />
             <span className="text-white font-black tracking-tighter text-lg hidden sm:block">NeuroLift</span>
-          </div>
+          </motion.div>
 
           {/* Desktop Navigation Items - Hidden on Mobile */}
           <div className="hidden md:flex items-center gap-8 text-sm font-bold text-zinc-400 mx-8">
             {navItems.map((item) => (
-              <button
+              <motion.button
                 key={item.id}
                 onClick={() => setCurrentView(item.id)}
+                whileTap={{ y: 2 }}
                 className={`relative py-1 transition-colors hover:text-white shrink-0 uppercase tracking-widest text-[0.625rem] ${currentView === item.id ? 'text-teal-400' : 'text-zinc-300'}`}
               >
                 <span className="relative z-10">{item.label}</span>
@@ -189,8 +194,9 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) =
 
           {/* Settings Section */}
           <div className="relative settings-container">
-            <button
+            <motion.button
               onClick={(e) => { e.stopPropagation(); setIsSettingsOpen(!isSettingsOpen); }}
+              whileTap={{ scale: 0.9 }}
               className={`flex items-center justify-center w-10 h-10 rounded-xl border transition-all shadow-sm ${isSettingsOpen ? 'bg-zinc-800 border-zinc-700 text-teal-400' : 'bg-zinc-900/50 border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700'}`}
             >
               <motion.svg
@@ -214,9 +220,10 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) =
       <div className="md:hidden fixed bottom-0 left-0 right-0 z-[60] pointer-events-none">
         <div className="w-full bg-[#0a0a0a]/95 backdrop-blur-xl border-t border-zinc-800 shadow-2xl flex items-center justify-around p-2 pb-[calc(env(safe-area-inset-bottom)+8px)] pointer-events-auto relative overflow-hidden">
           {navItems.map((item) => (
-            <button
+            <motion.button
               key={item.id}
               onClick={() => setCurrentView(item.id)}
+              whileTap={{ scale: 0.9, y: 4 }}
               className={`relative flex flex-col items-center justify-center gap-1.5 py-2 px-1 rounded-2xl transition-all duration-300 min-w-[64px] ${currentView === item.id ? 'text-teal-400 scale-105' : 'text-zinc-400 hover:text-zinc-200'}`}
             >
               <div className={`transition-all duration-300 ${currentView === item.id ? 'translate-y-[-2px]' : ''}`}>
