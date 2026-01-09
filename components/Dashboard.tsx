@@ -6,6 +6,7 @@ import { Card } from './ui/Card';
 import { Modal } from './ui/Modal';
 import { safeStorage } from '../utils/storage';
 import { CompletedWorkout } from '../types';
+import { getMuscleForExercise, getLocalizedMuscleName } from '../utils/exerciseData';
 
 interface DashboardProps {
     setCurrentView: (view: string) => void;
@@ -15,6 +16,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ setCurrentView }) => {
     const { t, language } = useLanguage();
     const [showStreakInfo, setShowStreakInfo] = useState(false);
     const [showScientificInfo, setShowScientificInfo] = useState(false);
+    const [selectedMuscle, setSelectedMuscle] = useState('Total');
+    const [activeIndex, setActiveIndex] = useState(0);
+
+    const muscleGroups = ['Total', 'Chest', 'Back', 'Shoulders', 'Legs', 'Arms', 'Core', 'Cardio'];
 
     const history = useMemo(() =>
         safeStorage.getParsed<CompletedWorkout[]>('neuroLift_history', []),
@@ -66,11 +71,20 @@ export const Dashboard: React.FC<DashboardProps> = ({ setCurrentView }) => {
         const data = [...history].reverse().slice(-7);
         if (data.length < 2) return null;
 
-        const volumes = data.map(d => d.totalVolume);
+        const volumes = data.map(d => {
+            if (selectedMuscle === 'Total') return d.totalVolume;
+            return (d.exercises || []).reduce((acc, ex) => {
+                const muscle = getMuscleForExercise(ex.name);
+                if (muscle === selectedMuscle) {
+                    return acc + (ex.sets || []).reduce((sAcc, s) => s.completed ? sAcc + (s.weight * s.reps) : sAcc, 0);
+                }
+                return acc;
+            }, 0);
+        });
         const maxVolume = Math.max(...volumes, 1);
 
         return { data, volumes, maxVolume };
-    }, [history]);
+    }, [history, selectedMuscle]);
 
     /* 
      * Scientific Score Logic (0-100):
@@ -105,6 +119,165 @@ export const Dashboard: React.FC<DashboardProps> = ({ setCurrentView }) => {
 
         return Math.round(consistencyScore + frequencyScore + progressionScore);
     }, [history, streak]);
+
+    const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+        const scrollLeft = e.currentTarget.scrollLeft;
+        const width = e.currentTarget.offsetWidth;
+        const index = Math.round(scrollLeft / (width * 0.85)); // 0.85 matches the 85vw width
+        setActiveIndex(index);
+    };
+
+    const renderRecentSessionCard = () => {
+        if (!lastWorkout) return (
+            <Card className="p-8 bg-zinc-900/20 border-dashed border-zinc-800 rounded-[3rem] flex flex-col items-center justify-center text-center space-y-4 h-full">
+                <div className="w-12 h-12 rounded-full bg-zinc-800/50 flex items-center justify-center text-zinc-600">
+                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest whitespace-normal">No recent sessions found. Start training to see your stats!</p>
+            </Card>
+        );
+
+        return (
+            <Card className="p-8 bg-zinc-900/40 border-zinc-800 rounded-[3rem] shadow-sm flex flex-col justify-between h-full group hover:border-teal-500/30 transition-all">
+                <div>
+                    <h3 className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.3em] mb-8">Recent Session</h3>
+                    <h4 className="text-2xl font-black text-white uppercase tracking-tighter mb-2 line-clamp-1">
+                        {lastWorkout.name || "Workout"}
+                    </h4>
+                    <div className="flex items-center gap-4 text-xs font-bold text-teal-400">
+                        <span>{lastWorkout.date}</span>
+                        <span className="w-1 h-1 bg-zinc-700 rounded-full"></span>
+                        <span className="text-zinc-500 uppercase tracking-widest text-[10px]">
+                            {Math.floor(lastWorkout.durationSeconds / 60)}m {lastWorkout.durationSeconds % 60}s
+                        </span>
+                    </div>
+                </div>
+                <div className="mt-8 pt-6 border-t border-zinc-800 flex justify-between items-end">
+                    <div>
+                        <div className="text-[9px] text-zinc-500 font-black uppercase tracking-widest mb-1">Volume</div>
+                        <div className="text-2xl font-black font-mono text-white">{lastWorkout.totalVolume} <span className="text-xs text-teal-500">KG</span></div>
+                    </div>
+                    <button
+                        onClick={() => setCurrentView('journal')}
+                        className="text-[9px] font-black text-zinc-400 hover:text-white transition-colors uppercase tracking-[0.2em] mb-1"
+                    >
+                        View Journal →
+                    </button>
+                </div>
+            </Card>
+        );
+    };
+
+    const renderInsightsCard = () => (
+        <Card className="p-8 bg-zinc-900/40 border-zinc-800 rounded-[3rem] shadow-sm overflow-hidden relative h-full">
+            <h3 className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.3em] mb-8">Insights</h3>
+            <div className="space-y-6">
+                <div className="flex justify-between items-center group">
+                    <div className="flex items-center gap-2">
+                        <span className="text-[11px] font-bold text-zinc-400 group-hover:text-white transition-colors uppercase tracking-widest">Scientific Score</span>
+                        <button
+                            onClick={() => setShowScientificInfo(true)}
+                            className="p-1 rounded-full bg-zinc-800/50 text-zinc-500 hover:text-teal-400 transition-colors"
+                        >
+                            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </button>
+                    </div>
+                    <span className="text-lg font-black font-mono text-teal-400">{scientificScore}%</span>
+                </div>
+                <div className="h-px bg-zinc-800"></div>
+                <div className="flex justify-between items-center group">
+                    <span className="text-[11px] font-bold text-zinc-400 group-hover:text-white transition-colors uppercase tracking-widest">Consistency</span>
+                    <span className="text-lg font-black font-mono text-white">{streak > 5 ? 'Elite' : 'Targeting'}</span>
+                </div>
+            </div>
+            {/* Aesthetic Glow */}
+            <div className="absolute -bottom-20 -right-20 w-40 h-40 bg-teal-500/5 blur-3xl rounded-full"></div>
+        </Card>
+    );
+
+    const renderVolumeChartCard = () => {
+        if (!chartData) return null;
+        return (
+            <Card className="p-8 bg-zinc-900/40 border-zinc-800 rounded-[3rem] shadow-sm h-full">
+                <div className="flex justify-between items-center mb-10">
+                    <div>
+                        <h3 className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.4em]">Volume Progress</h3>
+                        <div className="text-[9px] text-teal-500 font-bold uppercase tracking-widest mt-1 opacity-70">7 Sessions</div>
+                    </div>
+                    <select
+                        value={selectedMuscle}
+                        onChange={(e) => setSelectedMuscle(e.target.value)}
+                        className="bg-zinc-800/50 border border-zinc-800 rounded-xl px-4 py-2 text-[10px] font-black uppercase tracking-widest text-teal-400 outline-none focus:border-teal-500 transition-all cursor-pointer"
+                    >
+                        {muscleGroups.map(m => (
+                            <option key={m} value={m}>{m === 'Total' ? 'Overall' : getLocalizedMuscleName(m, language)}</option>
+                        ))}
+                    </select>
+                </div>
+
+                <div className="relative h-48 w-full group">
+                    <svg viewBox="0 0 300 100" className="w-full h-full drop-shadow-[0_10px_15px_rgba(0,0,0,0.5)]">
+                        {/* Horizontal Lines */}
+                        {[0, 0.5, 1].map(v => (
+                            <line
+                                key={v}
+                                x1="0" y1={10 + v * 80} x2="300" y2={10 + v * 80}
+                                stroke="#ffffff08" strokeWidth="0.5" strokeDasharray="4 4"
+                            />
+                        ))}
+
+                        {/* Main Path */}
+                        <motion.path
+                            initial={{ pathLength: 0, opacity: 0 }}
+                            animate={{ pathLength: 1, opacity: 1 }}
+                            transition={{ duration: 1.5, ease: "easeInOut" }}
+                            d={`M ${chartData.volumes.map((v, i) =>
+                                `${(i / (chartData.volumes.length - 1)) * 280 + 10},${90 - (v / chartData.maxVolume) * 70}`
+                            ).join(' L ')}`}
+                            fill="none"
+                            stroke="url(#chartGradient)"
+                            strokeWidth="4"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                        />
+
+                        {/* Dots */}
+                        {chartData.volumes.map((v, i) => {
+                            const x = (i / (chartData.volumes.length - 1)) * 280 + 10;
+                            const y = 90 - (v / chartData.maxVolume) * 70;
+                            return (
+                                <motion.circle
+                                    key={i}
+                                    initial={{ scale: 0 }}
+                                    animate={{ scale: 1 }}
+                                    transition={{ delay: i * 0.1 }}
+                                    cx={x} cy={y} r="3"
+                                    fill="#14b8a6"
+                                    className="shadow-lg"
+                                />
+                            );
+                        })}
+
+                        <defs>
+                            <linearGradient id="chartGradient" x1="0" y1="0" x2="1" y2="0">
+                                <stop offset="0%" stopColor="#14b8a6" />
+                                <stop offset="100%" stopColor="#2dd4bf" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+
+                    <div className="flex justify-between mt-6 text-[9px] text-zinc-600 font-black uppercase tracking-widest px-2">
+                        <span>{chartData.data[0].date}</span>
+                        <span>{chartData.data[chartData.data.length - 1].date}</span>
+                    </div>
+                </div>
+            </Card>
+        );
+    };
 
     return (
         <section className="relative min-h-screen py-24 px-6 overflow-hidden">
@@ -158,8 +331,9 @@ export const Dashboard: React.FC<DashboardProps> = ({ setCurrentView }) => {
                     </motion.div>
                 </div>
 
-                {/* Quick Actions Grid */}
+                {/* Actionable Sections */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {/* Quick Start - Primary Action (Always Top/Left) */}
                     <Card className="p-8 bg-zinc-900/40 border-zinc-800 rounded-[3rem] group hover:border-teal-500/50 transition-all shadow-sm">
                         <h3 className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.3em] mb-8">Quick Start</h3>
                         <div className="space-y-4">
@@ -182,143 +356,50 @@ export const Dashboard: React.FC<DashboardProps> = ({ setCurrentView }) => {
                         </div>
                     </Card>
 
-                    {/* Last Workout Summary */}
-                    {lastWorkout ? (
-                        <Card className="p-8 bg-zinc-900/40 border-zinc-800 rounded-[3rem] shadow-sm flex flex-col justify-between">
-                            <div>
-                                <h3 className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.3em] mb-8">Recent Session</h3>
-                                <h4 className="text-2xl font-black text-white uppercase tracking-tighter mb-2 line-clamp-1">
-                                    {lastWorkout.name || "Workout"}
-                                </h4>
-                                <div className="flex items-center gap-4 text-xs font-bold text-teal-400">
-                                    <span>{lastWorkout.date}</span>
-                                    <span className="w-1 h-1 bg-zinc-700 rounded-full"></span>
-                                    <span className="text-zinc-500 uppercase tracking-widest text-[10px]">
-                                        {Math.floor(lastWorkout.durationSeconds / 60)}m {lastWorkout.durationSeconds % 60}s
-                                    </span>
-                                </div>
-                            </div>
-                            <div className="mt-8 pt-6 border-t border-zinc-800 flex justify-between items-end">
-                                <div>
-                                    <div className="text-[9px] text-zinc-500 font-black uppercase tracking-widest mb-1">Volume</div>
-                                    <div className="text-2xl font-black font-mono text-white">{lastWorkout.totalVolume} <span className="text-xs text-teal-500">KG</span></div>
-                                </div>
-                                <button
-                                    onClick={() => setCurrentView('journal')}
-                                    className="text-[9px] font-black text-zinc-400 hover:text-white transition-colors uppercase tracking-[0.2em] mb-1"
-                                >
-                                    View Journal →
-                                </button>
-                            </div>
-                        </Card>
-                    ) : (
-                        <Card className="p-8 bg-zinc-900/20 border-dashed border-zinc-800 rounded-[3rem] flex flex-col items-center justify-center text-center space-y-4">
-                            <div className="w-12 h-12 rounded-full bg-zinc-800/50 flex items-center justify-center text-zinc-600">
-                                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                            </div>
-                            <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest whitespace-normal">No recent sessions found. Start training to see your stats!</p>
-                        </Card>
-                    )}
-
-                    {/* Mini Insights */}
-                    <Card className="p-8 bg-zinc-900/40 border-zinc-800 rounded-[3rem] shadow-sm overflow-hidden relative">
-                        <h3 className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.3em] mb-8">Insights</h3>
-                        <div className="space-y-6">
-                            <div className="flex justify-between items-center group">
-                                <div className="flex items-center gap-2">
-                                    <span className="text-[11px] font-bold text-zinc-400 group-hover:text-white transition-colors uppercase tracking-widest">Scientific Score</span>
-                                    <button
-                                        onClick={() => setShowScientificInfo(true)}
-                                        className="p-1 rounded-full bg-zinc-800/50 text-zinc-500 hover:text-teal-400 transition-colors"
-                                    >
-                                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                    </button>
-                                </div>
-                                <span className="text-lg font-black font-mono text-teal-400">{scientificScore}%</span>
-                            </div>
-                            <div className="h-px bg-zinc-800"></div>
-                            <div className="flex justify-between items-center group">
-                                <span className="text-[11px] font-bold text-zinc-400 group-hover:text-white transition-colors uppercase tracking-widest">Consistency</span>
-                                <span className="text-lg font-black font-mono text-white">{streak > 5 ? 'Elite' : 'Targeting'}</span>
-                            </div>
-                        </div>
-                        {/* Aesthetic Glow */}
-                        <div className="absolute -bottom-20 -right-20 w-40 h-40 bg-teal-500/5 blur-3xl rounded-full"></div>
-                    </Card>
+                    {/* Desktop View: Grid Layout for other cards */}
+                    <div className="hidden md:contents">
+                        {renderRecentSessionCard()}
+                        {renderInsightsCard()}
+                    </div>
                 </div>
 
-                {/* Volume Progression Chart */}
-                {chartData && (
-                    <Card className="p-8 bg-zinc-900/40 border-zinc-800 rounded-[3rem] shadow-sm">
-                        <div className="flex justify-between items-center mb-10">
-                            <h3 className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.4em]">Volume Progress (Last 7 Sessions)</h3>
-                            <div className="text-[10px] font-bold text-teal-500 bg-teal-500/10 px-3 py-1 rounded-full uppercase tracking-widest shadow-[0_0_15px_rgba(20,184,166,0.1)]">
-                                Dynamic Updates
-                            </div>
+                {/* Mobile View: Swipable Carousel for Insights & History */}
+                <div className="md:hidden">
+                    <div
+                        onScroll={handleScroll}
+                        className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide -mx-6 px-6 gap-6 h-full pb-8"
+                    >
+                        <div className="snap-center shrink-0 w-[85vw]">
+                            {renderRecentSessionCard()}
                         </div>
-
-                        <div className="relative h-48 w-full group">
-                            <svg viewBox="0 0 300 100" className="w-full h-full drop-shadow-[0_10px_15px_rgba(0,0,0,0.5)]">
-                                {/* Horizontal Lines */}
-                                {[0, 0.5, 1].map(v => (
-                                    <line
-                                        key={v}
-                                        x1="0" y1={10 + v * 80} x2="300" y2={10 + v * 80}
-                                        stroke="#ffffff08" strokeWidth="0.5" strokeDasharray="4 4"
-                                    />
-                                ))}
-
-                                {/* Main Path */}
-                                <motion.path
-                                    initial={{ pathLength: 0, opacity: 0 }}
-                                    animate={{ pathLength: 1, opacity: 1 }}
-                                    transition={{ duration: 1.5, ease: "easeInOut" }}
-                                    d={`M ${chartData.volumes.map((v, i) =>
-                                        `${(i / (chartData.volumes.length - 1)) * 280 + 10},${90 - (v / chartData.maxVolume) * 70}`
-                                    ).join(' L ')}`}
-                                    fill="none"
-                                    stroke="url(#chartGradient)"
-                                    strokeWidth="4"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                />
-
-                                {/* Dots */}
-                                {chartData.volumes.map((v, i) => {
-                                    const x = (i / (chartData.volumes.length - 1)) * 280 + 10;
-                                    const y = 90 - (v / chartData.maxVolume) * 70;
-                                    return (
-                                        <motion.circle
-                                            key={i}
-                                            initial={{ scale: 0 }}
-                                            animate={{ scale: 1 }}
-                                            transition={{ delay: i * 0.1 }}
-                                            cx={x} cy={y} r="3"
-                                            fill="#14b8a6"
-                                            className="shadow-lg"
-                                        />
-                                    );
-                                })}
-
-                                <defs>
-                                    <linearGradient id="chartGradient" x1="0" y1="0" x2="1" y2="0">
-                                        <stop offset="0%" stopColor="#14b8a6" />
-                                        <stop offset="100%" stopColor="#2dd4bf" />
-                                    </linearGradient>
-                                </defs>
-                            </svg>
-
-                            <div className="flex justify-between mt-6 text-[9px] text-zinc-600 font-black uppercase tracking-widest px-2">
-                                <span>{chartData.data[0].date}</span>
-                                <span>{chartData.data[chartData.data.length - 1].date}</span>
-                            </div>
+                        <div className="snap-center shrink-0 w-[85vw]">
+                            {renderInsightsCard()}
                         </div>
-                    </Card>
-                )}
+                        {chartData && (
+                            <div className="snap-center shrink-0 w-[85vw]">
+                                {renderVolumeChartCard()}
+                            </div>
+                        )}
+                    </div>
+                    {/* Carousel Indicators */}
+                    <div className="flex justify-center gap-2 -mt-4 mb-8">
+                        {[0, 1, chartData ? 2 : null].filter(x => x !== null).map((i) => (
+                            <motion.div
+                                key={i}
+                                animate={{
+                                    width: activeIndex === i ? 24 : 6,
+                                    backgroundColor: activeIndex === i ? '#14b8a6' : '#27272a'
+                                }}
+                                className="h-1.5 rounded-full"
+                            />
+                        ))}
+                    </div>
+                </div>
+
+                {/* Desktop View: Volume Progression Chart */}
+                <div className="hidden md:block">
+                    {chartData && renderVolumeChartCard()}
+                </div>
 
                 {/* Info Modals */}
                 <Modal isOpen={showStreakInfo} onClose={() => setShowStreakInfo(false)}>
