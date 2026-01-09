@@ -1,0 +1,265 @@
+import React, { useMemo } from 'react';
+import { motion } from 'framer-motion';
+import { useLanguage } from '../contexts/LanguageContext';
+import { SpotlightButton } from './ui/SpotlightButton';
+import { Card } from './ui/Card';
+import { safeStorage } from '../utils/storage';
+import { CompletedWorkout } from '../types';
+
+interface DashboardProps {
+    setCurrentView: (view: string) => void;
+}
+
+export const Dashboard: React.FC<DashboardProps> = ({ setCurrentView }) => {
+    const { t, language } = useLanguage();
+
+    const history = useMemo(() =>
+        safeStorage.getParsed<CompletedWorkout[]>('neuroLift_history', []),
+        []);
+
+    const lastWorkout = history[0];
+
+    // Calculate Streak
+    const streak = useMemo(() => {
+        if (history.length === 0) return 0;
+
+        let count = 0;
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const timestamps: number[] = history.map(w => {
+            const d = new Date(w.date);
+            d.setHours(0, 0, 0, 0);
+            return d.getTime();
+        });
+
+        const sortedDates: number[] = Array.from(new Set(timestamps)).sort((a, b) => b - a);
+
+        if (sortedDates.length === 0) return 0;
+
+        const todayTimestamp = today.getTime();
+        const latestTimestamp = sortedDates[0];
+        const diffDays = Math.floor((todayTimestamp - latestTimestamp) / (1000 * 60 * 60 * 24));
+
+        if (diffDays > 1) return 0;
+
+        count = 1;
+        for (let i = 0; i < sortedDates.length - 1; i++) {
+            const current = sortedDates[i];
+            const next = sortedDates[i + 1];
+            if (current - next === 86400000) {
+                count++;
+            } else {
+                break;
+            }
+        }
+        return count;
+    }, [history]);
+
+    // Chart Data (Last 7 workouts or days)
+    const chartData = useMemo(() => {
+        const data = [...history].reverse().slice(-7);
+        if (data.length < 2) return null;
+
+        const volumes = data.map(d => d.totalVolume);
+        const maxVolume = Math.max(...volumes, 1);
+
+        return { data, volumes, maxVolume };
+    }, [history]);
+
+    return (
+        <section className="relative min-h-screen py-24 px-6 overflow-hidden">
+            {/* Background Glow */}
+            <div className="absolute inset-0 -z-10 grid-bg opacity-30"></div>
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[500px] bg-gradient-to-b from-teal-500/10 to-transparent blur-3xl -z-10"></div>
+
+            <div className="max-w-6xl mx-auto space-y-12">
+                {/* Header Section */}
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                    <motion.div
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        className="space-y-2"
+                    >
+                        <h1 className="text-4xl md:text-6xl font-black text-white tracking-tighter uppercase italic">
+                            Welcome <span className="text-teal-500">Back.</span>
+                        </h1>
+                        <p className="text-zinc-500 font-bold uppercase tracking-widest text-xs">
+                            NeuroLift Personal Dashboard
+                        </p>
+                    </motion.div>
+
+                    {/* Streak Indicator */}
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="bg-zinc-900/50 backdrop-blur-xl border border-zinc-800 p-6 rounded-[2.5rem] flex items-center gap-6 shadow-2xl"
+                    >
+                        <div className={`relative flex items-center justify-center ${streak > 0 ? 'text-orange-500' : 'text-zinc-700'}`}>
+                            <svg className="w-10 h-10" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1014 0c0-1.187-.268-2.312-.733-3.32a1 1 0 00-.671-.563 1 1 0 00-1.207.306 4.415 4.415 0 01-.584.548c-.015.011-.03.023-.044.034a10.02 10.02 0 00-1.39-2.912c-.272-.397-.599-.79-.944-1.14a1 1 0 00-.032-1.402z" clipRule="evenodd" />
+                            </svg>
+                            {streak > 0 && <div className="absolute inset-0 bg-orange-500/20 blur-xl rounded-full"></div>}
+                        </div>
+                        <div>
+                            <div className="text-3xl font-black font-mono text-white leading-none">{streak}</div>
+                            <div className="text-[10px] text-zinc-500 font-black uppercase tracking-widest mt-1">Day Streak</div>
+                        </div>
+                    </motion.div>
+                </div>
+
+                {/* Quick Actions Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <Card className="p-8 bg-zinc-900/40 border-zinc-800 rounded-[3rem] group hover:border-teal-500/50 transition-all shadow-sm">
+                        <h3 className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.3em] mb-8">Quick Start</h3>
+                        <div className="space-y-4">
+                            <SpotlightButton
+                                onClick={() => setCurrentView('tracker')}
+                                className="w-full justify-center py-5 text-xs font-black uppercase tracking-widest shadow-xl shadow-teal-500/10"
+                            >
+                                Start Workout
+                                <svg className="w-4 h-4 ml-2 rtl:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                </svg>
+                            </SpotlightButton>
+                            <SpotlightButton
+                                variant="secondary"
+                                onClick={() => setCurrentView('planner')}
+                                className="w-full justify-center py-4 text-[10px] font-black uppercase tracking-[0.2em]"
+                            >
+                                Plan Exercises
+                            </SpotlightButton>
+                        </div>
+                    </Card>
+
+                    {/* Last Workout Summary */}
+                    {lastWorkout ? (
+                        <Card className="p-8 bg-zinc-900/40 border-zinc-800 rounded-[3rem] shadow-sm flex flex-col justify-between">
+                            <div>
+                                <h3 className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.3em] mb-8">Recent Session</h3>
+                                <h4 className="text-2xl font-black text-white uppercase tracking-tighter mb-2 line-clamp-1">
+                                    {lastWorkout.name || "Workout"}
+                                </h4>
+                                <div className="flex items-center gap-4 text-xs font-bold text-teal-400">
+                                    <span>{lastWorkout.date}</span>
+                                    <span className="w-1 h-1 bg-zinc-700 rounded-full"></span>
+                                    <span className="text-zinc-500 uppercase tracking-widest text-[10px]">
+                                        {Math.floor(lastWorkout.durationSeconds / 60)}m {lastWorkout.durationSeconds % 60}s
+                                    </span>
+                                </div>
+                            </div>
+                            <div className="mt-8 pt-6 border-t border-zinc-800 flex justify-between items-end">
+                                <div>
+                                    <div className="text-[9px] text-zinc-500 font-black uppercase tracking-widest mb-1">Volume</div>
+                                    <div className="text-2xl font-black font-mono text-white">{lastWorkout.totalVolume} <span className="text-xs text-teal-500">KG</span></div>
+                                </div>
+                                <button
+                                    onClick={() => setCurrentView('journal')}
+                                    className="text-[9px] font-black text-zinc-400 hover:text-white transition-colors uppercase tracking-[0.2em] mb-1"
+                                >
+                                    View Journal →
+                                </button>
+                            </div>
+                        </Card>
+                    ) : (
+                        <Card className="p-8 bg-zinc-900/20 border-dashed border-zinc-800 rounded-[3rem] flex flex-col items-center justify-center text-center space-y-4">
+                            <div className="w-12 h-12 rounded-full bg-zinc-800/50 flex items-center justify-center text-zinc-600">
+                                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                            <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest whitespace-normal">No recent sessions found. Start training to see your stats!</p>
+                        </Card>
+                    )}
+
+                    {/* Mini Insights */}
+                    <Card className="p-8 bg-zinc-900/40 border-zinc-800 rounded-[3rem] shadow-sm overflow-hidden relative">
+                        <h3 className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.3em] mb-8">Insights</h3>
+                        <div className="space-y-6">
+                            <div className="flex justify-between items-center group">
+                                <span className="text-[11px] font-bold text-zinc-400 group-hover:text-white transition-colors uppercase tracking-widest">Scientific Score</span>
+                                <span className="text-lg font-black font-mono text-teal-400">98%</span>
+                            </div>
+                            <div className="h-px bg-zinc-800"></div>
+                            <div className="flex justify-between items-center group">
+                                <span className="text-[11px] font-bold text-zinc-400 group-hover:text-white transition-colors uppercase tracking-widest">Consistency</span>
+                                <span className="text-lg font-black font-mono text-white">{streak > 5 ? 'Elite' : 'Targeting'}</span>
+                            </div>
+                        </div>
+                        {/* Aesthetic Glow */}
+                        <div className="absolute -bottom-20 -right-20 w-40 h-40 bg-teal-500/5 blur-3xl rounded-full"></div>
+                    </Card>
+                </div>
+
+                {/* Volume Progression Chart */}
+                {chartData && (
+                    <Card className="p-8 bg-zinc-900/40 border-zinc-800 rounded-[3rem] shadow-sm">
+                        <div className="flex justify-between items-center mb-10">
+                            <h3 className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.4em]">Volume Progress (Last 7 Sessions)</h3>
+                            <div className="text-[10px] font-bold text-teal-500 bg-teal-500/10 px-3 py-1 rounded-full uppercase tracking-widest shadow-[0_0_15px_rgba(20,184,166,0.1)]">
+                                Dynamic Updates
+                            </div>
+                        </div>
+
+                        <div className="relative h-48 w-full group">
+                            <svg viewBox="0 0 300 100" className="w-full h-full drop-shadow-[0_10px_15px_rgba(0,0,0,0.5)]">
+                                {/* Horizontal Lines */}
+                                {[0, 0.5, 1].map(v => (
+                                    <line
+                                        key={v}
+                                        x1="0" y1={10 + v * 80} x2="300" y2={10 + v * 80}
+                                        stroke="#ffffff08" strokeWidth="0.5" strokeDasharray="4 4"
+                                    />
+                                ))}
+
+                                {/* Main Path */}
+                                <motion.path
+                                    initial={{ pathLength: 0, opacity: 0 }}
+                                    animate={{ pathLength: 1, opacity: 1 }}
+                                    transition={{ duration: 1.5, ease: "easeInOut" }}
+                                    d={`M ${chartData.volumes.map((v, i) =>
+                                        `${(i / (chartData.volumes.length - 1)) * 280 + 10},${90 - (v / chartData.maxVolume) * 70}`
+                                    ).join(' L ')}`}
+                                    fill="none"
+                                    stroke="url(#chartGradient)"
+                                    strokeWidth="4"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                />
+
+                                {/* Dots */}
+                                {chartData.volumes.map((v, i) => {
+                                    const x = (i / (chartData.volumes.length - 1)) * 280 + 10;
+                                    const y = 90 - (v / chartData.maxVolume) * 70;
+                                    return (
+                                        <motion.circle
+                                            key={i}
+                                            initial={{ scale: 0 }}
+                                            animate={{ scale: 1 }}
+                                            transition={{ delay: i * 0.1 }}
+                                            cx={x} cy={y} r="3"
+                                            fill="#14b8a6"
+                                            className="shadow-lg"
+                                        />
+                                    );
+                                })}
+
+                                <defs>
+                                    <linearGradient id="chartGradient" x1="0" y1="0" x2="1" y2="0">
+                                        <stop offset="0%" stopColor="#14b8a6" />
+                                        <stop offset="100%" stopColor="#2dd4bf" />
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+
+                            <div className="flex justify-between mt-6 text-[9px] text-zinc-600 font-black uppercase tracking-widest px-2">
+                                <span>{chartData.data[0].date}</span>
+                                <span>{chartData.data[chartData.data.length - 1].date}</span>
+                            </div>
+                        </div>
+                    </Card>
+                )}
+            </div>
+        </section>
+    );
+};
