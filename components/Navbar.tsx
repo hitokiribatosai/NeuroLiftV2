@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useFontSize, FontSize } from '../contexts/FontSizeContext';
-import { Language, MuscleGroup } from '../types';
+import { Language } from '../types';
 
 interface NavbarProps {
   currentView: string;
@@ -11,8 +11,7 @@ interface NavbarProps {
 
 export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) => {
   const [scrolled, setScrolled] = useState(false);
-  const [isLangOpen, setIsLangOpen] = useState(false);
-  const [isFontSizeOpen, setIsFontSizeOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const { language, setLanguage, t, dir } = useLanguage();
   const { fontSize, setFontSize } = useFontSize();
 
@@ -24,22 +23,19 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) =
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close dropdown when clicking outside
+  // Close when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
-      if (!target.closest('.lang-dropdown-container')) {
-        setIsLangOpen(false);
-      }
-      if (!target.closest('.font-size-dropdown-container')) {
-        setIsFontSizeOpen(false);
+      if (!target.closest('.settings-container')) {
+        setIsSettingsOpen(false);
       }
     };
-    if (isLangOpen || isFontSizeOpen) {
+    if (isSettingsOpen) {
       document.addEventListener('click', handleClickOutside);
     }
     return () => document.removeEventListener('click', handleClickOutside);
-  }, [isLangOpen, isFontSizeOpen]);
+  }, [isSettingsOpen]);
 
   const navItems = [
     { id: 'home', label: t('nav_home') },
@@ -47,6 +43,19 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) =
     { id: 'tracker', label: t('nav_workout') },
     { id: 'journal', label: t('nav_journal') },
     { id: 'clock', label: t('nav_clock') },
+  ];
+
+  const languages: { code: Language; label: string }[] = [
+    { code: 'en', label: 'English' },
+    { code: 'fr', label: 'Français' },
+    { code: 'ar', label: 'العربية' },
+  ];
+
+  const fontSizes: { id: FontSize; label: string }[] = [
+    { id: 'small', label: 'Small' },
+    { id: 'medium', label: 'Medium' },
+    { id: 'large', label: 'Large' },
+    { id: 'xlarge', label: 'X-Large' },
   ];
 
   return (
@@ -64,56 +73,77 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) =
           <img src="/logo.png" alt="NeuroLift" className="h-10 w-auto rounded-xl shadow-lg" />
         </div>
 
-        {/* Font Size Selector */}
-        <div className="relative font-size-dropdown-container">
+        {/* Settings Hamburger/Gear */}
+        <div className="relative settings-container">
           <button
-            onClick={(e) => { e.stopPropagation(); setIsFontSizeOpen(!isFontSizeOpen); }}
-            className={`flex items-center gap-1.5 px-3 py-2.5 rounded-xl border transition-all shadow-sm ${isFontSizeOpen ? 'bg-zinc-800 border-zinc-700 text-white' : 'bg-zinc-900/50 border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700'}`}
-            title="Font Size"
+            onClick={(e) => { e.stopPropagation(); setIsSettingsOpen(!isSettingsOpen); }}
+            className={`flex items-center justify-center w-10 h-10 rounded-xl border transition-all shadow-sm ${isSettingsOpen ? 'bg-zinc-800 border-zinc-700 text-teal-400' : 'bg-zinc-900/50 border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700'}`}
+            title="Settings"
           >
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 5v14m0 0l-2-2m2 2l2-2m8-12v14m0 0l-2-2m2 2l2-2M3 17h6m6-14h6M9 3h12" />
-            </svg>
-            <svg className={`w-3 h-3 text-zinc-600 transition-transform duration-300 ${isFontSizeOpen ? 'rotate-180 text-teal-400' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 9l-7 7-7-7" /></svg>
+            <motion.svg
+              className="w-5 h-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              animate={{ rotate: isSettingsOpen ? 90 : 0 }}
+              transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </motion.svg>
           </button>
 
-          <div className={`absolute top-full mt-2 right-0 w-40 bg-zinc-950 border border-zinc-800 rounded-2xl overflow-hidden transition-all duration-200 shadow-2xl z-[100] ${dir === 'rtl' ? 'left-0 right-auto' : 'right-0 left-auto'} ${isFontSizeOpen ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 -translate-y-2 pointer-events-none'}`}>
-            {(['small', 'medium', 'large', 'xlarge'] as FontSize[]).map((size) => (
-              <button
-                key={size}
-                onClick={() => { setFontSize(size); setIsFontSizeOpen(false); }}
-                className={`w-full px-5 py-3 text-start transition-colors flex items-center justify-between ${fontSize === size ? 'text-teal-400 bg-teal-500/10' : 'text-zinc-300 hover:bg-zinc-900 hover:text-zinc-50'}`}
+          <AnimatePresence>
+            {isSettingsOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                transition={{ duration: 0.2 }}
+                className={`absolute top-full mt-2 w-64 bg-zinc-950 border border-zinc-800 rounded-3xl p-4 shadow-2xl z-[100] ${dir === 'rtl' ? 'right-0' : 'left-0'}`}
               >
-                <span className="text-[0.625rem] font-black uppercase tracking-widest">
-                  {size === 'small' ? 'Small' : size === 'medium' ? 'Medium' : size === 'large' ? 'Large' : 'X-Large'}
-                </span>
-                <span className="font-bold" style={{ fontSize: size === 'small' ? '0.875rem' : size === 'medium' ? '1rem' : size === 'large' ? '1.125rem' : '1.25rem' }}>Aa</span>
-              </button>
-            ))}
-          </div>
-        </div>
+                {/* Language Section */}
+                <div className="mb-6">
+                  <h3 className="text-[0.625rem] font-black text-zinc-500 uppercase tracking-widest mb-3 px-2 flex items-center gap-2">
+                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    {t('language')}
+                  </h3>
+                  <div className="grid grid-cols-1 gap-1">
+                    {languages.map((lang) => (
+                      <button
+                        key={lang.code}
+                        onClick={() => { setLanguage(lang.code); }}
+                        className={`flex items-center justify-between px-3 py-2.5 rounded-xl transition-all ${language === lang.code ? 'bg-teal-500/10 text-teal-400' : 'text-zinc-400 hover:bg-zinc-900 hover:text-zinc-200'}`}
+                      >
+                        <span className="text-xs font-bold">{lang.label}</span>
+                        {language === lang.code && <div className="w-1.5 h-1.5 rounded-full bg-teal-500 shadow-[0_0_8px_rgba(20,184,166,0.6)]" />}
+                      </button>
+                    ))}
+                  </div>
+                </div>
 
-        {/* Language Switcher - Premium Dropdown for All Screens */}
-        <div className="relative lang-dropdown-container">
-          <button
-            onClick={(e) => { e.stopPropagation(); setIsLangOpen(!isLangOpen); }}
-            className={`flex items-center gap-1.5 px-3 py-2.5 rounded-xl border transition-all shadow-sm text-[0.625rem] font-black uppercase tracking-widest ${isLangOpen ? 'bg-zinc-800 border-zinc-700 text-white' : 'bg-zinc-900/50 border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700'}`}
-          >
-            {language}
-            <svg className={`w-3 h-3 text-zinc-600 transition-transform duration-300 ${isLangOpen ? 'rotate-180 text-teal-400' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 9l-7 7-7-7" /></svg>
-          </button>
-
-          <div className={`absolute top-full mt-2 right-0 w-32 bg-zinc-950 border border-zinc-800 rounded-2xl overflow-hidden transition-all duration-200 shadow-2xl z-[100] ${dir === 'rtl' ? 'left-0 right-auto' : 'right-0 left-auto'} ${isLangOpen ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 -translate-y-2 pointer-events-none'}`}>
-            {(['en', 'fr', 'ar'] as Language[]).map((lang) => (
-              <button
-                key={lang}
-                onClick={() => { setLanguage(lang); setIsLangOpen(false); }}
-                className={`w-full px-5 py-3 text-start text-[0.625rem] font-black uppercase tracking-widest transition-colors ${language === lang ? 'text-teal-400 bg-teal-500/10' : 'text-zinc-300 hover:bg-zinc-900 hover:text-zinc-50'}`}
-              >
-                {lang === 'en' ? 'English' : lang === 'fr' ? 'Français' : 'العربية'}
-              </button>
-            ))}
-          </div>
+                {/* Font Size Section */}
+                <div>
+                  <h3 className="text-[0.625rem] font-black text-zinc-500 uppercase tracking-widest mb-3 px-2 flex items-center gap-2">
+                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" /></svg>
+                    Font Size
+                  </h3>
+                  <div className="grid grid-cols-2 gap-2">
+                    {fontSizes.map((size) => (
+                      <button
+                        key={size.id}
+                        onClick={() => setFontSize(size.id)}
+                        className={`flex flex-col items-center justify-center p-3 rounded-xl border transition-all ${fontSize === size.id ? 'bg-teal-500/10 border-teal-500/50 text-teal-400 shadow-sm' : 'bg-zinc-900/50 border-zinc-800 text-zinc-500 hover:border-zinc-700 hover:text-zinc-300'}`}
+                      >
+                        <span className="text-[0.625rem] font-bold mb-1">{size.label}</span>
+                        <span className="font-black" style={{ fontSize: size.id === 'small' ? '0.75rem' : size.id === 'medium' ? '0.875rem' : size.id === 'large' ? '1rem' : '1.125rem' }}>Aa</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         {/* Navigation Items - Scrollable Middle */}
