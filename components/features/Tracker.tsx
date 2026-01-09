@@ -496,7 +496,7 @@ export const Tracker: React.FC = () => {
 
                       return (
                         <div key={category}>
-                          <h5 className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.4em] mb-6 ml-1 flex items-center gap-4">
+                          <h5 className="text-[10px] font-black text-zinc-300 uppercase tracking-[0.4em] mb-6 ml-1 flex items-center gap-4">
                             {category}
                             <div className="h-px flex-1 bg-zinc-800"></div>
                           </h5>
@@ -505,7 +505,7 @@ export const Tracker: React.FC = () => {
                               <div key={ex} className="relative group">
                                 <label className={`flex items-center gap-4 p-5 border-2 rounded-2xl cursor-pointer transition-all duration-300 ${selectedExercises.includes(ex)
                                   ? 'bg-teal-500/5 border-teal-500 shadow-md text-teal-600 dark:text-teal-400'
-                                  : 'bg-white dark:bg-zinc-900/30 border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900/50'}`}>
+                                  : 'bg-white dark:bg-zinc-900/30 border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-200 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900/50'}`}>
                                   <input
                                     type="checkbox"
                                     checked={selectedExercises.includes(ex)}
@@ -546,14 +546,14 @@ export const Tracker: React.FC = () => {
 
         <div className="sticky bottom-6 bg-black/80 backdrop-blur-2xl p-6 md:p-8 rounded-[2.5rem] border border-zinc-800 shadow-2xl flex items-center justify-between z-40">
           <div className="hidden md:block">
-            <div className="text-[10px] text-zinc-500 font-black uppercase tracking-[0.3em] mb-1">{selectedExercises.length} Exercises Picked</div>
-            <div className="text-sm text-zinc-400 font-bold max-w-[400px] truncate">{selectedExercises.join(', ')}</div>
+            <div className="text-[10px] text-zinc-300 font-black uppercase tracking-[0.3em] mb-1">{selectedExercises.length} Exercises Picked</div>
+            <div className="text-sm text-zinc-200 font-bold max-w-[400px] truncate">{selectedExercises.join(', ')}</div>
           </div>
           <div className="flex gap-4 w-full md:w-auto">
             {activeExercises.length > 0 && (
               <button
                 onClick={() => setPhase('active')}
-                className="flex-1 md:flex-none px-8 py-5 text-xs font-black uppercase tracking-widest text-zinc-400 hover:text-white transition-colors border border-zinc-800 rounded-2xl"
+                className="flex-1 md:flex-none px-8 py-5 text-xs font-black uppercase tracking-widest text-zinc-300 hover:text-white transition-colors border border-zinc-800 rounded-2xl"
               >
                 {t('tracker_back')}
               </button>
@@ -777,7 +777,7 @@ export const Tracker: React.FC = () => {
                 </button>
               </h3>
               <div className="space-y-4">
-                <div className="grid grid-cols-12 gap-3 text-[10px] text-zinc-500 mb-2 px-4 font-black uppercase tracking-[0.3em]">
+                <div className="grid grid-cols-12 gap-3 text-[10px] text-zinc-300 mb-2 px-4 font-black uppercase tracking-[0.3em]">
                   <div className="col-span-2 text-center">{t('tracker_header_set')}</div>
                   <div className="col-span-4 text-center">{t('tracker_header_kg')}</div>
                   <div className="col-span-4 text-center">{t('tracker_header_reps')}</div>

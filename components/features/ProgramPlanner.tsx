@@ -134,7 +134,7 @@ export const ProgramPlanner: React.FC = () => {
                       onClick={() => setSelectedSubCategory(subKey)}
                       className={`px-4 py-2 rounded-xl border text-[10px] font-black uppercase tracking-widest transition-all duration-300 ${selectedSubCategory === subKey
                         ? 'bg-teal-500/10 border-teal-500/50 text-teal-600 dark:text-teal-400'
-                        : 'bg-zinc-100 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 text-zinc-500 hover:border-zinc-300 dark:hover:border-zinc-700'
+                        : 'bg-zinc-100 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 text-zinc-300 hover:border-zinc-300 dark:hover:border-zinc-100'
                         }`}
                     >
                       {getLocalizedMuscleName(subKey, language)}
@@ -150,7 +150,7 @@ export const ProgramPlanner: React.FC = () => {
 
                   return (
                     <div key={category}>
-                      <h4 className="text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-[0.4em] mb-6 flex items-center gap-4 ml-1">
+                      <h4 className="text-[10px] font-black text-zinc-300 dark:text-zinc-200 uppercase tracking-[0.4em] mb-6 flex items-center gap-4 ml-1">
                         {category}
                         <div className="h-px flex-1 bg-zinc-100 dark:bg-zinc-900"></div>
                       </h4>
