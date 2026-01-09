@@ -77,7 +77,7 @@ function App() {
             <div className="min-h-screen bg-[#0a0a0a] text-white transition-colors duration-300 selection:bg-teal-500/30 selection:text-teal-200 overflow-x-hidden">
               <Navbar currentView={currentView} setCurrentView={handleSetView} />
 
-              <main className="pt-24 min-h-screen relative overflow-hidden">
+              <main className="pt-16 min-h-screen relative overflow-hidden">
                 <AnimatePresence mode="wait">
                   {renderView()}
                 </AnimatePresence>

@@ -10,7 +10,7 @@ export const Hero: React.FC<HeroProps> = ({ setCurrentView }) => {
   const { t } = useLanguage();
 
   return (
-    <section className="relative flex min-h-[90dvh] flex-col items-center justify-center overflow-hidden pt-20 text-center">
+    <section className="relative flex min-h-[90dvh] flex-col items-center justify-center overflow-hidden pt-12 text-center">
       {/* Background Effects */}
       <div className="absolute inset-0 -z-10 grid-bg opacity-30"></div>
       <div className="absolute -top-40 left-1/2 h-[500px] w-[500px] -translate-x-1/2 rounded-full bg-teal-500/20 blur-[120px] filter animate-pulse-slow"></div>

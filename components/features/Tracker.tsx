@@ -380,7 +380,7 @@ export const Tracker: React.FC = () => {
 
   if (phase === 'setup') {
     return (
-      <div className="mx-auto max-w-5xl px-6 pt-12 pb-8 text-center">
+      <div className="mx-auto max-w-5xl px-6 pt-4 pb-8 text-center">
         <div className="mb-12">
           <h2 className="text-4xl md:text-5xl font-black text-white mb-2 uppercase tracking-tight">{t('tracker_select_muscle')}</h2>
           <div className="h-1.5 w-24 bg-teal-500 mx-auto rounded-full mb-8"></div>
@@ -431,7 +431,7 @@ export const Tracker: React.FC = () => {
 
   if (phase === 'selection') {
     return (
-      <div className="mx-auto max-w-4xl px-6 pt-12 pb-8">
+      <div className="mx-auto max-w-4xl px-6 pt-4 pb-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 border-b border-zinc-200 dark:border-zinc-800 pb-8">
           <div>
             <h2 className="text-3xl font-black text-white uppercase tracking-tight mb-2">
