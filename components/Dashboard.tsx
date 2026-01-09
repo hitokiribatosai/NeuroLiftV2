@@ -41,13 +41,15 @@ export const Dashboard: React.FC<DashboardProps> = ({ setCurrentView }) => {
         const latestTimestamp = sortedDates[0];
         const diffDays = Math.floor((todayTimestamp - latestTimestamp) / (1000 * 60 * 60 * 24));
 
-        if (diffDays > 1) return 0;
+        // If gap since last workout is more than 3 days, streak resets
+        if (diffDays > 3) return 0;
 
         count = 1;
         for (let i = 0; i < sortedDates.length - 1; i++) {
             const current = sortedDates[i];
             const next = sortedDates[i + 1];
-            if (current - next === 86400000) {
+            // Streak continues if workouts are within 3 days of each other
+            if (current - next <= 86400000 * 3) {
                 count++;
             } else {
                 break;
