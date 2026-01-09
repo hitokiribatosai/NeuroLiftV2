@@ -36,7 +36,7 @@ export const ProgramPlanner: React.FC = () => {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">
         <div>
           <h2 className="text-4xl font-black text-zinc-900 dark:text-white mb-2 uppercase tracking-tight">{t('planner_title')}</h2>
-          <p className="text-zinc-500 text-sm italic">{t('planner_desc')}</p>
+          <p className="text-zinc-300 text-sm italic">{t('planner_desc')}</p>
         </div>
         <div className="relative w-full md:w-80">
           <svg className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-teal-600 dark:text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -68,7 +68,7 @@ export const ProgramPlanner: React.FC = () => {
               }}
               className={`text-left px-6 py-4 rounded-2xl border transition-all duration-300 font-black uppercase tracking-widest text-[10px] sm:text-xs ${selectedMuscle === muscleKey
                 ? 'bg-teal-500 text-white border-teal-500 shadow-lg shadow-teal-500/20'
-                : 'bg-zinc-900/30 border-zinc-800 text-zinc-500 hover:border-zinc-700 hover:text-zinc-300 shadow-sm'
+                : 'bg-zinc-900/30 border-zinc-800 text-zinc-200 hover:border-zinc-700 hover:text-zinc-50 shadow-sm'
                 }`}
             >
               {getLocalizedMuscleName(muscleKey, language)}

@@ -82,7 +82,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) =
               <button
                 key={size}
                 onClick={() => { setFontSize(size); setIsFontSizeOpen(false); }}
-                className={`w-full px-5 py-3 text-start transition-colors flex items-center justify-between ${fontSize === size ? 'text-teal-400 bg-teal-500/10' : 'text-zinc-500 hover:bg-zinc-900 hover:text-zinc-300'}`}
+                className={`w-full px-5 py-3 text-start transition-colors flex items-center justify-between ${fontSize === size ? 'text-teal-400 bg-teal-500/10' : 'text-zinc-300 hover:bg-zinc-900 hover:text-zinc-50'}`}
               >
                 <span className="text-[0.625rem] font-black uppercase tracking-widest">
                   {size === 'small' ? 'Small' : size === 'medium' ? 'Medium' : size === 'large' ? 'Large' : 'X-Large'}
@@ -108,7 +108,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) =
               <button
                 key={lang}
                 onClick={() => { setLanguage(lang); setIsLangOpen(false); }}
-                className={`w-full px-5 py-3 text-start text-[0.625rem] font-black uppercase tracking-widest transition-colors ${language === lang ? 'text-teal-400 bg-teal-500/10' : 'text-zinc-500 hover:bg-zinc-900 hover:text-zinc-300'}`}
+                className={`w-full px-5 py-3 text-start text-[0.625rem] font-black uppercase tracking-widest transition-colors ${language === lang ? 'text-teal-400 bg-teal-500/10' : 'text-zinc-300 hover:bg-zinc-900 hover:text-zinc-50'}`}
               >
                 {lang === 'en' ? 'English' : lang === 'fr' ? 'Français' : 'العربية'}
               </button>
@@ -123,7 +123,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) =
               <button
                 key={item.id}
                 onClick={() => setCurrentView(item.id)}
-                className={`relative py-1 transition-colors hover:text-white shrink-0 uppercase tracking-widest text-[0.625rem] ${currentView === item.id ? 'text-teal-400' : ''}`}
+                className={`relative py-1 transition-colors hover:text-white shrink-0 uppercase tracking-widest text-[0.625rem] ${currentView === item.id ? 'text-teal-400' : 'text-zinc-200'}`}
               >
                 <span className="relative z-10">{item.label}</span>
                 {currentView === item.id && (
