@@ -127,6 +127,7 @@ export const getExerciseDatabase = (lang: Language): ExerciseDatabase => {
           { en: "DB Pullover (Lat Focus)", fr: "Pull-over Haltère", ar: "بلوفر دمبل للمجنص" }
         ],
         cables: [
+          { en: "Front Lat Pulldown", fr: "Tirage Poitrine", ar: "سحب عالي أمامي" },
           { en: "Wide Grip Lat Pulldown", fr: "Tirage Large", ar: "سحب عالي قبضة واسعة" },
           { en: "V-Bar Lat Pulldown", fr: "Tirage Triangle", ar: "سحب عالي قبضة ضيقة" },
           { en: "Single Arm Lat Pulldown", fr: "Tirage Unilatéral", ar: "سحب عالي فردي" },

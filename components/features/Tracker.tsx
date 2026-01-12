@@ -12,7 +12,6 @@ import { safeStorage } from '../../utils/storage';
 import { App as CapApp } from '@capacitor/app';
 import { Modal } from '../ui/Modal';
 import { motion, AnimatePresence } from 'framer-motion';
-import { scheduleRestNotification, cancelRestNotification, updateWorkoutNotification } from '../../utils/notification';
 import { Share } from '@capacitor/share';
 import { Capacitor } from '@capacitor/core';
 
@@ -70,14 +69,6 @@ export const Tracker: React.FC = () => {
 
   // Notification logic is now partially in ClockContext
   // but we still trigger the rest start here
-  useEffect(() => {
-    if (restRemaining === 90) { // Default rest duration from image
-      scheduleRestNotification(90);
-    }
-    if (restRemaining === null) {
-      cancelRestNotification();
-    }
-  }, [restRemaining]);
 
   // Handle Shared Workouts from URL
   useEffect(() => {
@@ -978,6 +969,6 @@ export const Tracker: React.FC = () => {
         confirmText="Reset"
         cancelText="Cancel"
       />
-    </div>
+    </div >
   );
 };
