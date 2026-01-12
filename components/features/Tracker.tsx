@@ -526,7 +526,8 @@ export const Tracker: React.FC = () => {
                         Object.keys(exercisesByMuscle[muscle]).forEach(subGroup => {
                           (['machines', 'weightlifting', 'cables', 'bodyweight'] as const).forEach(category => {
                             const exercises = exercisesByMuscle[muscle][subGroup][category] || [];
-                            exercises.filter(ex => ex.toLowerCase().includes(searchQuery.toLowerCase())).forEach(ex => {
+                            const normalize = (str: string) => str.toLowerCase().replace(/[^a-z0-9]/g, '');
+                            exercises.filter(ex => normalize(ex).includes(normalize(searchQuery))).forEach(ex => {
                               // De-duplicate if needed, or just push
                               if (!allMatches.some(m => m.name === ex)) {
                                 allMatches.push({ name: ex, muscle });
