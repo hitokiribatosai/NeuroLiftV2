@@ -50,3 +50,52 @@ export const cancelRestNotification = async () => {
         console.error("Failed to cancel notification", e);
     }
 };
+
+export const registerWorkoutActionTypes = async () => {
+    try {
+        await LocalNotifications.registerActionTypes({
+            types: [
+                {
+                    id: 'WORKOUT_ACTIONS',
+                    actions: [
+                        { id: 'PAUSE', title: 'Pause', foreground: false },
+                        { id: 'RESET', title: 'Reset', foreground: false, destructive: true }
+                    ]
+                }
+            ]
+        });
+    } catch (e) {
+        console.error("Failed to register action types", e);
+    }
+};
+
+export const updateWorkoutNotification = async (timeText: string, isPaused: boolean, restText?: string) => {
+    try {
+        const hasPerm = await requestNotificationPermissions();
+        if (!hasPerm) return;
+
+        await LocalNotifications.schedule({
+            notifications: [
+                {
+                    title: isPaused ? 'Workout Paused' : 'Workout in Progress',
+                    body: restText ? `Rest: ${restText} | Time: ${timeText}` : `Current Time: ${timeText}`,
+                    id: 2,
+                    ongoing: true,
+                    autoCancel: false,
+                    actionTypeId: 'WORKOUT_ACTIONS',
+                    smallIcon: 'ic_stat_icon_config_sample'
+                }
+            ]
+        });
+    } catch (e) {
+        console.error("Failed to update workout notification", e);
+    }
+};
+
+export const cancelWorkoutNotification = async () => {
+    try {
+        await LocalNotifications.cancel({ notifications: [{ id: 2 }] });
+    } catch (e) {
+        console.error("Failed to cancel workout notification", e);
+    }
+};

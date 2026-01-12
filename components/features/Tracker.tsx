@@ -12,7 +12,9 @@ import { safeStorage } from '../../utils/storage';
 import { App as CapApp } from '@capacitor/app';
 import { Modal } from '../ui/Modal';
 import { motion, AnimatePresence } from 'framer-motion';
-import { scheduleRestNotification, cancelRestNotification } from '../../utils/notification';
+import { scheduleRestNotification, cancelRestNotification, updateWorkoutNotification } from '../../utils/notification';
+import { Share } from '@capacitor/share';
+import { Capacitor } from '@capacitor/core';
 
 export const Tracker: React.FC = () => {
   const { t, language } = useLanguage();
@@ -36,11 +38,7 @@ export const Tracker: React.FC = () => {
 
 
   // Active Session State
-  const [activeExercises, setActiveExercises] = useState<ActiveExercise[]>(() => {
-    return safeStorage.getParsed<ActiveExercise[]>('neuroLift_tracker_active_exercises', []);
-  });
   const [completedWorkout, setCompletedWorkout] = useState<CompletedWorkout | null>(null);
-  const [restRemaining, setRestRemaining] = useState<number | null>(null);
   const [direction, setDirection] = useState(0);
 
   const phaseOrder = ['setup', 'selection', 'active', 'summary'];
@@ -55,29 +53,30 @@ export const Tracker: React.FC = () => {
     countdownSeconds, setCountdownSeconds,
     laps, addLap,
     resetClock,
-    startTimer
+    startTimer,
+    restRemaining,
+    setRestRemaining
   } = useClock();
+
+  // Active Exercises as separate effect to avoid context lag if needed, or just keep in useClock
+  // but for now let's use the one from Tracker to keep logic separate
+  const [activeExercises, setActiveExercises] = useState<ActiveExercise[]>(() => {
+    return safeStorage.getParsed<ActiveExercise[]>('neuroLift_tracker_active_exercises', []);
+  });
 
   // Dynamic DB
   const exercisesByMuscle = getExerciseDatabase(language);
   const selectableMuscles = Object.keys(exercisesByMuscle);
 
-  // Notification & Sound Logic
+  // Notification logic is now partially in ClockContext
+  // but we still trigger the rest start here
   useEffect(() => {
-    let interval: any;
-    if (restRemaining !== null && restRemaining > 0) {
-      if (restRemaining === 90) { // Start of rest
-        scheduleRestNotification(90);
-      }
-      interval = setInterval(() => setRestRemaining(r => (r !== null ? r - 1 : null)), 1000);
-    } else if (restRemaining === 0) {
-      setRestRemaining(null);
-      playNotificationSound();
-      // Notification is handled by system schedule, but we can ensure cleanup
-    } else if (restRemaining === null) {
+    if (restRemaining === 90) { // Default rest duration from image
+      scheduleRestNotification(90);
+    }
+    if (restRemaining === null) {
       cancelRestNotification();
     }
-    return () => clearInterval(interval);
   }, [restRemaining]);
 
   // Handle Shared Workouts from URL
@@ -354,13 +353,23 @@ export const Tracker: React.FC = () => {
     }
   };
 
-  const handleShareWorkout = () => {
+  const handleShareWorkout = async () => {
     try {
       const encoded = btoa(JSON.stringify(selectedExercises));
-      const shareUrl = `https://neurolift.vercel.app?share=${encoded}#tracker?phase=selection`;
-      navigator.clipboard.writeText(shareUrl);
-      setShareFeedback(true);
-      setTimeout(() => setShareFeedback(false), 2000);
+      const shareUrl = `${window.location.origin}${window.location.pathname}?share=${encoded}${window.location.hash}`;
+
+      if (Capacitor.isNativePlatform()) {
+        await Share.share({
+          title: 'NeuroLift Workout Plan',
+          text: 'Check out my workout plan on NeuroLift!',
+          url: shareUrl,
+          dialogTitle: 'Share Workout Plan'
+        });
+      } else {
+        navigator.clipboard.writeText(shareUrl);
+        setShareFeedback(true);
+        setTimeout(() => setShareFeedback(false), 2000);
+      }
     } catch (e) {
       console.error("Failed to generate share link", e);
     }
@@ -948,7 +957,7 @@ export const Tracker: React.FC = () => {
                     onClick={finishWorkout}
                     variant="secondary"
                     spotlightColor="rgba(244, 63, 94, 0.4)"
-                    className="w-full md:w-auto px-20 py-5 bg-rose-500/10 border-rose-500/20 text-rose-500 hover:text-rose-400 font-black uppercase tracking-[0.2em] text-sm shadow-none hover:shadow-lg hover:shadow-rose-500/10"
+                    className="w-auto px-20 py-5 bg-rose-500/10 border-rose-500/20 text-rose-500 hover:text-rose-400 font-black uppercase tracking-[0.2em] text-sm shadow-none hover:shadow-lg hover:shadow-rose-500/10"
                   >
                     {t('tracker_finish')}
                   </SpotlightButton>

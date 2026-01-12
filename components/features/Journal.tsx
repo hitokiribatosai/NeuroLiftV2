@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { JournalEntry, CustomMeasurement, CompletedWorkout, ActiveExercise, WorkoutSet } from '../../types';
+import { Share } from '@capacitor/share';
+import { Capacitor } from '@capacitor/core';
 import { Card } from '../ui/Card';
 import { SpotlightButton } from '../ui/SpotlightButton';
 import { getMuscleForExercise, getLocalizedMuscleName } from '../../utils/exerciseData';
@@ -133,16 +135,46 @@ export const Journal: React.FC = () => {
     safeStorage.setItem('neuroLift_history', JSON.stringify(updatedHistory));
   };
 
-  const handleShareWorkout = (exercises: ActiveExercise[]) => {
+  const handleShareWorkout = async (exercises: ActiveExercise[]) => {
     try {
       const exerciseNames = exercises.map(ex => ex.name);
       const encoded = btoa(JSON.stringify(exerciseNames));
       const shareUrl = `${window.location.origin}${window.location.pathname}?share=${encoded}${window.location.hash}`;
-      navigator.clipboard.writeText(shareUrl);
-      setShareFeedback(true);
-      setTimeout(() => setShareFeedback(false), 2000);
+
+      if (Capacitor.isNativePlatform()) {
+        await Share.share({
+          title: 'NeuroLift Workout Plan',
+          text: 'Check out my workout plan on NeuroLift!',
+          url: shareUrl,
+          dialogTitle: 'Share Workout Plan'
+        });
+      } else {
+        await navigator.clipboard.writeText(shareUrl);
+        setShareFeedback(true);
+        setTimeout(() => setShareFeedback(false), 2000);
+      }
     } catch (e) {
       console.error("Failed to generate share link", e);
+    }
+  };
+
+  const handleShareEntry = async (entry: JournalEntry) => {
+    try {
+      const text = `My Progress on NeuroLift (${entry.date}):\nWeight: ${entry.weight}kg\n${entry.customMeasurements?.map(m => `${m.name}: ${m.value}${m.unit}`).join('\n')}`;
+
+      if (Capacitor.isNativePlatform()) {
+        await Share.share({
+          title: 'My Progress on NeuroLift',
+          text: text,
+          dialogTitle: 'Share My Progress'
+        });
+      } else {
+        await navigator.clipboard.writeText(text);
+        setShareFeedback(true);
+        setTimeout(() => setShareFeedback(false), 2000);
+      }
+    } catch (e) {
+      console.error("Failed to share entry", e);
     }
   };
 
@@ -450,6 +482,17 @@ export const Journal: React.FC = () => {
                     >
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                    </button>
+
+                    <button
+                      onClick={(e) => { e.stopPropagation(); handleShareEntry(entry); }}
+                      className="absolute top-1 right-16 p-3 rounded-2xl bg-zinc-50 dark:bg-zinc-800/80 text-zinc-400 hover:bg-teal-500 hover:text-white md:opacity-0 group-hover:opacity-100 opacity-100 transition-all z-10 shadow-sm border border-zinc-100 dark:border-zinc-700 backdrop-blur-sm"
+                      style={{ WebkitBackdropFilter: 'blur(8px)' }}
+                      title="Share entry"
+                    >
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
                       </svg>
                     </button>
 

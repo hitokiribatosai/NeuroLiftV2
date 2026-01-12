@@ -1,6 +1,9 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { playNotificationSound } from '../utils/audio';
 import { safeStorage } from '../utils/storage';
+import { LocalNotifications } from '@capacitor/local-notifications';
+import { Capacitor } from '@capacitor/core';
+import { registerWorkoutActionTypes, updateWorkoutNotification, cancelWorkoutNotification } from '../utils/notification';
 
 type ClockMode = 'stopwatch' | 'timer';
 
@@ -21,6 +24,8 @@ interface ClockContextType {
     addLap: () => void;
     resetClock: () => void;
     startTimer: (mins: number, secs: number) => void;
+    restRemaining: number | null;
+    setRestRemaining: (seconds: number | null) => void;
 }
 
 const ClockContext = createContext<ClockContextType | undefined>(undefined);
@@ -49,6 +54,32 @@ export const ClockProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     const [laps, setLaps] = useState<number[]>(() => {
         return safeStorage.getParsed<number[]>('neuroLift_clock_laps', []);
     });
+    const [restRemaining, setRestRemaining] = useState<number | null>(null);
+
+    // Initial Registration
+    useEffect(() => {
+        let listenerHandle: any = null;
+
+        if (Capacitor.isNativePlatform()) {
+            registerWorkoutActionTypes();
+
+            const setupListener = async () => {
+                listenerHandle = await LocalNotifications.addListener('localNotificationActionPerformed', (notification) => {
+                    if (notification.actionId === 'PAUSE') {
+                        setTimerActive(prev => !prev);
+                    } else if (notification.actionId === 'RESET') {
+                        resetClock();
+                    }
+                });
+            };
+
+            setupListener();
+
+            return () => {
+                if (listenerHandle) listenerHandle.remove();
+            };
+        }
+    }, []);
 
     useEffect(() => {
         safeStorage.setItem('neuroLift_clock_mode', mode);
@@ -62,16 +93,46 @@ export const ClockProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
     useEffect(() => {
         let interval: any;
-        if (timerActive) {
+        if (timerActive || (restRemaining !== null && restRemaining > 0)) {
             interval = setInterval(() => {
-                if (mode === 'stopwatch') {
-                    setDuration(d => d + 1);
-                } else if (countdownRemaining !== null && countdownRemaining > 0) {
-                    setCountdownRemaining(r => (r !== null ? r - 1 : 0));
-                } else if (countdownRemaining === 0) {
-                    setTimerActive(false);
-                    setCountdownRemaining(null);
+                if (timerActive) {
+                    if (mode === 'stopwatch') {
+                        setDuration(d => d + 1);
+                    } else if (countdownRemaining !== null && countdownRemaining > 0) {
+                        setCountdownRemaining(r => (r !== null ? r - 1 : 0));
+                    } else if (countdownRemaining === 0) {
+                        setTimerActive(false);
+                        setCountdownRemaining(null);
+                        playNotificationSound();
+                    }
+                }
+
+                // Handle Rest Timer
+                if (restRemaining !== null && restRemaining > 0) {
+                    setRestRemaining(r => (r !== null ? r - 1 : null));
+                } else if (restRemaining === 0) {
+                    setRestRemaining(null);
                     playNotificationSound();
+                }
+
+                // Update Native Notification
+                if (Capacitor.isNativePlatform()) {
+                    const formatTime = (s: number) => {
+                        const h = Math.floor(s / 3600);
+                        const m = Math.floor((s % 3600) / 60);
+                        const sec = s % 60;
+                        return h > 0
+                            ? `${h}:${m.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`
+                            : `${m}:${sec.toString().padStart(2, '0')}`;
+                    };
+
+                    const timeText = mode === 'stopwatch'
+                        ? formatTime(duration)
+                        : formatTime(countdownRemaining || 0);
+
+                    const restText = restRemaining !== null ? `${restRemaining}s` : undefined;
+
+                    updateWorkoutNotification(timeText, !timerActive, restText);
                 }
             }, 1000);
         }
@@ -89,6 +150,8 @@ export const ClockProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         setLaps([]);
         setCountdownRemaining(null);
         setTimerActive(false);
+        setRestRemaining(null);
+        if (Capacitor.isNativePlatform()) cancelWorkoutNotification();
     };
 
     const startTimer = (mins: number, secs: number) => {
@@ -110,7 +173,9 @@ export const ClockProvider: React.FC<{ children: ReactNode }> = ({ children }) =
             countdownSeconds, setCountdownSeconds,
             laps, addLap,
             resetClock,
-            startTimer
+            startTimer,
+            restRemaining,
+            setRestRemaining
         }}>
             {children}
         </ClockContext.Provider>
