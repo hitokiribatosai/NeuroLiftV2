@@ -6,7 +6,7 @@ import { Card } from './ui/Card';
 import { Modal } from './ui/Modal';
 import { safeStorage } from '../utils/storage';
 import { CompletedWorkout } from '../types';
-import { getMuscleForExercise, getLocalizedMuscleName } from '../utils/exerciseData';
+import { getMuscleForExercise, getLocalizedMuscleName, getSubMuscleForExercise } from '../utils/exerciseData';
 
 interface DashboardProps {
     setCurrentView: (view: string) => void;
@@ -19,7 +19,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ setCurrentView }) => {
     const [selectedMuscle, setSelectedMuscle] = useState('Total');
     const [activeIndex, setActiveIndex] = useState(0);
 
-    const muscleGroups = ['Total', 'Chest', 'Back', 'Shoulders', 'Legs', 'Arms', 'Core', 'Cardio'];
+    const muscleGroups = ['Total', 'Chest', 'Back', 'Shoulders', 'Legs', 'Biceps', 'Triceps', 'Forearms', 'Core', 'Cardio'];
 
     const history = useMemo(() =>
         safeStorage.getParsed<CompletedWorkout[]>('neuroLift_history', []),
@@ -75,7 +75,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ setCurrentView }) => {
             if (selectedMuscle === 'Total') return d.totalVolume;
             return (d.exercises || []).reduce((acc, ex) => {
                 const muscle = getMuscleForExercise(ex.name);
-                if (muscle === selectedMuscle) {
+                const subMuscle = getSubMuscleForExercise(ex.name);
+                if (muscle === selectedMuscle || subMuscle === selectedMuscle) {
                     return acc + (ex.sets || []).reduce((sAcc, s) => s.completed ? sAcc + (s.weight * s.reps) : sAcc, 0);
                 }
                 return acc;

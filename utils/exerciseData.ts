@@ -535,6 +535,24 @@ export const getExerciseLinks = (exerciseName: string) => {
   };
 };
 
+export const getSubMuscleForExercise = (exerciseName: string): string => {
+  const db = getExerciseDatabase('en');
+  for (const subGroups of Object.values(db)) {
+    for (const [subGroup, categories] of Object.entries(subGroups)) {
+      const allExercises = [
+        ...categories.weightlifting,
+        ...categories.cables,
+        ...categories.bodyweight,
+        ...categories.machines
+      ];
+      if (allExercises.includes(exerciseName)) {
+        return subGroup;
+      }
+    }
+  }
+  return 'Other';
+};
+
 export const getMuscleForExercise = (exerciseName: string): string => {
   const db = getExerciseDatabase('en'); // Use 'en' as stable keys
   for (const [muscle, subGroups] of Object.entries(db)) {

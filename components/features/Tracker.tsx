@@ -205,6 +205,8 @@ export const Tracker: React.FC = () => {
     setPhase(newPhase);
   };
 
+  const [weightFocus, setWeightFocus] = useState(true);
+
   const formatTime = (secs: number) => {
     const m = Math.floor(secs / 60);
     const s = secs % 60;
@@ -250,6 +252,13 @@ export const Tracker: React.FC = () => {
     } else if (!timerActive) {
       setTimerActive(true);
     }
+  };
+
+  const removeSet = (exerciseIndex: number, setIndex: number) => {
+    if (!activeExercises[exerciseIndex]) return;
+    const newExs = [...activeExercises];
+    newExs[exerciseIndex].sets.splice(setIndex, 1);
+    setActiveExercises(newExs);
   };
 
   const addSet = (exerciseIndex: number) => {
@@ -350,7 +359,7 @@ export const Tracker: React.FC = () => {
   const handleShareWorkout = () => {
     try {
       const encoded = btoa(JSON.stringify(selectedExercises));
-      const shareUrl = `${window.location.origin}${window.location.pathname}?share=${encoded}${window.location.hash}`;
+      const shareUrl = `https://neurolift.vercel.app?share=${encoded}#tracker?phase=selection`;
       navigator.clipboard.writeText(shareUrl);
       setShareFeedback(true);
       setTimeout(() => setShareFeedback(false), 2000);
@@ -677,7 +686,9 @@ export const Tracker: React.FC = () => {
                       {restRemaining !== null && (
                         <div className="flex items-center gap-2 px-3 py-1.5 bg-orange-500/10 border border-orange-500/20 rounded-xl animate-pulse">
                           <span className="text-[10px] font-black text-orange-500 uppercase tracking-widest">Rest</span>
-                          <span className="text-lg font-mono font-black text-orange-400">{restRemaining}s</span>
+                          <span className="text-lg font-mono font-black text-orange-400">
+                            {restRemaining}s <span className="text-[10px] text-orange-500/50">/ 90s</span>
+                          </span>
                         </div>
                       )}
                     </div>
@@ -760,9 +771,19 @@ export const Tracker: React.FC = () => {
                     <div className="space-y-4">
                       <div className="grid grid-cols-12 gap-3 text-[10px] text-zinc-300 mb-2 px-4 font-black uppercase tracking-[0.3em]">
                         <div className="col-span-2 text-center">{t('tracker_header_set')}</div>
-                        <div className="col-span-3 text-center">{t('tracker_header_reps')}</div>
-                        <div className="col-span-3 text-center">{t('tracker_header_kg')}</div>
-                        <div className="col-span-4 text-center">{t('tracker_header_check')}</div>
+                        {weightFocus ? (
+                          <>
+                            <div className="col-span-3 text-center cursor-pointer hover:text-teal-400 transition-colors" onClick={() => setWeightFocus(false)}>{t('tracker_header_kg')} ⇄</div>
+                            <div className="col-span-3 text-center cursor-pointer hover:text-teal-400 transition-colors" onClick={() => setWeightFocus(false)}>{t('tracker_header_reps')}</div>
+                          </>
+                        ) : (
+                          <>
+                            <div className="col-span-3 text-center cursor-pointer hover:text-teal-400 transition-colors" onClick={() => setWeightFocus(true)}>{t('tracker_header_reps')} ⇄</div>
+                            <div className="col-span-3 text-center cursor-pointer hover:text-teal-400 transition-colors" onClick={() => setWeightFocus(true)}>{t('tracker_header_kg')}</div>
+                          </>
+                        )}
+                        <div className="col-span-1 text-center">RM</div>
+                        <div className="col-span-3 text-center">{t('tracker_header_check')}</div>
                       </div>
 
                       <div className="space-y-3">
@@ -773,29 +794,70 @@ export const Tracker: React.FC = () => {
                                 {setIdx + 1}
                               </div>
                             </div>
-                            <div className="col-span-3">
-                              <input
-                                type="tel"
-                                pattern="[0-9]*"
-                                inputMode="numeric"
-                                value={set.reps || ''}
-                                onChange={(e) => updateSet(exIdx, setIdx, 'reps', e.target.value)}
-                                placeholder="0"
-                                className="w-full bg-transparent text-center text-lg font-bold text-white placeholder-zinc-700 outline-none border-b border-transparent focus:border-teal-500 transition-all"
-                              />
+
+                            {weightFocus ? (
+                              <>
+                                <div className="col-span-3">
+                                  <input
+                                    type="tel"
+                                    pattern="[0-9]*"
+                                    inputMode="numeric"
+                                    value={set.weight || ''}
+                                    onChange={(e) => updateSet(exIdx, setIdx, 'weight', e.target.value)}
+                                    placeholder="0"
+                                    className="w-full bg-transparent text-center text-lg font-bold text-white placeholder-zinc-700 outline-none border-b border-transparent focus:border-teal-500 transition-all"
+                                  />
+                                </div>
+                                <div className="col-span-3">
+                                  <input
+                                    type="tel"
+                                    pattern="[0-9]*"
+                                    inputMode="numeric"
+                                    value={set.reps || ''}
+                                    onChange={(e) => updateSet(exIdx, setIdx, 'reps', e.target.value)}
+                                    placeholder="0"
+                                    className="w-full bg-transparent text-center text-lg font-bold text-white placeholder-zinc-700 outline-none border-b border-transparent focus:border-teal-500 transition-all"
+                                  />
+                                </div>
+                              </>
+                            ) : (
+                              <>
+                                <div className="col-span-3">
+                                  <input
+                                    type="tel"
+                                    pattern="[0-9]*"
+                                    inputMode="numeric"
+                                    value={set.reps || ''}
+                                    onChange={(e) => updateSet(exIdx, setIdx, 'reps', e.target.value)}
+                                    placeholder="0"
+                                    className="w-full bg-transparent text-center text-lg font-bold text-white placeholder-zinc-700 outline-none border-b border-transparent focus:border-teal-500 transition-all"
+                                  />
+                                </div>
+                                <div className="col-span-3">
+                                  <input
+                                    type="tel"
+                                    pattern="[0-9]*"
+                                    inputMode="numeric"
+                                    value={set.weight || ''}
+                                    onChange={(e) => updateSet(exIdx, setIdx, 'weight', e.target.value)}
+                                    placeholder="0"
+                                    className="w-full bg-transparent text-center text-lg font-bold text-white placeholder-zinc-700 outline-none border-b border-transparent focus:border-teal-500 transition-all"
+                                  />
+                                </div>
+                              </>
+                            )}
+                            <div className="col-span-1 flex justify-center">
+                              <button
+                                onClick={() => removeSet(exIdx, setIdx)}
+                                className="p-2 text-zinc-600 hover:text-rose-500 transition-colors"
+                              >
+                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                              </button>
                             </div>
-                            <div className="col-span-3">
-                              <input
-                                type="tel"
-                                pattern="[0-9]*"
-                                inputMode="numeric"
-                                value={set.weight || ''}
-                                onChange={(e) => updateSet(exIdx, setIdx, 'weight', e.target.value)}
-                                placeholder="0"
-                                className="w-full bg-transparent text-center text-lg font-bold text-white placeholder-zinc-700 outline-none border-b border-transparent focus:border-teal-500 transition-all"
-                              />
-                            </div>
-                            <div className="col-span-4 flex justify-center">
+
+                            <div className="col-span-3 flex justify-center">
                               <button
                                 onClick={() => toggleSetComplete(exIdx, setIdx)}
                                 className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${set.completed
@@ -836,14 +898,16 @@ export const Tracker: React.FC = () => {
                   Add Exercises
                 </button>
 
-                <SpotlightButton
-                  onClick={finishWorkout}
-                  variant="secondary"
-                  spotlightColor="rgba(244, 63, 94, 0.4)"
-                  className="w-full py-5 bg-rose-500/10 border-rose-500/20 text-rose-500 hover:text-rose-400 font-black uppercase tracking-[0.2em] text-sm shadow-none hover:shadow-lg hover:shadow-rose-500/10"
-                >
-                  {t('tracker_finish')}
-                </SpotlightButton>
+                <div className="flex justify-center w-full">
+                  <SpotlightButton
+                    onClick={finishWorkout}
+                    variant="secondary"
+                    spotlightColor="rgba(244, 63, 94, 0.4)"
+                    className="w-full md:w-auto px-16 py-5 bg-rose-500/10 border-rose-500/20 text-rose-500 hover:text-rose-400 font-black uppercase tracking-[0.2em] text-sm shadow-none hover:shadow-lg hover:shadow-rose-500/10"
+                  >
+                    {t('tracker_finish')}
+                  </SpotlightButton>
+                </div>
               </div>
             </div>
           )}
