@@ -12,6 +12,7 @@ import { safeStorage } from '../../utils/storage';
 import { App as CapApp } from '@capacitor/app';
 import { Modal } from '../ui/Modal';
 import { motion, AnimatePresence } from 'framer-motion';
+import { scheduleRestNotification, cancelRestNotification } from '../../utils/notification';
 
 export const Tracker: React.FC = () => {
   const { t, language } = useLanguage();
@@ -61,13 +62,20 @@ export const Tracker: React.FC = () => {
   const exercisesByMuscle = getExerciseDatabase(language);
   const selectableMuscles = Object.keys(exercisesByMuscle);
 
+  // Notification & Sound Logic
   useEffect(() => {
     let interval: any;
     if (restRemaining !== null && restRemaining > 0) {
+      if (restRemaining === 90) { // Start of rest
+        scheduleRestNotification(90);
+      }
       interval = setInterval(() => setRestRemaining(r => (r !== null ? r - 1 : null)), 1000);
     } else if (restRemaining === 0) {
       setRestRemaining(null);
       playNotificationSound();
+      // Notification is handled by system schedule, but we can ensure cleanup
+    } else if (restRemaining === null) {
+      cancelRestNotification();
     }
     return () => clearInterval(interval);
   }, [restRemaining]);
@@ -660,123 +668,16 @@ export const Tracker: React.FC = () => {
           )}
 
           {phase === 'active' && (
-            <div className="mx-auto max-w-4xl px-4 md:px-6 py-20 pb-40">
-              <div className="sticky top-0 z-50 -mx-6 mb-8 bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-zinc-900 px-6 pt-[calc(1.5rem+env(safe-area-inset-top))] pb-6 ring-1 ring-white/5" style={{ WebkitBackdropFilter: 'blur(24px)' }}>
-                <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-                  <div className="flex flex-col gap-2">
-                    <div className="flex items-center gap-4">
-                      {mode === 'timer' && countdownRemaining === null ? (
-                        <div className="flex items-center gap-2 animate-in fade-in zoom-in duration-300">
-                          <input
-                            type="number"
-                            value={countdownMinutes}
-                            onChange={(e) => setCountdownMinutes(e.target.value.slice(-2))}
-                            placeholder="00"
-                            className="w-14 md:w-16 bg-zinc-900 border-b-2 border-teal-500/30 py-1 text-3xl md:text-4xl font-mono font-black text-white text-center outline-none focus:border-teal-500 focus:bg-teal-500/5 transition-all"
-                          />
-                          <span className="text-2xl font-black text-zinc-700">:</span>
-                          <input
-                            type="number"
-                            value={countdownSeconds}
-                            onChange={(e) => setCountdownSeconds(e.target.value.slice(-2))}
-                            placeholder="00"
-                            className="w-14 md:w-16 bg-zinc-900 border-b-2 border-teal-500/30 py-1 text-3xl md:text-4xl font-mono font-black text-white text-center outline-none focus:border-teal-500 focus:bg-teal-500/5 transition-all"
-                          />
-                          <button
-                            onClick={startTimerMode}
-                            className="ml-2 w-10 h-10 rounded-xl bg-teal-500 flex items-center justify-center text-white shadow-lg shadow-teal-500/20 active:scale-90 transition-all"
-                          >
-                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
-                          </button>
-                        </div>
-                      ) : (
-                        <>
-                          <div className="text-4xl md:text-5xl font-mono font-black text-teal-400 leading-none tracking-tighter">
-                            {mode === 'stopwatch' ? formatTime(duration) : formatTime(countdownRemaining || 0)}
-                          </div>
-                          {/* Add Exercise Button moved here to keep header clean */}
-                          <button
-                            onClick={() => setPhase('selection')}
-                            className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-zinc-800 flex items-center justify-center text-zinc-500 hover:text-teal-400 transition-colors shadow-sm"
-                            title={t('tracker_select_exercises')}
-                          >
-                            <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" /></svg>
-                          </button>
-                        </>
-                      )}
-                    </div>
-
-                    <div className="flex items-center gap-2 mt-2">
-                      <button
-                        onClick={() => { setMode('stopwatch'); setTimerActive(false); }}
-                        className={`px-3 py-1 rounded-full font-black text-[9px] uppercase tracking-widest transition-all ${mode === 'stopwatch' ? 'bg-teal-500 text-white shadow-lg shadow-teal-500/30' : 'bg-zinc-800 text-zinc-500 hover:bg-zinc-700'}`}
-                      >
-                        {t('clock_stopwatch')}
-                      </button>
-                      <button
-                        onClick={() => { setMode('timer'); setTimerActive(false); }}
-                        className={`px-3 py-1 rounded-full font-black text-[9px] uppercase tracking-widest transition-all ${mode === 'timer' ? 'bg-teal-500 text-white shadow-lg shadow-teal-500/30' : 'bg-zinc-800 text-zinc-500 hover:bg-zinc-700'}`}
-                      >
-                        {t('clock_timer')}
-                      </button>
-                      {restRemaining !== null && (
-                        <div className="flex items-center gap-1.5 text-[9px] font-black text-orange-400 animate-pulse bg-orange-500/10 px-3 py-1 rounded-full border border-orange-500/20">
-                          <span className="w-1.5 h-1.5 bg-orange-500 rounded-full"></span>
-                          {restRemaining}s
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    {/* Play/Pause Button */}
-                    {(countdownRemaining !== null || mode === 'stopwatch') && (
-                      <button
-                        onClick={() => setTimerActive(!timerActive)}
-                        className={`w-12 h-12 md:w-14 md:h-14 rounded-2xl border-2 transition-all duration-300 shadow-lg flex items-center justify-center ${timerActive
-                          ? 'bg-amber-500 text-white border-amber-400 shadow-amber-500/20'
-                          : 'bg-teal-500 text-white border-teal-400 shadow-teal-500/20'
-                          }`}
-                      >
-                        {timerActive ? <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" /></svg> : <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>}
-                      </button>
-                    )}
-
-                    {/* Lap/Reset Row */}
-                    <div className="flex gap-1.5">
-                      <button
-                        onClick={mode === 'stopwatch' ? addLap : undefined}
-                        disabled={!timerActive || mode !== 'stopwatch'}
-                        className="w-10 h-10 md:w-12 md:h-12 rounded-xl border border-zinc-800 text-zinc-500 hover:text-white disabled:opacity-30 bg-zinc-900/50 flex items-center justify-center"
-                      >
-                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                      </button>
-
-                      <button onClick={resetCurrentTimer} className="w-10 h-10 md:w-12 md:h-12 rounded-xl border border-zinc-800 text-zinc-500 hover:text-rose-500 transition-colors bg-zinc-900/50 flex items-center justify-center">
-                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
-                      </button>
-                    </div>
-
-                    <SpotlightButton
-                      variant="secondary"
-                      onClick={finishWorkout}
-                      spotlightColor="rgba(244, 63, 94, 0.2)"
-                      className="h-[48px] md:h-[56px] px-auto md:px-6 flex items-center justify-center text-[9px] font-black uppercase tracking-widest bg-rose-500/10 text-rose-400 border-rose-500/20 ml-1 shadow-lg shadow-rose-500/10 min-w-[80px]"
-                    >
-                      {t('tracker_finish')}
-                    </SpotlightButton>
-                  </div>
-                </div>
-
-                {mode === 'stopwatch' && laps.length > 0 && (
-                  <div className="flex gap-3 overflow-x-auto mt-6 pb-2 scrollbar-hide border-t border-zinc-900 pt-5">
-                    {laps.map((time, i) => (
-                      <div key={i} className="flex-shrink-0 px-4 py-2 bg-zinc-900/50 border border-zinc-800 rounded-full text-[11px] text-zinc-400 font-mono shadow-sm">
-                        <span className="text-teal-400 font-black mr-2">LAP {laps.length - i}</span> {formatTime(time)}
-                      </div>
-                    ))}
-                  </div>
-                )}
+            <div className="mx-auto max-w-4xl px-4 md:px-6 py-6 pb-[200px]">
+              {/* Back to Selection */}
+              <div className="mb-6">
+                <button
+                  onClick={() => setPhase('selection')}
+                  className="text-xs text-zinc-500 hover:text-white uppercase tracking-widest font-black flex items-center gap-2 transition-colors px-2 py-1"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+                  {t('tracker_select_exercises')}
+                </button>
               </div>
 
               <div className="space-y-12">
@@ -798,371 +699,214 @@ export const Tracker: React.FC = () => {
                     <div className="space-y-4">
                       <div className="grid grid-cols-12 gap-3 text-[10px] text-zinc-300 mb-2 px-4 font-black uppercase tracking-[0.3em]">
                         <div className="col-span-2 text-center">{t('tracker_header_set')}</div>
-                        <div className="col-span-4 text-center">{t('tracker_header_kg')}</div>
-                        <div className="col-span-4 text-center">{t('tracker_header_reps')}</div>
-                        <div className="col-span-2 text-center">✓</div>
+                        <div className="col-span-3 text-center">{t('tracker_header_reps')}</div>
+                        <div className="col-span-3 text-center">{t('tracker_header_kg')}</div>
+                        <div className="col-span-4 text-center">{t('tracker_header_check')}</div>
                       </div>
-                      {ex.sets.map((set, setIdx) => {
-                        const isCardio = getMuscleForExercise(ex.name) === 'Cardio';
 
-                        return (
-                          <div key={set.id} className={`grid grid-cols-12 gap-3 items-center p-4 rounded-3xl transition-all duration-300 border-2 ${set.completed
-                            ? 'bg-teal-500/5 border-teal-500 shadow-md transform scale-[1.01]'
-                            : 'bg-black/40 border-zinc-800 shadow-sm'}`}>
-                            <div className="col-span-2 text-zinc-600 font-black font-mono text-lg text-center">{setIdx + 1}</div>
-
-                            {isCardio ? (
-                              <>
-                                <div className="col-span-4">
-                                  <input
-                                    type="number"
-                                    placeholder="Min"
-                                    value={set.durationSeconds ? Math.floor(set.durationSeconds / 60) : ''}
-                                    onChange={(e) => {
-                                      const mins = parseInt(e.target.value) || 0;
-                                      const currentSeconds = (set.durationSeconds || 0) % 60;
-                                      updateSet(exIdx, setIdx, 'durationSeconds', (mins * 60 + currentSeconds).toString());
-                                    }}
-                                    className={`w-full bg-transparent text-center outline-none text-xl font-black font-mono ${set.completed ? 'text-teal-400' : 'text-white'}`}
-                                  />
-                                  <div className="text-[8px] text-center text-zinc-500 uppercase font-black">Min</div>
-                                </div>
-                                <div className="col-span-4">
-                                  <input
-                                    type="number"
-                                    placeholder="KM"
-                                    step="0.1"
-                                    value={set.distanceKm || ''}
-                                    onChange={(e) => updateSet(exIdx, setIdx, 'distanceKm', e.target.value)}
-                                    className={`w-full bg-transparent text-center outline-none text-xl font-black font-mono ${set.completed ? 'text-teal-600 dark:text-teal-400' : 'text-zinc-900 dark:text-white'}`}
-                                  />
-                                  <div className="text-[8px] text-center text-zinc-500 uppercase font-black">KM</div>
-                                </div>
-                              </>
-                            ) : (
-                              <>
-                                <div className="col-span-4 relative group/plate">
-                                  <input
-                                    type="number"
-                                    placeholder="0"
-                                    value={set.weight || ''}
-                                    onChange={(e) => updateSet(exIdx, setIdx, 'weight', e.target.value)}
-                                    className={`w-full bg-transparent text-center outline-none text-xl font-black font-mono ${set.completed ? 'text-teal-600 dark:text-teal-400' : 'text-zinc-900 dark:text-white'}`}
-                                  />
-                                  <button
-                                    onClick={() => {
-                                      setPlateCalcWeight(0);
-                                      setActiveSetInfo({ exIdx, setIdx });
-                                    }}
-                                    className="absolute right-0 top-1/2 -translate-y-1/2 p-2 text-zinc-300 dark:text-zinc-700 hover:text-teal-500 transition-colors"
-                                    title={t('plate_calc_title')}
-                                  >
-                                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="2" /></svg>
-                                  </button>
-                                  <div className="text-[8px] text-center text-zinc-500 uppercase font-black">KG</div>
-                                </div>
-                                <div className="col-span-4">
-                                  <input
-                                    type="number"
-                                    placeholder="0"
-                                    value={set.reps || ''}
-                                    onChange={(e) => updateSet(exIdx, setIdx, 'reps', e.target.value)}
-                                    className={`w-full bg-transparent text-center outline-none text-xl font-black font-mono ${set.completed ? 'text-teal-600 dark:text-teal-400' : 'text-zinc-900 dark:text-white'}`}
-                                  />
-                                  <div className="text-[8px] text-center text-zinc-500 uppercase font-black">Reps</div>
-                                </div>
-                              </>
-                            )}
-
+                      <div className="space-y-3">
+                        {ex.sets.map((set, setIdx) => (
+                          <div key={set.id} className={`grid grid-cols-12 gap-3 items-center rounded-2xl p-2 md:p-3 bg-black/20 border border-zinc-800/50 transition-all ${set.completed ? 'opacity-50' : 'opacity-100'}`}>
                             <div className="col-span-2 flex justify-center">
+                              <div className="w-6 h-6 rounded-full bg-zinc-800 flex items-center justify-center text-[10px] font-black text-zinc-400">
+                                {setIdx + 1}
+                              </div>
+                            </div>
+                            <div className="col-span-3">
+                              <input
+                                type="tel"
+                                pattern="[0-9]*"
+                                inputMode="numeric"
+                                value={set.reps || ''}
+                                onChange={(e) => updateSet(exIdx, setIdx, 'reps', e.target.value)}
+                                placeholder="0"
+                                className="w-full bg-transparent text-center text-lg font-bold text-white placeholder-zinc-700 outline-none border-b border-transparent focus:border-teal-500 transition-all"
+                              />
+                            </div>
+                            <div className="col-span-3">
+                              <input
+                                type="tel"
+                                pattern="[0-9]*"
+                                inputMode="numeric"
+                                value={set.weight || ''}
+                                onChange={(e) => updateSet(exIdx, setIdx, 'weight', e.target.value)}
+                                placeholder="0"
+                                className="w-full bg-transparent text-center text-lg font-bold text-white placeholder-zinc-700 outline-none border-b border-transparent focus:border-teal-500 transition-all"
+                              />
+                            </div>
+                            <div className="col-span-4 flex justify-center">
                               <button
                                 onClick={() => toggleSetComplete(exIdx, setIdx)}
-                                className={`w-10 h-10 rounded-2xl border-2 flex items-center justify-center transition-all duration-300 ${set.completed ? 'bg-teal-500 border-teal-500 text-white shadow-lg shadow-teal-500/30 rotate-0' : 'border-zinc-700 hover:border-teal-500/50'}`}
+                                className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${set.completed
+                                  ? 'bg-teal-500 text-white shadow-lg shadow-teal-500/20'
+                                  : 'bg-zinc-800 text-zinc-600 hover:bg-zinc-700'
+                                  }`}
                               >
-                                {set.completed && <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 13l4 4L19 7" /></svg>}
+                                {set.completed ? (
+                                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
+                                ) : (
+                                  <span className="w-3 h-3 rounded-full border-2 border-zinc-600"></span>
+                                )}
                               </button>
                             </div>
                           </div>
-                        );
-                      })}
+                        ))}
+                      </div>
+
                       <button
                         onClick={() => addSet(exIdx)}
-                        className="w-full py-5 mt-4 text-[11px] text-zinc-400 dark:text-zinc-500 hover:text-teal-600 dark:hover:text-teal-400 hover:bg-teal-500/5 rounded-3xl border-2 border-dashed border-zinc-200 dark:border-zinc-800 transition-all font-black uppercase tracking-[0.3em]"
+                        className="w-full py-4 text-xs font-black uppercase tracking-[0.2em] text-zinc-500 hover:text-white hover:bg-zinc-800/50 rounded-2xl border border-zinc-800 border-dashed hover:border-zinc-600 transition-all mt-4 flex items-center justify-center gap-2"
                       >
-                        + {t('tracker_add_set')}
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+                        {t('tracker_add_set')}
                       </button>
                     </div>
                   </Card>
                 ))}
+
+                <Card className="p-8 bg-zinc-900/40 border-zinc-800 rounded-[3rem] shadow-sm overflow-hidden flex flex-col items-center text-center">
+                  <h3 className="text-xl font-black text-white uppercase tracking-tight mb-2">Next Exercise?</h3>
+                  <p className="text-zinc-400 text-sm mb-6">Finished with this batch? Add more exercises to continue.</p>
+                  <button
+                    onClick={() => setPhase('selection')}
+                    className="px-8 py-4 bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-black uppercase tracking-widest rounded-2xl border border-zinc-700 transition-all"
+                  >
+                    Select Exercises
+                  </button>
+                </Card>
               </div>
 
-              {/* Plate Calculator Modal */}
-              <Modal isOpen={activeSetInfo !== null} onClose={() => setActiveSetInfo(null)}>
-                {activeSetInfo !== null && (
-                  <div className="relative w-full max-w-md mx-auto rounded-[3.5rem] border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-10 shadow-3xl">
-                    <div className="absolute top-0 left-0 w-full h-2 bg-teal-500"></div>
-                    <button
-                      onClick={() => setActiveSetInfo(null)}
-                      className="absolute right-8 top-8 text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors"
-                      title={t('modal_close')}
-                    >
-                      <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-                    </button>
+              {/* FLOATING BOTTOM BAR */}
+              <div className="fixed bottom-0 left-0 w-full z-50 px-4 pb-[calc(1rem+env(safe-area-inset-bottom))] pt-4">
+                <div className="max-w-4xl mx-auto rounded-[2rem] bg-[#0a0a0a]/90 backdrop-blur-xl border border-white/10 shadow-[0_-10px_40px_rgba(0,0,0,0.5)] p-4 flex flex-col gap-4 ring-1 ring-white/5">
 
-                    <div className="mb-10 text-center md:text-left">
-                      <h3 className="text-3xl font-black text-zinc-900 dark:text-white uppercase tracking-tighter mb-2 flex items-center justify-center md:justify-start gap-4">
-                        <div className="w-3 h-10 bg-teal-500 rounded-full"></div>
-                        {t('plate_calc_title')}
-                      </h3>
+                  {/* Top Row: Timer Display & Controls */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      {/* Timer / Stopwatch */}
+                      <div className="flex flex-col">
+                        <span className="text-[9px] font-black uppercase tracking-widest text-zinc-500 mb-0.5">
+                          {mode === 'stopwatch' ? 'Session Time' : 'Timer'}
+                        </span>
+                        {mode === 'timer' && countdownRemaining === null ? (
+                          <div className="flex items-center gap-1">
+                            <input
+                              type="number"
+                              value={countdownMinutes}
+                              onClick={(e) => (e.target as HTMLInputElement).select()}
+                              onChange={(e) => setCountdownMinutes(e.target.value.slice(-2))}
+                              placeholder="00"
+                              className="w-8 bg-transparent text-xl font-mono font-black text-white text-center outline-none border-b border-zinc-700 focus:border-teal-500 p-0"
+                            />
+                            <span className="text-xl font-black text-zinc-600">:</span>
+                            <input
+                              type="number"
+                              value={countdownSeconds}
+                              onClick={(e) => (e.target as HTMLInputElement).select()}
+                              onChange={(e) => setCountdownSeconds(e.target.value.slice(-2))}
+                              placeholder="00"
+                              className="w-8 bg-transparent text-xl font-mono font-black text-white text-center outline-none border-b border-zinc-700 focus:border-teal-500 p-0"
+                            />
+                            <button onClick={startTimerMode} className="ml-2 p-1.5 bg-teal-500 rounded-lg text-white shadow-lg shadow-teal-500/20 active:scale-95 transition-transform"><svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg></button>
+                          </div>
+                        ) : (
+                          <div className="text-2xl font-mono font-black text-white leading-none tracking-tight">
+                            {mode === 'stopwatch' ? formatTime(duration) : formatTime(countdownRemaining || 0)}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Rest Timer Badge */}
+                      {restRemaining !== null && (
+                        <div className="flex items-center gap-2 px-3 py-1.5 bg-orange-500/10 border border-orange-500/20 rounded-xl animate-pulse">
+                          <span className="text-[10px] font-black text-orange-500 uppercase tracking-widest">Rest</span>
+                          <span className="text-lg font-mono font-black text-orange-400">{restRemaining}s</span>
+                        </div>
+                      )}
                     </div>
 
-                    <div className="space-y-10">
-                      <div className="grid grid-cols-2 gap-6">
-                        <div>
-                          <label className="block text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-widest mb-3 ml-2">{t('plate_calc_barbell')} (KG)</label>
-                          <input
-                            type="number"
-                            value={barWeight}
-                            step="0.5"
-                            onChange={(e) => setBarWeight(parseFloat(e.target.value) || 0)}
-                            className="w-full bg-zinc-50 dark:bg-zinc-900 border-2 border-zinc-100 dark:border-zinc-800 rounded-3xl px-6 py-4 text-zinc-900 dark:text-white font-black font-mono focus:border-teal-500 shadow-inner outline-none transition-all"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-widest mb-3 ml-2">{t('plate_calc_per_side')} (KG)</label>
-                          <input
-                            type="number"
-                            value={plateCalcWeight || 0}
-                            step="0.5"
-                            onChange={(e) => setPlateCalcWeight(parseFloat(e.target.value) || 0)}
-                            className="w-full bg-zinc-50 dark:bg-zinc-900 border-2 border-zinc-100 dark:border-zinc-800 rounded-3xl px-6 py-4 text-zinc-900 dark:text-white font-black font-mono focus:border-teal-500 shadow-inner outline-none transition-all"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="p-10 rounded-[2.5rem] bg-teal-500/5 border-2 border-teal-500/10 text-center relative overflow-hidden group shadow-inner">
-                        <div className="absolute inset-0 bg-teal-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                        <div className="text-[10px] font-black text-teal-600/50 dark:text-teal-500/50 uppercase tracking-[0.4em] mb-4">{t('plate_calc_total')}</div>
-                        <div className="text-7xl font-black text-zinc-900 dark:text-white font-mono tracking-tighter">
-                          {(plateCalcWeight || 0) * 2 + barWeight} <span className="text-2xl text-teal-600 dark:text-teal-500 underline decoration-4 decoration-teal-500/20 underline-offset-8">KG</span>
-                        </div>
-                      </div>
-
-                      <div className="flex flex-col gap-4">
-                        <SpotlightButton
-                          onClick={() => {
-                            const total = (plateCalcWeight || 0) * 2 + barWeight;
-                            updateSet(activeSetInfo.exIdx, activeSetInfo.setIdx, 'weight', total.toString());
-                            setActiveSetInfo(null);
-                          }}
-                          className="w-full py-5 text-sm font-black uppercase tracking-widest shadow-xl shadow-teal-500/20"
-                        >
-                          {t('save')}
-                        </SpotlightButton>
-                        <button
-                          onClick={() => setActiveSetInfo(null)}
-                          className="w-full py-4 text-[10px] text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 font-black uppercase tracking-[0.3em] transition-all"
-                        >
-                          {t('modal_close')}
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </Modal>
-
-              {/* Tutorial Modal (Active Phase) */}
-              <Modal isOpen={!!tutorialExercise} onClose={() => setTutorialExercise(null)}>
-                {tutorialExercise && (() => {
-                  const links = getExerciseLinks(tutorialExercise);
-                  return (
-                    <div className="relative w-full max-w-xl mx-auto rounded-[3rem] border border-zinc-800 bg-zinc-950 p-10 shadow-3xl overflow-hidden">
-                      <div className="absolute top-0 left-0 w-full h-2 bg-teal-500"></div>
+                    <div className="flex items-center gap-2">
+                      {/* Mode Toggle */}
                       <button
-                        onClick={() => setTutorialExercise(null)}
-                        className="absolute right-8 top-8 text-zinc-400 hover:text-white transition-colors"
-                        title={t('modal_close')}
+                        onClick={() => { setMode(mode === 'stopwatch' ? 'timer' : 'stopwatch'); setTimerActive(false); }}
+                        className="w-10 h-10 rounded-xl bg-zinc-800 flex items-center justify-center text-zinc-400 hover:text-white transition-colors"
                       >
-                        <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
+                        {mode === 'stopwatch' ? (
+                          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        ) : (
+                          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        )}
                       </button>
 
-                      <div className="flex items-center gap-4 mb-8">
-                        <div className="w-3 h-10 bg-teal-500 rounded-full"></div>
-                        <h3 className="text-2xl font-black text-white uppercase tracking-tighter leading-tight pr-10">
-                          {tutorialExercise}
-                        </h3>
-                      </div>
-
-                      <a
-                        href={links.tutorial}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="block aspect-video w-full rounded-2xl bg-black/60 mb-10 overflow-hidden relative group border border-zinc-800 shadow-inner"
+                      {/* Play/Pause */}
+                      <button
+                        onClick={() => setTimerActive(!timerActive)}
+                        className={`w-12 h-12 rounded-xl flex items-center justify-center text-white transition-all shadow-lg ${timerActive ? 'bg-amber-500 shadow-amber-500/20' : 'bg-teal-500 shadow-teal-500/20'}`}
                       >
-                        <div className="absolute inset-0 bg-gradient-to-br from-teal-500/5 to-transparent"></div>
-                        <div className="absolute inset-0 flex flex-col items-center justify-center transition-transform group-hover:scale-105 duration-500">
-                          <div className="w-20 h-20 rounded-full bg-teal-500/10 dark:bg-teal-500/20 border-2 border-teal-500/30 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-700 backdrop-blur-sm shadow-xl">
-                            <svg className="h-10 w-10 text-teal-400 ml-1.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
-                          </div>
-                          <p className="text-xs text-teal-500 font-black uppercase tracking-[0.3em]">{t('modal_watch_video')}</p>
-                        </div>
-                      </a>
-
-                      <div className="flex flex-col gap-4">
-                        <a
-                          href={links.science}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="w-full"
-                        >
-                          <SpotlightButton className="w-full py-5 text-sm font-black uppercase tracking-[0.2em] shadow-lg shadow-teal-500/20">
-                            🔬 Learn the Science
-                          </SpotlightButton>
-                        </a>
-                        <a
-                          href={links.tutorial}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="w-full"
-                        >
-                          <button className="w-full py-4 text-[10px] text-zinc-500 hover:text-white font-black uppercase tracking-[0.3em] transition-all border border-zinc-800 rounded-2xl bg-zinc-900/40">
-                            {t('modal_watch_video')}
-                          </button>
-                        </a>
-                        <button
-                          onClick={() => setTutorialExercise(null)}
-                          className="w-full py-2 text-[10px] text-zinc-600 hover:text-rose-500 font-black uppercase tracking-[0.3em] transition-all"
-                        >
-                          {t('modal_close')}
-                        </button>
-                      </div>
+                        {timerActive ? <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" /></svg> : <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>}
+                      </button>
                     </div>
-                  );
-                })()}
-              </Modal>
+                  </div>
 
-              <ConfirmModal
-                isOpen={showResetConfirm}
-                title={t('confirm_title')}
-                message={t('confirm_reset_timer')}
-                confirmLabel={t('confirm_yes')}
-                cancelLabel={t('confirm_cancel')}
-                onConfirm={() => {
-                  resetClock();
-                  setShowResetConfirm(false);
-                }}
-                onCancel={() => setShowResetConfirm(false)}
-                isDestructive={true}
-              />
+                  {/* Bottom Row: Finish Button */}
+                  <SpotlightButton
+                    onClick={finishWorkout}
+                    variant="secondary"
+                    spotlightColor="rgba(244, 63, 94, 0.4)"
+                    className="w-full py-4 bg-rose-500/10 border-rose-500/20 text-rose-500 hover:text-rose-400 font-black uppercase tracking-[0.2em] text-xs shadow-none hover:shadow-lg hover:shadow-rose-500/10"
+                  >
+                    {t('tracker_finish')}
+                  </SpotlightButton>
+                </div>
+              </div>
             </div>
           )}
 
           {phase === 'summary' && completedWorkout && (
-            <div className="mx-auto max-w-2xl px-6 pt-32 pb-48 text-center animate-in zoom-in duration-500">
-              <div className="inline-flex h-24 w-24 items-center justify-center rounded-[2rem] bg-teal-500/10 dark:bg-teal-500/20 mb-8 shadow-2xl shadow-teal-500/20 rotate-12">
-                <svg className="h-12 w-12 text-teal-600 dark:text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+            <div className="mx-auto max-w-4xl px-6 pt-10 pb-32 text-center">
+              <div className="w-24 h-24 bg-teal-500 rounded-full mx-auto flex items-center justify-center mb-8 shadow-2xl shadow-teal-500/30 animate-in zoom-in duration-500">
+                <svg className="w-12 h-12 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
               </div>
-              <h2 className="text-6xl font-black text-zinc-900 dark:text-white mb-4 uppercase tracking-tighter leading-none">{t('tracker_summary')}</h2>
-              <p className="text-zinc-500 italic mb-16 text-xl font-medium tracking-tight opacity-80">"{t('tracker_quote')}"</p>
+              <h2 className="text-4xl md:text-6xl font-black text-white mb-4 uppercase tracking-tighter">
+                {t('tracker_summary_title')}
+              </h2>
+              <p className="text-zinc-400 text-lg mb-12 max-w-lg mx-auto">
+                {t('tracker_summary_subtitle')}
+              </p>
 
-              <div className="grid grid-cols-2 gap-6 mb-16">
-                <div className="p-10 rounded-[2.5rem] bg-white dark:bg-zinc-900/80 border-2 border-zinc-100 dark:border-zinc-800 shadow-xl backdrop-blur-xl">
-                  <div className="text-zinc-400 dark:text-zinc-500 text-[10px] font-black uppercase tracking-[0.3em] mb-4">{t('tracker_duration')}</div>
-                  <div className="text-4xl font-black font-mono text-teal-600 dark:text-teal-400 tracking-tighter">{formatTime(completedWorkout.durationSeconds)}</div>
+              <div className="grid grid-cols-2 gap-4 max-w-2xl mx-auto mb-12">
+                <div className="bg-zinc-900/50 rounded-3xl p-6 border border-zinc-800">
+                  <div className="text-xs text-zinc-500 font-black uppercase tracking-widest mb-2">Duration</div>
+                  <div className="text-3xl font-black text-white text-mono">{formatTime(completedWorkout.durationSeconds)}</div>
                 </div>
-                <div className="p-10 rounded-[2.5rem] bg-white dark:bg-zinc-900/80 border-2 border-zinc-100 dark:border-zinc-800 shadow-xl backdrop-blur-xl">
-                  <div className="text-zinc-400 dark:text-zinc-500 text-[10px] font-black uppercase tracking-[0.3em] mb-4">{t('tracker_volume')}</div>
-                  <div className="text-4xl font-black font-mono text-teal-600 dark:text-teal-400 tracking-tighter">{completedWorkout.totalVolume} <span className="text-lg">KG</span></div>
+                <div className="bg-zinc-900/50 rounded-3xl p-6 border border-zinc-800">
+                  <div className="text-xs text-zinc-500 font-black uppercase tracking-widest mb-2">Volume</div>
+                  <div className="text-3xl font-black text-white text-mono">{completedWorkout.totalVolume.toLocaleString()} <span className="text-sm text-zinc-500">kg</span></div>
                 </div>
               </div>
 
-              <SpotlightButton onClick={reset} className="px-20 py-6 text-xl font-black uppercase tracking-[0.2em] shadow-2xl shadow-teal-500/30">
-                {t('tracker_start_new')}
+              <SpotlightButton
+                onClick={reset}
+                className="px-12 py-5 text-lg font-black uppercase tracking-widest shadow-xl mx-auto"
+              >
+                Start New Workout
               </SpotlightButton>
             </div>
           )}
         </motion.div>
       </AnimatePresence>
 
-      {/* Shared Modals */}
-      <Modal isOpen={!!tutorialExercise} onClose={() => setTutorialExercise(null)}>
-        {tutorialExercise && (() => {
-          const links = getExerciseLinks(tutorialExercise);
-          return (
-            <div className="relative w-full max-w-xl mx-auto rounded-[3rem] border border-zinc-800 bg-zinc-950 p-10 shadow-3xl overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-2 bg-teal-500"></div>
-              <motion.button
-                whileTap={{ scale: 0.9 }}
-                onClick={() => setTutorialExercise(null)}
-                className="absolute right-8 top-8 text-zinc-400 hover:text-white transition-colors"
-                title={t('modal_close')}
-              >
-                <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </motion.button>
-
-              <div className="flex items-center gap-4 mb-8">
-                <div className="w-3 h-10 bg-teal-500 rounded-full"></div>
-                <h3 className="text-2xl font-black text-white uppercase tracking-tighter leading-tight pr-10">
-                  {tutorialExercise}
-                </h3>
-              </div>
-
-              <a
-                href={links.tutorial}
-                target="_blank"
-                rel="noreferrer"
-                className="block aspect-video w-full rounded-2xl bg-black/60 mb-10 overflow-hidden relative group border border-zinc-800 shadow-inner"
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-teal-500/5 to-transparent"></div>
-                <div className="absolute inset-0 flex flex-col items-center justify-center transition-transform group-hover:scale-105 duration-500">
-                  <div className="w-20 h-20 rounded-full bg-teal-500/10 dark:bg-teal-500/20 border-2 border-teal-500/30 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-700 backdrop-blur-sm shadow-xl">
-                    <svg className="h-10 w-10 text-teal-400 ml-1.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
-                  </div>
-                </div>
-              </a>
-
-              <div className="flex flex-col gap-4">
-                <a
-                  href={links.science}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="w-full"
-                >
-                  <SpotlightButton className="w-full py-5 text-sm font-black uppercase tracking-[0.2em] shadow-lg shadow-teal-500/20">
-                    🔬 {t('modal_watch_video')}
-                  </SpotlightButton>
-                </a>
-                <motion.button
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setTutorialExercise(null)}
-                  className="w-full py-2 text-[10px] text-zinc-600 hover:text-rose-500 font-black uppercase tracking-[0.3em] transition-all"
-                >
-                  {t('modal_close')}
-                </motion.button>
-              </div>
-            </div>
-          );
-        })()}
-      </Modal>
-
       <ConfirmModal
         isOpen={showResetConfirm}
-        title={t('confirm_title')}
-        message={t('confirm_reset_timer')}
-        confirmLabel={t('confirm_yes')}
-        cancelLabel={t('confirm_cancel')}
+        onClose={() => setShowResetConfirm(false)}
         onConfirm={() => {
           resetClock();
           setShowResetConfirm(false);
         }}
-        onCancel={() => setShowResetConfirm(false)}
-        isDestructive={true}
+        title="Reset Timer?"
+        description="Are you sure you want to reset the current timer? This action cannot be undone."
+        confirmText="Reset"
+        cancelText="Cancel"
       />
     </div>
   );
