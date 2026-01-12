@@ -97,7 +97,7 @@ export const ClockProvider: React.FC<{ children: ReactNode }> = ({ children }) =
             }, 1000);
         }
         return () => clearInterval(interval);
-    }, [timerActive, mode, countdownRemaining]);
+    }, [timerActive, mode, countdownRemaining, restRemaining]);
 
     const addLap = () => {
         if (mode === 'stopwatch') {
