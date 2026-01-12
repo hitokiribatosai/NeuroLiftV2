@@ -62,6 +62,7 @@ export const Tracker: React.FC = () => {
   const [activeExercises, setActiveExercises] = useState<ActiveExercise[]>(() => {
     return safeStorage.getParsed<ActiveExercise[]>('neuroLift_tracker_active_exercises', []);
   });
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Dynamic DB
   const exercisesByMuscle = getExerciseDatabase(language);
@@ -469,6 +470,25 @@ export const Tracker: React.FC = () => {
                     ))}
                   </div>
                 </div>
+
+                {/* Search Input */}
+                <div className="flex-1 w-full md:max-w-md mx-4 md:mx-0 order-last md:order-none mt-4 md:mt-0">
+                  <div className="relative group">
+                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                      <svg className="h-5 w-5 text-zinc-500 group-focus-within:text-teal-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                      </svg>
+                    </div>
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder={t('planner_search_placeholder') || "Search exercises..."}
+                      className="block w-full pl-11 pr-4 py-3 bg-zinc-900/50 border border-zinc-800 rounded-2xl text-sm text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500 transition-all"
+                    />
+                  </div>
+                </div>
+
                 <div className="flex flex-wrap gap-2">
                   <button onClick={() => setPhase('setup')} className="text-xs text-zinc-400 hover:text-white uppercase tracking-widest font-black flex items-center gap-2 transition-colors">
                     <svg className="w-4 h-4 text-teal-50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
@@ -493,79 +513,156 @@ export const Tracker: React.FC = () => {
                     {shareFeedback ? t('save') : 'Share Plan'}
                   </button>
                 </div>
-
               </div>
 
               <div className="space-y-20 mb-20">
-                {selectedMuscles.map(majorMuscle => (
-                  <div key={majorMuscle} className="space-y-12">
-                    {/* Show Major Group Header */}
-                    <h3 className="text-3xl font-black text-white uppercase tracking-tighter flex items-center gap-4">
-                      <span className="w-4 h-12 bg-teal-500 rounded-full"></span>
-                      {getLocalizedMuscleName(majorMuscle, language)}
-                    </h3>
+                {searchQuery ? (
+                  /* Search Results View */
+                  <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    {(() => {
+                      const allMatches: { name: string; muscle: string }[] = [];
+                      // Global search across all muscles
+                      Object.keys(exercisesByMuscle).forEach(muscle => {
+                        Object.keys(exercisesByMuscle[muscle]).forEach(subGroup => {
+                          (['machines', 'weightlifting', 'cables', 'bodyweight'] as const).forEach(category => {
+                            const exercises = exercisesByMuscle[muscle][subGroup][category] || [];
+                            exercises.filter(ex => ex.toLowerCase().includes(searchQuery.toLowerCase())).forEach(ex => {
+                              // De-duplicate if needed, or just push
+                              if (!allMatches.some(m => m.name === ex)) {
+                                allMatches.push({ name: ex, muscle });
+                              }
+                            });
+                          });
+                        });
+                      });
 
-                    {/* Render functional sub-groups */}
-                    {Object.keys(exercisesByMuscle[majorMuscle] || {}).map(subGroup => (
-                      <div key={subGroup} className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                        <h4 className="text-xl font-black text-zinc-200 mb-8 uppercase tracking-widest flex items-center gap-4 ml-4">
-                          <span className="w-1.5 h-6 bg-teal-500/50 rounded-full"></span>
-                          {getLocalizedMuscleName(subGroup, language)}
-                        </h4>
+                      if (allMatches.length === 0) {
+                        return (
+                          <div className="text-center py-20">
+                            <div className="w-16 h-16 bg-zinc-900 rounded-full mx-auto flex items-center justify-center mb-6">
+                              <svg className="w-8 h-8 text-zinc-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                            </div>
+                            <h3 className="text-zinc-400 font-bold">No exercises found</h3>
+                            <p className="text-zinc-600 text-sm mt-2">Try searching for a different name</p>
+                          </div>
+                        );
+                      }
 
-                        <div className="space-y-12 ml-4">
-                          {(['machines', 'weightlifting', 'cables', 'bodyweight'] as const).map(category => {
-                            const exercises = exercisesByMuscle[majorMuscle]?.[subGroup]?.[category] || [];
-                            if (exercises.length === 0) return null;
-
-                            return (
-                              <div key={category}>
-                                <h5 className="text-[0.625rem] font-black text-zinc-100 uppercase tracking-[0.4em] mb-6 ml-1 flex items-center gap-4">
-                                  {category}
-                                  <div className="h-px flex-1 bg-zinc-800"></div>
-                                </h5>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                  {exercises.map(ex => (
-                                    <div key={ex} className="relative group">
-                                      <label className={`flex items-center gap-4 p-5 border-2 rounded-2xl cursor-pointer transition-all duration-300 ${selectedExercises.includes(ex)
-                                        ? 'bg-teal-500/5 border-teal-500 shadow-md text-teal-600 dark:text-teal-400'
-                                        : 'bg-white dark:bg-zinc-900/30 border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-200 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900/50'}`}>
-                                        <input
-                                          type="checkbox"
-                                          checked={selectedExercises.includes(ex)}
-                                          onChange={() => toggleExercise(ex)}
-                                          className="hidden"
-                                        />
-                                        <div className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all ${selectedExercises.includes(ex) ? 'bg-teal-500 border-teal-500 text-white shadow-lg shadow-teal-500/20' : 'border-zinc-700'}`}>
-                                          {selectedExercises.includes(ex) && <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 13l4 4L19 7" /></svg>}
-                                        </div>
-                                        <span className="text-sm font-black tracking-wide flex-1 uppercase pr-10 rtl:pr-0 rtl:pl-10">{ex}</span>
-                                      </label>
-
-                                      <button
-                                        onClick={(e) => {
-                                          e.preventDefault();
-                                          e.stopPropagation();
-                                          setTutorialExercise(ex);
-                                        }}
-                                        className="absolute right-4 rtl:right-auto rtl:left-4 top-1/2 -translate-y-1/2 p-2 text-zinc-600 hover:text-teal-400 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all z-10"
-                                        title={t('modal_watch_video')}
-                                      >
-                                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 16v-4m0-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                      </button>
-                                    </div>
-                                  ))}
+                      return (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {allMatches.map(({ name, muscle }) => (
+                            <div key={name} className="relative group">
+                              <label className={`flex items-center gap-4 p-5 border-2 rounded-2xl cursor-pointer transition-all duration-300 ${selectedExercises.includes(name)
+                                ? 'bg-teal-500/5 border-teal-500 shadow-md text-teal-600 dark:text-teal-400'
+                                : 'bg-white dark:bg-zinc-900/30 border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-200 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900/50'}`}>
+                                <input
+                                  type="checkbox"
+                                  checked={selectedExercises.includes(name)}
+                                  onChange={() => {
+                                    toggleExercise(name);
+                                    // Optional: clear search after selection? No, better to keep searching.
+                                  }}
+                                  className="hidden"
+                                />
+                                <div className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all ${selectedExercises.includes(name) ? 'bg-teal-500 border-teal-500 text-white shadow-lg shadow-teal-500/20' : 'border-zinc-700'}`}>
+                                  {selectedExercises.includes(name) && <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 13l4 4L19 7" /></svg>}
                                 </div>
-                              </div>
-                            );
-                          })}
+                                <div className="flex-1">
+                                  <span className="block text-sm font-black tracking-wide uppercase pr-10 rtl:pr-0 rtl:pl-10">{name}</span>
+                                  <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">{getLocalizedMuscleName(muscle, language)}</span>
+                                </div>
+                              </label>
+
+                              <button
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  setTutorialExercise(name);
+                                }}
+                                className="absolute right-4 rtl:right-auto rtl:left-4 top-1/2 -translate-y-1/2 p-2 text-zinc-600 hover:text-teal-400 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all z-10"
+                                title={t('modal_watch_video')}
+                              >
+                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 16v-4m0-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                              </button>
+                            </div>
+                          ))}
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })()}
                   </div>
-                ))}
+                ) : (
+                  selectedMuscles.map(majorMuscle => (
+                    <div key={majorMuscle} className="space-y-12">
+                      {/* Show Major Group Header */}
+                      <h3 className="text-3xl font-black text-white uppercase tracking-tighter flex items-center gap-4">
+                        <span className="w-4 h-12 bg-teal-500 rounded-full"></span>
+                        {getLocalizedMuscleName(majorMuscle, language)}
+                      </h3>
+
+                      {/* Render functional sub-groups */}
+                      {Object.keys(exercisesByMuscle[majorMuscle] || {}).map(subGroup => (
+                        <div key={subGroup} className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                          <h4 className="text-xl font-black text-zinc-200 mb-8 uppercase tracking-widest flex items-center gap-4 ml-4">
+                            <span className="w-1.5 h-6 bg-teal-500/50 rounded-full"></span>
+                            {getLocalizedMuscleName(subGroup, language)}
+                          </h4>
+
+                          <div className="space-y-12 ml-4">
+                            {(['machines', 'weightlifting', 'cables', 'bodyweight'] as const).map(category => {
+                              const exercises = exercisesByMuscle[majorMuscle]?.[subGroup]?.[category] || [];
+                              if (exercises.length === 0) return null;
+
+                              return (
+                                <div key={category}>
+                                  <h5 className="text-[0.625rem] font-black text-zinc-100 uppercase tracking-[0.4em] mb-6 ml-1 flex items-center gap-4">
+                                    {category}
+                                    <div className="h-px flex-1 bg-zinc-800"></div>
+                                  </h5>
+                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {exercises.map(ex => (
+                                      <div key={ex} className="relative group">
+                                        <label className={`flex items-center gap-4 p-5 border-2 rounded-2xl cursor-pointer transition-all duration-300 ${selectedExercises.includes(ex)
+                                          ? 'bg-teal-500/5 border-teal-500 shadow-md text-teal-600 dark:text-teal-400'
+                                          : 'bg-white dark:bg-zinc-900/30 border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-200 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900/50'}`}>
+                                          <input
+                                            type="checkbox"
+                                            checked={selectedExercises.includes(ex)}
+                                            onChange={() => toggleExercise(ex)}
+                                            className="hidden"
+                                          />
+                                          <div className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all ${selectedExercises.includes(ex) ? 'bg-teal-500 border-teal-500 text-white shadow-lg shadow-teal-500/20' : 'border-zinc-700'}`}>
+                                            {selectedExercises.includes(ex) && <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 13l4 4L19 7" /></svg>}
+                                          </div>
+                                          <span className="text-sm font-black tracking-wide flex-1 uppercase pr-10 rtl:pr-0 rtl:pl-10">{ex}</span>
+                                        </label>
+
+                                        <button
+                                          onClick={(e) => {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            setTutorialExercise(ex);
+                                          }}
+                                          className="absolute right-4 rtl:right-auto rtl:left-4 top-1/2 -translate-y-1/2 p-2 text-zinc-600 hover:text-teal-400 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all z-10"
+                                          title={t('modal_watch_video')}
+                                        >
+                                          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 16v-4m0-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                          </svg>
+                                        </button>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ))
+                )}
               </div>
 
               <div className="sticky bottom-0 md:bottom-6 p-6 md:p-8 flex items-center justify-between z-40 pb-[calc(2rem+env(safe-area-inset-bottom))] md:pb-8">
