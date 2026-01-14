@@ -14,16 +14,10 @@ import { Modal } from '../ui/Modal';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Share } from '@capacitor/share';
 import { Capacitor } from '@capacitor/core';
-import { useGymMode } from '../../contexts/GymModeContext';
 import { hapticFeedback } from '../../utils/haptics';
 import { exerciseHistoryService } from '../../utils/exerciseHistory';
-import { PlateCalculator } from '../ui/PlateCalculator';
-import { SubstitutionModal } from '../ui/SubstitutionModal';
-import { FormCueModal } from '../ui/FormCueModal';
-import { getFormCues, FormCue } from '../../utils/formCues';
 
 export const Tracker: React.FC = () => {
-  const { isGymMode, enableGymMode, disableGymMode } = useGymMode();
   const { t, language } = useLanguage();
   const [phase, setPhase] = useState<'setup' | 'selection' | 'active' | 'summary'>(() => {
     const saved = safeStorage.getItem('neuroLift_tracker_phase');
@@ -43,9 +37,6 @@ export const Tracker: React.FC = () => {
   const [shareFeedback, setShareFeedback] = useState(false);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [exerciseHistory, setExerciseHistory] = useState<Map<string, any>>(new Map());
-  const [calculatorOpen, setCalculatorOpen] = useState(false);
-  const [substitutionTarget, setSubstitutionTarget] = useState<{ idx: number, name: string } | null>(null);
-  const [activeFormCue, setActiveFormCue] = useState<FormCue | null>(null);
 
   // Load history when selected exercises change
   useEffect(() => {
@@ -249,7 +240,6 @@ export const Tracker: React.FC = () => {
   };
 
   const handleStartWorkout = () => {
-    enableGymMode();
     handleSetPhase('active');
 
     // Merge logic: Preserve existing active exercises data
@@ -336,7 +326,6 @@ export const Tracker: React.FC = () => {
   };
 
   const finishWorkout = () => {
-    disableGymMode();
     hapticFeedback.success();
     setTimerActive(false);
     setRestRemaining(null);
@@ -379,7 +368,6 @@ export const Tracker: React.FC = () => {
   };
 
   const reset = () => {
-    disableGymMode();
     setPhase('setup');
     setSelectedMuscles([]);
     setSelectedExercises([]);
@@ -898,13 +886,6 @@ export const Tracker: React.FC = () => {
               <div className="text-center mb-12">
                 <div className="inline-flex flex-col items-center relative">
                   {/* Gym Mode Badge */}
-                  {isGymMode && (
-                    <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-zinc-800/80 backdrop-blur border border-zinc-700 rounded-full px-3 py-1 flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
-                      <span className="text-[10px] font-bold text-zinc-300 uppercase tracking-widest">Gym Mode Active</span>
-                    </div>
-                  )}
-
                   {/* Rest Timer Overlay */}
                   <AnimatePresence>
                     {restRemaining !== null && restRemaining > 0 && (
@@ -988,28 +969,6 @@ export const Tracker: React.FC = () => {
                       <span className="w-2.5 h-8 bg-teal-500 rounded-full shadow-lg shadow-teal-500/20"></span>
                       {ex.name}
                       <div className="ml-auto flex items-center gap-2">
-                        <button
-                          onClick={() => setSubstitutionTarget({ idx: exIdx, name: ex.name })}
-                          className="p-2 text-zinc-600 hover:text-orange-400 transition-colors"
-                          title="Swap Exercise"
-                        >
-                          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-                          </svg>
-                        </button>
-
-                        {getFormCues(ex.name) && (
-                          <button
-                            onClick={() => setActiveFormCue(getFormCues(ex.name))}
-                            className="p-2 text-zinc-600 hover:text-blue-400 transition-colors"
-                            title="Form Tips"
-                          >
-                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                            </svg>
-                          </button>
-                        )}
-
                         <button
                           onClick={() => setTutorialExercise(ex.name)}
                           className="p-2 text-zinc-600 hover:text-teal-400 transition-colors"
@@ -1160,42 +1119,6 @@ export const Tracker: React.FC = () => {
                   </SpotlightButton>
                 </div>
               </div>
-
-              {/* Plate Calculator Floating Button */}
-              <button
-                onClick={() => setCalculatorOpen(true)}
-                className="fixed bottom-24 right-4 md:bottom-8 md:right-8 w-14 h-14 bg-zinc-900 border border-zinc-800 rounded-2xl flex items-center justify-center shadow-2xl hover:bg-zinc-800 transition-all z-40 group"
-                title="Plate Calculator"
-              >
-                <div className="absolute -top-1 -right-1 w-3 h-3 bg-teal-500 rounded-full animate-ping opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                </svg>
-              </button>
-
-              <PlateCalculator
-                isOpen={calculatorOpen}
-                onClose={() => setCalculatorOpen(false)}
-              />
-
-              <SubstitutionModal
-                isOpen={!!substitutionTarget}
-                onClose={() => setSubstitutionTarget(null)}
-                originalExercise={substitutionTarget?.name || ''}
-                onSubstitute={(newName) => {
-                  if (substitutionTarget) {
-                    const newExs = [...activeExercises];
-                    newExs[substitutionTarget.idx].name = newName;
-                    setActiveExercises(newExs);
-                  }
-                }}
-              />
-
-              <FormCueModal
-                isOpen={!!activeFormCue}
-                onClose={() => setActiveFormCue(null)}
-                cues={activeFormCue}
-              />
 
             </div>
           )}

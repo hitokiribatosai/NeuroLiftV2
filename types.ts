@@ -110,3 +110,19 @@ export interface ExerciseHistory {
     maxVolume: number; // weight × reps
   };
 }
+
+// Onboarding & User Profile
+export interface UserProfile {
+  name: string;
+  age: number | null;
+  gender: 'male' | 'female' | 'other' | null;
+  height: number | null; // in cm
+  weight: number | null; // in kg
+  goal: 'strength' | 'hypertrophy' | 'endurance' | 'weight_loss' | 'general_health';
+  experienceLevel: 'beginner' | 'intermediate' | 'advanced';
+  unitSystem: 'metric' | 'imperial';
+}
+
+export interface OnboardingState extends UserProfile {
+  step: number;
+}

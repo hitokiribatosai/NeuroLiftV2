@@ -13,6 +13,7 @@ import { FontSizeProvider } from './contexts/FontSizeContext';
 import { GymModeProvider } from './contexts/GymModeContext';
 import { AnimatePresence, motion } from 'framer-motion';
 import { OfflineIndicator } from './components/ui/OfflineIndicator';
+import { OnboardingWizard } from './components/onboarding/OnboardingWizard';
 import { migrateToIndexedDB } from './utils/storage';
 
 function App() {
@@ -85,6 +86,22 @@ function App() {
     );
   };
 
+  /* Onboarding Logic */
+  const [showOnboarding, setShowOnboarding] = React.useState(false);
+
+  React.useEffect(() => {
+    const isCompleted = localStorage.getItem('neuroLift_onboarding_completed');
+    if (!isCompleted) {
+      setShowOnboarding(true);
+    }
+  }, []);
+
+  const handleOnboardingComplete = () => {
+    setShowOnboarding(false);
+    // Optionally redirect to a specific "First Workout" view
+    setCurrentView('home');
+  };
+
   return (
     <ThemeProvider>
       <LanguageProvider>
@@ -93,13 +110,21 @@ function App() {
             <GymModeProvider>
               <OfflineIndicator />
               <div className="min-h-screen bg-[#0a0a0a] text-white transition-colors duration-300 selection:bg-teal-500/30 selection:text-teal-200 overflow-x-hidden flex flex-col">
-                <Navbar currentView={currentView} setCurrentView={handleSetView} />
 
-                <main className="flex-1 pt-16 pb-[calc(8rem+env(safe-area-inset-bottom))] min-h-screen relative overflow-x-hidden">
-                  <AnimatePresence mode="wait">
-                    {renderView()}
-                  </AnimatePresence>
-                </main>
+                {showOnboarding ? (
+                  <OnboardingWizard onComplete={handleOnboardingComplete} />
+                ) : (
+                  <>
+                    <Navbar currentView={currentView} setCurrentView={handleSetView} />
+
+                    <main className="flex-1 pt-16 pb-[calc(8rem+env(safe-area-inset-bottom))] min-h-screen relative overflow-x-hidden">
+                      <AnimatePresence mode="wait">
+                        {renderView()}
+                      </AnimatePresence>
+                    </main>
+                  </>
+                )}
+
               </div>
             </GymModeProvider>
           </ClockProvider>
