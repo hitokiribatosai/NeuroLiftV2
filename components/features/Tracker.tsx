@@ -3,7 +3,7 @@ import { useLanguage } from '../../contexts/LanguageContext';
 import { SpotlightButton } from '../ui/SpotlightButton';
 import { Card } from '../ui/Card';
 import { CompletedWorkout, ActiveExercise, WorkoutSet } from '../../types';
-import { getExerciseDatabase, getLocalizedMuscleName, getMuscleForExercise, getExerciseLinks } from '../../utils/exerciseData';
+import { getExerciseDatabase, getLocalizedMuscleName, getMuscleForExercise, getExerciseTranslation, getExerciseLinks } from '../../utils/exerciseData';
 import { useClock } from '../../contexts/ClockContext';
 import { playNotificationSound } from '../../utils/audio';
 import { ConfirmModal } from '../ui/ConfirmModal';
@@ -618,7 +618,7 @@ export const Tracker: React.FC = () => {
                                   {selectedExercises.includes(name) && <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 13l4 4L19 7" /></svg>}
                                 </div>
                                 <div className="flex-1">
-                                  <span className="block text-sm font-black tracking-wide uppercase pr-10 rtl:pr-0 rtl:pl-10">{name}</span>
+                                  <span className="block text-sm font-black tracking-wide uppercase pr-10 rtl:pr-0 rtl:pl-10">{getExerciseTranslation(name, language)}</span>
                                   <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">{getLocalizedMuscleName(muscle, language)}</span>
                                 </div>
                               </label>
@@ -685,7 +685,7 @@ export const Tracker: React.FC = () => {
                                           <div className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all ${selectedExercises.includes(ex) ? 'bg-teal-500 border-teal-500 text-white shadow-lg shadow-teal-500/20' : 'border-zinc-700'}`}>
                                             {selectedExercises.includes(ex) && <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 13l4 4L19 7" /></svg>}
                                           </div>
-                                          <span className="text-sm font-black tracking-wide flex-1 uppercase pr-10 rtl:pr-0 rtl:pl-10">{ex}</span>
+                                          <span className="text-sm font-black tracking-wide flex-1 uppercase pr-10 rtl:pr-0 rtl:pl-10">{getExerciseTranslation(ex, language)}</span>
                                         </label>
 
                                         <button
@@ -734,7 +734,7 @@ export const Tracker: React.FC = () => {
                     disabled={selectedExercises.length === 0}
                     className="flex-1 md:flex-none px-6 md:px-16 py-5 text-sm md:text-lg font-black uppercase tracking-widest shadow-lg shadow-teal-500/20 flex items-center justify-center !rounded-2xl"
                   >
-                    {activeExercises.length > 0 ? 'Resume' : t('tracker_start')}
+                    {activeExercises.length > 0 ? t('tracker_resume') : t('tracker_start')}
                   </SpotlightButton>
                 </div>
               </div>
@@ -819,12 +819,12 @@ export const Tracker: React.FC = () => {
                 <div className="absolute top-0 left-0 w-full h-2 bg-teal-500"></div>
                 <h3 className="text-xl font-black text-white uppercase tracking-tighter mb-8 flex items-center gap-3">
                   <span className="w-2 h-6 bg-teal-500 rounded-full"></span>
-                  Plate Calculator
+                  {t('tracker_plate_calc_title')}
                 </h3>
 
                 <div className="space-y-6">
                   <div>
-                    <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest block mb-2 px-1">Weight on ONE side (kg)</label>
+                    <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest block mb-2 px-1">{t('tracker_plate_one_side')}</label>
                     <input
                       type="number"
                       value={plateCalcWeight || ''}
@@ -835,7 +835,7 @@ export const Tracker: React.FC = () => {
                   </div>
 
                   <div>
-                    <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest block mb-2 px-1">Bar Weight (kg)</label>
+                    <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest block mb-2 px-1">{t('tracker_bar_weight')}</label>
                     <div className="grid grid-cols-4 gap-2">
                       {[0, 10, 15, 20].map(w => (
                         <button
@@ -852,7 +852,7 @@ export const Tracker: React.FC = () => {
                   </div>
 
                   <div className="bg-teal-500/5 border border-teal-500/20 rounded-2xl p-6 text-center">
-                    <div className="text-[10px] font-black text-teal-500 uppercase tracking-[0.2em] mb-1">Total Weight</div>
+                    <div className="text-[10px] font-black text-teal-500 uppercase tracking-[0.2em] mb-1">{t('tracker_total_weight')}</div>
                     <div className="text-4xl font-black text-white">
                       {((plateCalcWeight || 0) * 2) + barWeight} <span className="text-sm text-zinc-500">kg</span>
                     </div>
@@ -867,14 +867,14 @@ export const Tracker: React.FC = () => {
                     }}
                     className="w-full py-4 text-xs font-black uppercase tracking-widest"
                   >
-                    Set Weight
+                    {t('tracker_set_weight_btn')}
                   </SpotlightButton>
 
                   <button
                     onClick={() => setActiveSetInfo(null)}
                     className="w-full py-2 text-[10px] text-zinc-600 hover:text-rose-500 font-black uppercase tracking-widest transition-all"
                   >
-                    Cancel
+                    {t('tracker_cancel')}
                   </button>
                 </div>
               </div>
@@ -967,7 +967,7 @@ export const Tracker: React.FC = () => {
                   <Card key={exIdx} className="p-8 bg-zinc-900/40 border-zinc-800 rounded-[3rem] shadow-sm overflow-hidden">
                     <h3 className="text-2xl font-black text-white mb-8 flex items-center gap-4 uppercase tracking-tight">
                       <span className="w-2.5 h-8 bg-teal-500 rounded-full shadow-lg shadow-teal-500/20"></span>
-                      {ex.name}
+                      {getExerciseTranslation(ex.name, language)}
                       <div className="ml-auto flex items-center gap-2">
                         <button
                           onClick={() => setTutorialExercise(ex.name)}
@@ -976,6 +976,24 @@ export const Tracker: React.FC = () => {
                         >
                           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                        </button>
+                        <button
+                          onClick={() => {
+                            if (window.confirm(t('tracker_confirm_delete_exercise'))) {
+                              const newExs = activeExercises.filter((_, i) => i !== exIdx);
+                              setActiveExercises(newExs);
+                              // Sync selectedExercises if we want them to reflect deletion for summary or next start
+                              const newSelected = selectedExercises.filter(name => name !== ex.name);
+                              setSelectedExercises(newSelected);
+                              hapticFeedback.medium();
+                            }
+                          }}
+                          className="p-2 text-zinc-600 hover:text-rose-500 transition-colors"
+                          title={t('tracker_delete_exercise')}
+                        >
+                          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                           </svg>
                         </button>
                       </div>
@@ -1129,28 +1147,27 @@ export const Tracker: React.FC = () => {
                 <svg className="w-12 h-12 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
               </div>
               <h2 className="text-4xl md:text-6xl font-black text-white mb-4 uppercase tracking-tighter">
-                {t('tracker_summary_title')}
+                {t('tracker_summary')}
               </h2>
               <p className="text-zinc-400 text-lg mb-12 max-w-lg mx-auto">
-                {t('tracker_summary_subtitle')}
+                {t('tracker_quote')}
               </p>
 
               <div className="grid grid-cols-2 gap-4 max-w-2xl mx-auto mb-12">
                 <div className="bg-zinc-900/50 rounded-3xl p-6 border border-zinc-800">
-                  <div className="text-xs text-zinc-500 font-black uppercase tracking-widest mb-2">Duration</div>
+                  <div className="text-xs text-zinc-500 font-black uppercase tracking-widest mb-2">{t('tracker_duration')}</div>
                   <div className="text-3xl font-black text-white text-mono">{formatTime(completedWorkout.durationSeconds)}</div>
                 </div>
                 <div className="bg-zinc-900/50 rounded-3xl p-6 border border-zinc-800">
-                  <div className="text-xs text-zinc-500 font-black uppercase tracking-widest mb-2">Volume</div>
+                  <div className="text-xs text-zinc-500 font-black uppercase tracking-widest mb-2">{t('tracker_volume')}</div>
                   <div className="text-3xl font-black text-white text-mono">{completedWorkout.totalVolume.toLocaleString()} <span className="text-sm text-zinc-500">kg</span></div>
                 </div>
               </div>
-
               <SpotlightButton
                 onClick={reset}
                 className="px-12 py-5 text-lg font-black uppercase tracking-widest shadow-xl mx-auto"
               >
-                Start New Workout
+                {t('tracker_start_new')}
               </SpotlightButton>
             </div>
           )}
@@ -1164,10 +1181,10 @@ export const Tracker: React.FC = () => {
           resetClock();
           setShowResetConfirm(false);
         }}
-        title="Reset Timer?"
-        description="Are you sure you want to reset the current timer? This action cannot be undone."
-        confirmText="Reset"
-        cancelText="Cancel"
+        title={t('tracker_reset_timer_title')}
+        description={t('tracker_reset_timer_desc')}
+        confirmText={t('timer_reset')}
+        cancelText={t('tracker_cancel')}
       />
     </div >
   );

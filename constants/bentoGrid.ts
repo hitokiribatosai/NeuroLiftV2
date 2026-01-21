@@ -1,34 +1,34 @@
 export const HERO_FEATURES = [
     {
         id: 'tracker',
-        title: 'Smart Tracker',
-        description: 'Log sets, reps, and check your history.',
-        className: 'lg:col-span-2 lg:row-span-2 bg-gradient-to-br from-teal-500/20 to-teal-900/20 border-teal-500/30',
-        icon: '📊',
-        link: 'tracker'
+        title: 'home_smart_tracker',
+        description: 'home_smart_tracker_desc',
+        icon: '⚡',
+        link: 'tracker',
+        className: 'md:col-span-2 md:row-span-2 bg-gradient-to-br from-teal-500/10 to-transparent border-teal-500/20'
     },
     {
         id: 'gym_mode',
-        title: 'Gym Mode',
-        description: 'Focus Mode. No distractions.',
-        className: 'lg:col-span-1 lg:row-span-1 bg-zinc-900/50 border-zinc-800',
-        icon: '🚫',
-        link: 'settings'
+        title: 'home_gym_mode',
+        description: 'home_gym_mode_desc',
+        icon: '🏋️',
+        link: '#',
+        className: 'bg-zinc-900 border-zinc-800'
     },
     {
         id: 'analytics',
-        title: 'Analytics',
-        description: 'Visualize your progress.',
-        className: 'lg:col-span-1 lg:row-span-1 bg-zinc-900/50 border-zinc-800',
+        title: 'home_analytics',
+        description: 'home_analytics_desc',
         icon: '📈',
-        link: 'journal'
+        link: 'journal',
+        className: 'bg-zinc-900 border-zinc-800'
     },
     {
         id: 'ai_coach',
-        title: 'AI Coach',
-        description: 'Coming Soon.',
-        className: 'lg:col-span-2 lg:row-span-1 bg-zinc-900/50 border-zinc-800 opacity-70',
-        icon: '🤖',
-        link: '#'
+        title: 'home_ai_coach',
+        description: 'home_ai_coach_desc',
+        icon: '🧠',
+        link: '#',
+        className: 'md:col-span-2 bg-gradient-to-r from-zinc-900 to-zinc-800 border-zinc-800'
     }
 ];

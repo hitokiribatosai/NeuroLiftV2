@@ -20,16 +20,16 @@ export const Home: React.FC<HomeProps> = ({ setCurrentView }) => {
         <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-8 duration-700">
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-zinc-900/50 rounded-full border border-zinc-800 mb-4 backdrop-blur-sm">
             <span className="w-2 h-2 rounded-full bg-teal-500 animate-pulse"></span>
-            <span className="text-[10px] font-bold text-zinc-300 uppercase tracking-widest">v2.0 Beta Live</span>
+            <span className="text-[10px] font-bold text-zinc-300 uppercase tracking-widest">{t('home_beta_live')}</span>
           </div>
 
           <h1 className="text-5xl md:text-7xl font-black text-white uppercase tracking-tighter leading-tight">
-            Scientific <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-teal-200">Hypertrophy</span>
+            {t('home_hero_title_1')} <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-teal-200">{t('home_hero_title_2')}</span>
           </h1>
 
           <p className="text-lg text-zinc-400 max-w-lg mx-auto leading-relaxed">
-            The intelligent workout tracker that adapts to your goals. No spreadsheets. No guesswork. Just gains.
+            {t('home_hero_subtitle')}
           </p>
 
           <div className="pt-8 flex flex-col items-center gap-4">
@@ -37,9 +37,9 @@ export const Home: React.FC<HomeProps> = ({ setCurrentView }) => {
               onClick={() => setCurrentView('tracker')}
               className="px-12 py-5 text-lg font-black uppercase tracking-widest shadow-2xl shadow-teal-500/20"
             >
-              Start Tracking
+              {t('home_start_tracking')}
             </SpotlightButton>
-            <p className="text-xs text-zinc-600 font-mono">No account required</p>
+            <p className="text-xs text-zinc-600 font-mono">{t('home_no_account')}</p>
           </div>
         </div>
       </section>
@@ -57,8 +57,8 @@ export const Home: React.FC<HomeProps> = ({ setCurrentView }) => {
 
               <div className="relative z-10">
                 <div className="text-4xl mb-4">{feature.icon}</div>
-                <h3 className="text-xl font-black text-white uppercase tracking-tight mb-1">{feature.title}</h3>
-                <p className="text-sm text-zinc-400">{feature.description}</p>
+                <h3 className="text-xl font-black text-white uppercase tracking-tight mb-1">{t(feature.title as any)}</h3>
+                <p className="text-sm text-zinc-400">{t(feature.description as any)}</p>
               </div>
 
               <div className="absolute bottom-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity transform group-hover:translate-x-0 translate-x-4">
