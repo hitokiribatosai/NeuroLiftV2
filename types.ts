@@ -126,3 +126,16 @@ export interface UserProfile {
 export interface OnboardingState extends UserProfile {
   step: number;
 }
+
+export interface WorkoutTemplate {
+  id: string;
+  name: string;
+  exercises: {
+    name: string;
+    targetSets: number;
+    targetReps: string;
+    notes?: string;
+  }[];
+  lastUsed?: string;
+  createdAt: string;
+}

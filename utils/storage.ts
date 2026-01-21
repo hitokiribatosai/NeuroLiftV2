@@ -64,6 +64,18 @@ export const safeStorage = {
 
     async getAllJournalEntries() {
         return dbStorage.getAll('journal');
+    },
+
+    async saveTemplate(id: string, template: any) {
+        return dbStorage.setItem('templates', id, template);
+    },
+
+    async getTemplates() {
+        return dbStorage.getAll('templates');
+    },
+
+    async deleteTemplate(id: string) {
+        return dbStorage.removeItem('templates', id);
     }
 };
 

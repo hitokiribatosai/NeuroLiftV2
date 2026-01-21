@@ -205,8 +205,8 @@ export const Journal: React.FC = () => {
   const WorkoutHistory = () => {
     if (history.length === 0) return (
       <div className="text-zinc-400 dark:text-zinc-600 text-center py-20 border-2 border-dashed border-zinc-100 dark:border-zinc-800 rounded-[3rem] bg-zinc-50/50 dark:bg-zinc-900/10">
-        <div className="text-[10px] font-black uppercase tracking-[0.4em] mb-2 text-zinc-300 dark:text-zinc-800">No History Found</div>
-        <p className="text-xs font-bold px-10">Complete a workout in the Tracker to see it here.</p>
+        <div className="text-[10px] font-black uppercase tracking-[0.4em] mb-2 text-zinc-300 dark:text-zinc-800">{t('journal_no_history')}</div>
+        <p className="text-xs font-bold px-10">{t('journal_complete_workout')}</p>
       </div>
     );
 
@@ -215,7 +215,7 @@ export const Journal: React.FC = () => {
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-xl font-black text-zinc-900 dark:text-white uppercase tracking-tight flex items-center gap-3">
             <span className="w-2 h-6 bg-teal-500 rounded-full"></span>
-            Workout Sessions
+            {t('journal_workout_sessions')}
           </h3>
         </div>
         {history.map((workout) => (
@@ -256,7 +256,7 @@ export const Journal: React.FC = () => {
                 </div>
               </div>
               <div className="text-right">
-                <div className="text-[10px] text-zinc-300 uppercase tracking-widest mb-1 font-black">Total Volume</div>
+                <div className="text-[10px] text-zinc-300 uppercase tracking-widest mb-1 font-black">{t('journal_total_volume')}</div>
                 <div className="text-2xl font-black font-mono text-zinc-900 dark:text-white">{workout.totalVolume} <span className="text-xs font-bold text-teal-600">KG</span></div>
               </div>
             </div>
@@ -398,13 +398,13 @@ export const Journal: React.FC = () => {
               <InputField label={t('field_neck')} field="neck" formData={formData} handleChange={handleChange} />
               <InputField label={t('field_shoulders')} field="shoulders" formData={formData} handleChange={handleChange} />
               <InputField label={t('field_chest')} field="chest" formData={formData} handleChange={handleChange} />
-              <InputField label="Biceps (L)" field="biceps_left" formData={formData} handleChange={handleChange} />
-              <InputField label="Biceps (R)" field="biceps_right" formData={formData} handleChange={handleChange} />
+              <InputField label={t('field_biceps_left')} field="biceps_left" formData={formData} handleChange={handleChange} />
+              <InputField label={t('field_biceps_right')} field="biceps_right" formData={formData} handleChange={handleChange} />
               <InputField label={t('field_forearms')} field="forearms" formData={formData} handleChange={handleChange} />
               <InputField label={t('field_waist')} field="waist" formData={formData} handleChange={handleChange} />
               <InputField label={t('field_hips')} field="hips" formData={formData} handleChange={handleChange} />
-              <InputField label="Thigh (L)" field="thigh_left" formData={formData} handleChange={handleChange} />
-              <InputField label="Thigh (R)" field="thigh_right" formData={formData} handleChange={handleChange} />
+              <InputField label={t('field_thigh_left')} field="thigh_left" formData={formData} handleChange={handleChange} />
+              <InputField label={t('field_thigh_right')} field="thigh_right" formData={formData} handleChange={handleChange} />
               <InputField label={t('field_calves')} field="calves" formData={formData} handleChange={handleChange} />
             </div>
 
@@ -474,7 +474,7 @@ export const Journal: React.FC = () => {
                 onClick={handleSave}
                 className="px-12 py-4 text-xs font-black uppercase tracking-widest shadow-xl shadow-teal-500/20"
               >
-                {editingId ? 'Update Entry' : t('save')}
+                {editingId ? t('journal_update_entry') : t('save')}
               </SpotlightButton>
             </div>
           </Card>
@@ -486,13 +486,13 @@ export const Journal: React.FC = () => {
           <div className="pt-8 border-t border-zinc-100 dark:border-zinc-800">
             <h3 className="text-xl font-black text-zinc-900 dark:text-white uppercase tracking-tight mb-8 flex items-center gap-3">
               <span className="w-2 h-6 bg-teal-500 rounded-full"></span>
-              Body Metrics
+              {t('journal_body_metrics')}
             </h3>
             <div className="space-y-6">
               {entries.length === 0 ? (
                 <div className="text-zinc-300 dark:text-zinc-200 text-center py-32 border-2 border-dashed border-zinc-100 dark:border-zinc-800 rounded-[3rem] bg-zinc-50/50 dark:bg-zinc-900/10">
-                  <div className="text-[10px] font-black uppercase tracking-[0.4em] mb-2 text-zinc-200 dark:text-zinc-100">No Entries Found</div>
-                  <p className="text-xs font-bold px-10">Start tracking your comprehensive metrics today.</p>
+                  <div className="text-[10px] font-black uppercase tracking-[0.4em] mb-2 text-zinc-200 dark:text-zinc-100">{t('journal_no_entries')}</div>
+                  <p className="text-xs font-bold px-10">{t('journal_start_tracking')}</p>
                 </div>
               ) : (
                 entries.map(entry => (
@@ -531,10 +531,10 @@ export const Journal: React.FC = () => {
                       {entry.weight && <span className="text-zinc-900 dark:text-white font-black text-xl font-mono tracking-tighter">{entry.weight} <span className="text-[10px] text-zinc-200 dark:text-zinc-300">KG</span></span>}
                     </div>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-xs text-zinc-300 dark:text-zinc-200">
-                      {entry.chest && <div className="flex flex-col gap-1"><span className="text-[8px] font-black uppercase tracking-widest text-zinc-400">Chest</span> <span className="text-zinc-900 dark:text-zinc-200 font-bold">{entry.chest} cm</span></div>}
-                      {entry.waist && <div className="flex flex-col gap-1"><span className="text-[8px] font-black uppercase tracking-widest text-zinc-400">Waist</span> <span className="text-zinc-900 dark:text-zinc-200 font-bold">{entry.waist} cm</span></div>}
-                      {entry.biceps_right && <div className="flex flex-col gap-1"><span className="text-[8px] font-black uppercase tracking-widest text-zinc-400">Arms</span> <span className="text-zinc-900 dark:text-zinc-200 font-bold">{entry.biceps_right} cm</span></div>}
-                      {entry.thigh_right && <div className="flex flex-col gap-1"><span className="text-[8px] font-black uppercase tracking-widest text-zinc-400">Legs</span> <span className="text-zinc-900 dark:text-zinc-200 font-bold">{entry.thigh_right} cm</span></div>}
+                      {entry.chest && <div className="flex flex-col gap-1"><span className="text-[8px] font-black uppercase tracking-widest text-zinc-400">{t('journal_chest')}</span> <span className="text-zinc-900 dark:text-zinc-200 font-bold">{entry.chest} cm</span></div>}
+                      {entry.waist && <div className="flex flex-col gap-1"><span className="text-[8px] font-black uppercase tracking-widest text-zinc-400">{t('journal_waist')}</span> <span className="text-zinc-900 dark:text-zinc-200 font-bold">{entry.waist} cm</span></div>}
+                      {entry.biceps_right && <div className="flex flex-col gap-1"><span className="text-[8px] font-black uppercase tracking-widest text-zinc-400">{t('journal_arms')}</span> <span className="text-zinc-900 dark:text-zinc-200 font-bold">{entry.biceps_right} cm</span></div>}
+                      {entry.thigh_right && <div className="flex flex-col gap-1"><span className="text-[8px] font-black uppercase tracking-widest text-zinc-400">{t('journal_legs')}</span> <span className="text-zinc-900 dark:text-zinc-200 font-bold">{entry.thigh_right} cm</span></div>}
 
                       {entry.customMeasurements?.map(c => (
                         <div key={c.id} className="flex flex-col gap-1">
@@ -546,7 +546,7 @@ export const Journal: React.FC = () => {
                     {editingId === entry.id && (
                       <div className="mt-6 flex items-center justify-center gap-3 text-[9px] text-teal-600 dark:text-teal-400 font-black uppercase tracking-[0.4em] bg-teal-500/5 py-2 rounded-xl">
                         <div className="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse"></div>
-                        Currently Editing
+                        {t('journal_currently_editing')}
                       </div>
                     )}
                   </div>
@@ -618,14 +618,14 @@ const VolumeChart = ({ history, t, selectedMuscle, onMuscleChange, language }: {
   return (
     <Card className="p-8 bg-zinc-900/40 border-zinc-800 rounded-[2.5rem] shadow-sm mb-12 backdrop-blur-xl" style={{ WebkitBackdropFilter: 'blur(24px)' }}>
       <div className="flex justify-between items-center mb-8">
-        <h3 className="text-[10px] font-black text-zinc-300 uppercase tracking-[0.3em]">Volume Progression</h3>
+        <h3 className="text-[10px] font-black text-zinc-300 uppercase tracking-[0.3em]">{t('journal_volume_progression')}</h3>
         <select
           value={selectedMuscle}
           onChange={(e) => onMuscleChange(e.target.value)}
           className="bg-black/40 border border-zinc-800 rounded-xl px-4 py-2 text-[10px] font-black uppercase tracking-widest text-teal-400 outline-none focus:border-teal-500 transition-all"
         >
           {muscleGroups.map(m => (
-            <option key={m} value={m}>{m === 'Total' ? 'Overall Volume' : getLocalizedMuscleName(m, language)}</option>
+            <option key={m} value={m}>{m === 'Total' ? t('journal_overall_volume') : getLocalizedMuscleName(m, language)}</option>
           ))}
         </select>
       </div>

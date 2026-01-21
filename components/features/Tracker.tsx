@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { SpotlightButton } from '../ui/SpotlightButton';
 import { Card } from '../ui/Card';
-import { CompletedWorkout, ActiveExercise, WorkoutSet } from '../../types';
+import { CompletedWorkout, ActiveExercise, WorkoutSet, WorkoutTemplate } from '../../types';
 import { getExerciseDatabase, getLocalizedMuscleName, getMuscleForExercise, getExerciseTranslation, getExerciseLinks } from '../../utils/exerciseData';
 import { useClock } from '../../contexts/ClockContext';
 import { playNotificationSound } from '../../utils/audio';
@@ -37,6 +37,11 @@ export const Tracker: React.FC = () => {
   const [shareFeedback, setShareFeedback] = useState(false);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [exerciseHistory, setExerciseHistory] = useState<Map<string, any>>(new Map());
+  const [templates, setTemplates] = useState<WorkoutTemplate[]>([]);
+  const [showSaveTemplateModal, setShowSaveTemplateModal] = useState(false);
+  const [showLoadTemplateModal, setShowLoadTemplateModal] = useState(false);
+  const [templateName, setTemplateName] = useState('');
+
 
   // Load history when selected exercises change
   useEffect(() => {
@@ -145,6 +150,16 @@ export const Tracker: React.FC = () => {
     safeStorage.setItem('neuroLift_tracker_selected_exercises', JSON.stringify(selectedExercises));
     safeStorage.setItem('neuroLift_tracker_active_exercises', JSON.stringify(activeExercises));
   }, [phase, selectedMuscles, selectedExercises, activeExercises]);
+
+  // Load Templates
+  useEffect(() => {
+    const fetchTemplates = async () => {
+      const savedTemplates = await safeStorage.getTemplates();
+      setTemplates(savedTemplates);
+    };
+    fetchTemplates();
+  }, []);
+
 
   // Sync Phase with URL & Handle Back Navigation
   useEffect(() => {
@@ -416,6 +431,60 @@ export const Tracker: React.FC = () => {
     }
   };
 
+  const saveCurrentAsTemplate = async () => {
+    if (!templateName.trim()) return;
+    const newTemplate: WorkoutTemplate = {
+      id: generateId(),
+      name: templateName,
+      exercises: selectedExercises.map(ex => ({
+        name: ex,
+        targetSets: 3, // Default values
+        targetReps: '8-12'
+      })),
+      createdAt: new Date().toISOString()
+    };
+
+    await safeStorage.saveTemplate(newTemplate.id, newTemplate);
+    setTemplates(prev => [newTemplate, ...prev]);
+    setShowSaveTemplateModal(false);
+    setTemplateName('');
+    hapticFeedback.success();
+  };
+
+  const loadTemplate = async (template: WorkoutTemplate) => {
+    const exerciseNames = template.exercises.map(e => e.name);
+    setSelectedExercises(exerciseNames);
+
+    // Update lastUsed
+    const updatedTemplate = { ...template, lastUsed: new Date().toISOString() };
+    await safeStorage.saveTemplate(updatedTemplate.id, updatedTemplate);
+    setTemplates(prev => prev.map(t => t.id === updatedTemplate.id ? updatedTemplate : t));
+
+    // Infer muscles from exercises
+    const musclesToSelect = new Set<string>();
+    Object.entries(exercisesByMuscle).forEach(([muscle, subCats]) => {
+      Object.values(subCats).forEach(categories => {
+        Object.values(categories).forEach(exercises => {
+          exercises.forEach(ex => {
+            if (exerciseNames.includes(ex)) musclesToSelect.add(muscle);
+          });
+        });
+      });
+    });
+    setSelectedMuscles(Array.from(musclesToSelect));
+    setShowLoadTemplateModal(false);
+    hapticFeedback.light();
+  };
+
+  const deleteTemplate = async (id: string) => {
+    if (confirm(t('tracker_delete_confirm'))) {
+      await safeStorage.deleteTemplate(id);
+      setTemplates(prev => prev.filter(t => t.id !== id));
+      hapticFeedback.medium();
+    }
+  };
+
+
   const MuscleChecklist = () => {
     return (
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-w-4xl mx-auto px-4 mb-16">
@@ -561,7 +630,32 @@ export const Tracker: React.FC = () => {
                     </svg>
                     {shareFeedback ? t('save') : 'Share Plan'}
                   </button>
+
+                  {templates.length > 0 && (
+                    <button
+                      onClick={() => setShowLoadTemplateModal(true)}
+                      className="text-xs text-zinc-400 hover:text-white uppercase tracking-widest font-black flex items-center gap-2 transition-colors px-3 py-1.5 rounded-xl border border-zinc-800 hover:border-teal-500/50"
+                    >
+                      <svg className="w-4 h-4 text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                      </svg>
+                      {t('tracker_load_template')}
+                    </button>
+                  )}
+
+                  {selectedExercises.length > 0 && (
+                    <button
+                      onClick={() => setShowSaveTemplateModal(true)}
+                      className="text-xs text-teal-400 hover:text-teal-300 uppercase tracking-widest font-black flex items-center gap-2 transition-colors px-3 py-1.5 rounded-xl border border-teal-500/20 hover:border-teal-500/50 bg-teal-500/5"
+                    >
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                      </svg>
+                      {t('tracker_save_template')}
+                    </button>
+                  )}
                 </div>
+
               </div>
 
               <div className="space-y-20 mb-20">
@@ -1191,6 +1285,86 @@ export const Tracker: React.FC = () => {
         confirmText={t('timer_reset')}
         cancelText={t('tracker_cancel')}
       />
+
+      {/* Save Template Modal */}
+      <Modal isOpen={showSaveTemplateModal} onClose={() => setShowSaveTemplateModal(false)}>
+        <div className="relative w-full rounded-[3rem] border border-zinc-800 bg-zinc-950 p-8 shadow-3xl overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-2 bg-teal-500"></div>
+          <h3 className="text-xl font-black text-white uppercase tracking-tighter mb-8 flex items-center gap-3">
+            <span className="w-2 h-6 bg-teal-500 rounded-full"></span>
+            {t('tracker_save_template')}
+          </h3>
+          <div className="space-y-6">
+            <div>
+              <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest block mb-2 px-1">{t('tracker_template_name')}</label>
+              <input
+                type="text"
+                value={templateName}
+                onChange={(e) => setTemplateName(e.target.value)}
+                placeholder="e.g., Push Day A"
+                autoFocus
+                className="w-full bg-zinc-900 border border-zinc-800 rounded-2xl px-6 py-4 text-white font-bold outline-none focus:border-teal-500 transition-all"
+              />
+            </div>
+            <SpotlightButton
+              onClick={saveCurrentAsTemplate}
+              disabled={!templateName.trim()}
+              className="w-full py-4 text-xs font-black uppercase tracking-widest disabled:opacity-50"
+            >
+              {t('tracker_save')}
+            </SpotlightButton>
+            <button
+              onClick={() => setShowSaveTemplateModal(false)}
+              className="w-full py-2 text-[10px] text-zinc-600 hover:text-rose-500 font-black uppercase tracking-widest transition-all"
+            >
+              {t('tracker_cancel')}
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Load Template Modal */}
+      <Modal isOpen={showLoadTemplateModal} onClose={() => setShowLoadTemplateModal(false)}>
+        <div className="relative w-full rounded-[3rem] border border-zinc-800 bg-zinc-950 p-8 shadow-3xl overflow-hidden max-h-[80vh] flex flex-col">
+          <div className="absolute top-0 left-0 w-full h-2 bg-teal-500"></div>
+          <h3 className="text-xl font-black text-white uppercase tracking-tighter mb-8 flex items-center gap-3 flex-shrink-0">
+            <span className="w-2 h-6 bg-teal-500 rounded-full"></span>
+            {t('tracker_templates_title')}
+          </h3>
+
+          <div className="space-y-3 overflow-y-auto flex-1 pr-2 custom-scrollbar">
+            {templates.map(template => (
+              <div key={template.id} className="group flex items-center gap-3 p-4 bg-zinc-900/50 border border-zinc-800 rounded-2xl hover:border-teal-500/50 transition-all">
+                <button
+                  onClick={() => loadTemplate(template)}
+                  className="flex-1 text-left"
+                >
+                  <div className="text-sm font-black text-white uppercase tracking-tight mb-1">{template.name}</div>
+                  <div className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">
+                    {template.exercises.length} {t('tracker_exercises')} • {t('tracker_created')} {new Date(template.createdAt).toLocaleDateString()}
+                  </div>
+                </button>
+                <button
+                  onClick={() => deleteTemplate(template.id)}
+                  className="p-2 text-zinc-700 hover:text-rose-500 transition-colors opacity-0 group-hover:opacity-100"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                </button>
+              </div>
+            ))}
+          </div>
+
+          <button
+            onClick={() => setShowLoadTemplateModal(false)}
+            className="w-full py-4 mt-6 text-[10px] text-zinc-600 hover:text-white font-black uppercase tracking-widest transition-all border-t border-zinc-900 flex-shrink-0"
+          >
+            {t('modal_close')}
+          </button>
+        </div>
+      </Modal>
+
     </div >
   );
 };

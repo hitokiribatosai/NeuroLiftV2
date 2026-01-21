@@ -13,14 +13,18 @@ interface NeuroLiftDB extends DBSchema {
         key: string;
         value: any;
     };
+    templates: {
+        key: string;
+        value: any;
+    };
 }
 
 let db: IDBPDatabase<NeuroLiftDB> | null = null;
 
 export const initDB = async () => {
     if (db) return db;
-
-    db = await openDB<NeuroLiftDB>('neurolift-db', 1, {
+    // Upgrade version to 2 to add 'templates' store
+    db = await openDB<NeuroLiftDB>('neurolift-db', 2, {
         upgrade(db) {
             if (!db.objectStoreNames.contains('workouts')) {
                 db.createObjectStore('workouts');
@@ -30,6 +34,9 @@ export const initDB = async () => {
             }
             if (!db.objectStoreNames.contains('settings')) {
                 db.createObjectStore('settings');
+            }
+            if (!db.objectStoreNames.contains('templates')) {
+                db.createObjectStore('templates');
             }
         },
     });
