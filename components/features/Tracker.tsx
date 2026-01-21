@@ -1024,10 +1024,11 @@ export const Tracker: React.FC = () => {
                       </div>
                     )}
                     <div className="space-y-4">
-                      <div className="grid grid-cols-12 gap-3 text-[10px] text-zinc-100 mb-2 px-4 font-black uppercase tracking-[0.3em]">
+                      <div className="grid grid-cols-12 gap-1 md:gap-3 text-[10px] text-zinc-100 mb-2 px-4 font-black uppercase tracking-[0.3em]">
                         <div className="col-span-2 text-center">{t('tracker_header_set')}</div>
                         <div className="col-span-2 text-center">{t('tracker_header_kg')}</div>
-                        <div className="col-span-3 text-center">{t('tracker_header_reps')}</div>
+                        <div className="col-span-1 text-center"></div>
+                        <div className="col-span-2 text-center">{t('tracker_header_reps')}</div>
                         <div className="col-span-3 text-center">{t('tracker_header_check')}</div>
                         <div className="col-span-2 text-center"></div>
                       </div>
@@ -1051,10 +1052,13 @@ export const Tracker: React.FC = () => {
                                 placeholder="0"
                                 className="w-full bg-transparent text-center text-lg font-bold text-white placeholder-zinc-700 outline-none border-b border-transparent focus:border-teal-500 transition-all"
                               />
+                            </div>
+
+                            <div className="col-span-1 flex justify-center">
                               <button
                                 onClick={() => setActiveSetInfo({ exIdx, setIdx })}
-                                className="absolute -right-2 top-1/2 -translate-y-1/2 p-1 text-zinc-700 hover:text-teal-500 transition-colors"
-                                title="Plate Calculator"
+                                className="p-1.5 rounded-full bg-zinc-800/50 text-zinc-500 hover:text-teal-400 hover:bg-zinc-800 transition-all"
+                                title={t('tracker_plate_calc_title')}
                               >
                                 <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
                                   <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="2" />
@@ -1062,7 +1066,8 @@ export const Tracker: React.FC = () => {
                                 </svg>
                               </button>
                             </div>
-                            <div className="col-span-3">
+
+                            <div className="col-span-2">
                               <input
                                 type="tel"
                                 pattern="[0-9]*"

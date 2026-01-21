@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { Card } from '../ui/Card';
 import { SpotlightButton } from '../ui/SpotlightButton';
-import { getExerciseDatabase, getLocalizedMuscleName, getExerciseLinks } from '../../utils/exerciseData';
+import { getExerciseDatabase, getLocalizedMuscleName, getExerciseLinks, getExerciseTranslation } from '../../utils/exerciseData';
 import { Modal } from '../ui/Modal';
 
 export const ProgramPlanner: React.FC = () => {
@@ -96,7 +96,7 @@ export const ProgramPlanner: React.FC = () => {
                         {i + 1}
                       </div>
                       <div className="flex flex-col">
-                        <span className="text-zinc-900 dark:text-zinc-200 font-black text-xs uppercase tracking-tight">{feat.name}</span>
+                        <span className="text-zinc-900 dark:text-zinc-200 font-black text-xs uppercase tracking-tight">{getExerciseTranslation(feat.name, language)}</span>
                         <div className="flex gap-2 items-center mt-1">
                           <span className="text-[9px] text-zinc-500 dark:text-zinc-500 font-black uppercase tracking-[0.2em]">{getLocalizedMuscleName(feat.muscle, language)}</span>
                           <span className="text-[9px] text-teal-600 dark:text-teal-500/60 font-black uppercase tracking-[0.2em]">• {feat.category}</span>

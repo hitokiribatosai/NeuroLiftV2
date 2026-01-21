@@ -9,6 +9,10 @@ const config: CapacitorConfig = {
       overlaysWebView: true,
       style: 'Dark'
     }
+  },
+  ios: {
+    contentInset: 'always',
+    handleApplicationNotifications: true
   }
 };
 

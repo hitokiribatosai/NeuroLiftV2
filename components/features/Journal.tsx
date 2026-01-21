@@ -6,7 +6,7 @@ import { Share } from '@capacitor/share';
 import { Capacitor } from '@capacitor/core';
 import { Card } from '../ui/Card';
 import { SpotlightButton } from '../ui/SpotlightButton';
-import { getMuscleForExercise, getLocalizedMuscleName } from '../../utils/exerciseData';
+import { getMuscleForExercise, getLocalizedMuscleName, getExerciseTranslation } from '../../utils/exerciseData';
 import { ConfirmModal } from '../ui/ConfirmModal';
 import { generateId } from '../../utils/id';
 import { safeStorage } from '../../utils/storage';
@@ -266,7 +266,7 @@ export const Journal: React.FC = () => {
                 <div key={exIdx} className="bg-zinc-50 dark:bg-zinc-950/40 p-5 rounded-3xl border border-zinc-100 dark:border-zinc-800/50">
                   <div className="text-xs font-black text-teal-600 dark:text-teal-400 uppercase tracking-widest mb-3 flex items-center gap-2">
                     <span className="w-1 h-1 bg-teal-500 rounded-full"></span>
-                    {ex.name}
+                    {getExerciseTranslation(ex.name, language)}
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {ex.sets.filter(s => s.completed).map((set, sIdx) => {
