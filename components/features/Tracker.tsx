@@ -628,7 +628,7 @@ export const Tracker: React.FC = () => {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
                       )}
                     </svg>
-                    {shareFeedback ? t('save') : 'Share Plan'}
+                    {shareFeedback ? t('save') : t('tracker_share_plan')}
                   </button>
 
                   {templates.length > 0 && (
@@ -989,7 +989,7 @@ export const Tracker: React.FC = () => {
                         exit={{ opacity: 0, scale: 0.9 }}
                         className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/90 backdrop-blur-md"
                       >
-                        <h3 className="text-zinc-500 text-sm font-black uppercase tracking-[0.5em] mb-8">Resting</h3>
+                        <h3 className="text-zinc-500 text-sm font-black uppercase tracking-[0.5em] mb-8">{t('tracker_resting')}</h3>
                         <div className="text-[12rem] font-black text-orange-500 font-mono leading-none tracking-tighter tabular-nums mb-12">
                           {restRemaining}
                         </div>
@@ -1005,7 +1005,7 @@ export const Tracker: React.FC = () => {
                             onClick={() => setRestRemaining(null)}
                             className="px-8 py-4 bg-teal-500 text-white rounded-2xl font-black uppercase tracking-widest text-xs shadow-lg shadow-teal-500/20 hover:scale-105 transition-all"
                           >
-                            Skip Rest
+                            {t('tracker_skip_rest')}
                           </button>
                         </div>
                       </motion.div>
@@ -1013,7 +1013,7 @@ export const Tracker: React.FC = () => {
                   </AnimatePresence>
 
                   <span className="text-[10px] font-black text-zinc-300 uppercase tracking-[0.3em] mb-4">
-                    {mode === 'stopwatch' ? 'Total Time' : 'Time Remaining'}
+                    {mode === 'stopwatch' ? t('tracker_total_time') : t('tracker_time_remaining')}
                   </span>
 
                   <div className="flex items-center gap-6">
@@ -1098,9 +1098,9 @@ export const Tracker: React.FC = () => {
                       <div className="mb-6 px-4">
                         <div className="flex items-center justify-between bg-zinc-800/50 rounded-xl p-3 border border-zinc-700/50">
                           <div>
-                            <div className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mb-1">Last Session</div>
+                            <div className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mb-1">{t('tracker_last_session')}</div>
                             <div className="text-xs text-zinc-300 font-mono">
-                              {exerciseHistory.get(ex.name).lastSets.length} sets × {exerciseHistory.get(ex.name).lastSets[0]?.reps} reps @ {exerciseHistory.get(ex.name).lastSets[0]?.weight}kg
+                              {exerciseHistory.get(ex.name).lastSets.length} {t('tracker_sets_count')} × {exerciseHistory.get(ex.name).lastSets[0]?.reps} {t('tracker_reps_count')} @ {exerciseHistory.get(ex.name).lastSets[0]?.weight}kg
                             </div>
                           </div>
 
@@ -1111,7 +1111,7 @@ export const Tracker: React.FC = () => {
                               className="px-3 py-1.5 bg-teal-500/10 hover:bg-teal-500/20 text-teal-400 text-[10px] font-black uppercase tracking-widest rounded-lg border border-teal-500/30 transition-all flex items-center gap-2"
                             >
                               <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
-                              Quick Load
+                              {t('tracker_quick_load')}
                             </button>
                           )}
                         </div>

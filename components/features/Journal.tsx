@@ -251,13 +251,13 @@ export const Journal: React.FC = () => {
                 <div className="flex gap-4 items-center">
                   <span className="text-teal-600 dark:text-teal-400 font-black text-[10px] uppercase tracking-widest">{workout.date}</span>
                   <span className="text-zinc-200 dark:text-zinc-200 font-bold text-[10px] uppercase tracking-widest">
-                    {Math.floor(workout.durationSeconds / 60)}m {workout.durationSeconds % 60}s
+                    {Math.floor(workout.durationSeconds / 60)}{t('unit_min_short')} {workout.durationSeconds % 60}{t('unit_sec_short')}
                   </span>
                 </div>
               </div>
               <div className="text-right">
                 <div className="text-[10px] text-zinc-300 uppercase tracking-widest mb-1 font-black">{t('journal_total_volume')}</div>
-                <div className="text-2xl font-black font-mono text-zinc-900 dark:text-white">{workout.totalVolume} <span className="text-xs font-bold text-teal-600">KG</span></div>
+                <div className="text-2xl font-black font-mono text-zinc-900 dark:text-white">{workout.totalVolume} <span className="text-xs font-bold text-teal-600 uppercase">{t('unit_kg')}</span></div>
               </div>
             </div>
 
@@ -274,7 +274,7 @@ export const Journal: React.FC = () => {
 
                       return (
                         <div key={set.id} className="px-3 py-1.5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl text-[10px] font-bold shadow-sm flex items-center gap-1">
-                          <span className="text-zinc-300 dark:text-zinc-600 mr-1">S{sIdx + 1}:</span>
+                          <span className="text-zinc-300 dark:text-zinc-600 mr-1">{t('unit_set_prefix')}{sIdx + 1}:</span>
                           {editingWorkoutId === workout.id ? (
                             <div className="flex items-center gap-1">
                               {isCardio ? (
@@ -291,7 +291,7 @@ export const Journal: React.FC = () => {
                                       handleUpdateWorkoutSet(workout.id, exIdx, sIdx, 'durationSeconds', mins * 60 + currentSeconds);
                                     }}
                                   />
-                                  <span>min</span>
+                                  <span>{t('unit_min_short')}</span>
                                   <input
                                     type="number"
                                     inputMode="decimal"
@@ -301,7 +301,7 @@ export const Journal: React.FC = () => {
                                     value={set.distanceKm || 0}
                                     onChange={(e) => handleUpdateWorkoutSet(workout.id, exIdx, sIdx, 'distanceKm', parseFloat(e.target.value) || 0)}
                                   />
-                                  <span>km</span>
+                                  <span>{t('unit_km')}</span>
                                 </>
                               ) : (
                                 <>
@@ -313,7 +313,7 @@ export const Journal: React.FC = () => {
                                     value={set.weight}
                                     onChange={(e) => handleUpdateWorkoutSet(workout.id, exIdx, sIdx, 'weight', parseInt(e.target.value) || 0)}
                                   />
-                                  <span>kg ×</span>
+                                  <span>{t('unit_kg')} ×</span>
                                   <input
                                     type="number"
                                     inputMode="decimal"
@@ -334,8 +334,8 @@ export const Journal: React.FC = () => {
                           ) : (
                             <span className="text-zinc-900 dark:text-white">
                               {isCardio
-                                ? `${set.durationSeconds ? Math.floor(set.durationSeconds / 60) : 0}m | ${set.distanceKm || 0}km`
-                                : `${set.weight}kg × ${set.reps}`
+                                ? `${set.durationSeconds ? Math.floor(set.durationSeconds / 60) : 0}${t('unit_min_short')} | ${set.distanceKm || 0}${t('unit_km')}`
+                                : `${set.weight}${t('unit_kg')} × ${set.reps}`
                               }
                             </span>
                           )}
