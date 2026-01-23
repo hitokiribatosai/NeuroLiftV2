@@ -205,7 +205,22 @@ export const translations = {
     home_analytics: "Analytics",
     home_analytics_desc: "Visualize your progress.",
     home_ai_coach: "AI Coach",
-    home_ai_coach_desc: "Coming Soon."
+    home_ai_coach_desc: "Coming Soon.",
+
+    // Demo Data & Quick Start
+    demo_workout_label: "Demo",
+    demo_clear_data: "Clear Demo Data",
+    demo_clear_confirm: "Are you sure you want to clear all demo data?",
+    demo_clear_success: "Demo data cleared successfully",
+    quick_start_title: "Quick Start Your Workout",
+    quick_start_subtitle: "Jump into a pre-configured workout based on your split",
+    quick_start_push_day: "Push Day",
+    quick_start_push_desc: "Chest, Shoulders, Triceps",
+    quick_start_pull_day: "Pull Day",
+    quick_start_pull_desc: "Back, Biceps, Forearms",
+    quick_start_leg_day: "Leg Day",
+    quick_start_leg_desc: "Quads, Hamstrings, Calves",
+    quick_start_get_started: "Get Started"
   },
   fr: {
     // Nav
@@ -404,7 +419,22 @@ export const translations = {
     home_analytics: "Analytique",
     home_analytics_desc: "Visualisez vos progrès.",
     home_ai_coach: "Coach IA",
-    home_ai_coach_desc: "Bientôt disponible."
+    home_ai_coach_desc: "Bientôt disponible.",
+
+    // Demo Data & Quick Start
+    demo_workout_label: "Démo",
+    demo_clear_data: "Effacer les données de démonstration",
+    demo_clear_confirm: "Êtes-vous sûr de vouloir effacer toutes les données de démonstration ?",
+    demo_clear_success: "Données de démonstration effacées avec succès",
+    quick_start_title: "Démarrage rapide de votre entraînement",
+    quick_start_subtitle: "Plongez dans un entraînement préconfiguré selon votre split",
+    quick_start_push_day: "Jour Push",
+    quick_start_push_desc: "Poitrine, Épaules, Triceps",
+    quick_start_pull_day: "Jour Pull",
+    quick_start_pull_desc: "Dos, Biceps, Avant-bras",
+    quick_start_leg_day: "Jour Jambes",
+    quick_start_leg_desc: "Quadriceps, Ischio-jambiers, Mollets",
+    quick_start_get_started: "Commencer"
   },
   ar: {
     // Nav
@@ -606,7 +636,22 @@ export const translations = {
     home_analytics: "التحليلات",
     home_analytics_desc: "تصور تقدمك.",
     home_ai_coach: "مدرب الذكاء الاصطناعي",
-    home_ai_coach_desc: "قريباً."
+    home_ai_coach_desc: "قريباً.",
+
+    // Demo Data & Quick Start
+    demo_workout_label: "عرض توضيحي",
+    demo_clear_data: "مسح بيانات العرض التوضيحي",
+    demo_clear_confirm: "هل أنت متأكد أنك تريد مسح جميع بيانات العرض التوضيحي؟",
+    demo_clear_success: "تم مسح بيانات العرض التوضيحي بنجاح",
+    quick_start_title: "بدء سريع لتمرينك",
+    quick_start_subtitle: "ابدأ تمريناً مُعد مسبقاً حسب برنامجك",
+    quick_start_push_day: "يوم الدفع",
+    quick_start_push_desc: "الصدر، الكتفين، العضلة الثلاثية الرؤوس",
+    quick_start_pull_day: "يوم السحب",
+    quick_start_pull_desc: "الظهر، العضلة الثنائية، السواعد",
+    quick_start_leg_day: "يوم الساقين",
+    quick_start_leg_desc: "العضلة الرباعية، العضلة الخلفية للفخذ، السمانة",
+    quick_start_get_started: "ابدأ الآن"
   }
 };
 

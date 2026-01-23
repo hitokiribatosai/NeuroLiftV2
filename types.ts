@@ -46,25 +46,26 @@ export interface CustomMeasurement {
 }
 
 export interface JournalEntry {
-  id: string;
-  date: string;
-  // Standard Bodybuilding Measurements
-  weight?: number;
-  neck?: number;
-  shoulders?: number;
-  chest?: number;
-  biceps_left?: number;
-  biceps_right?: number;
-  forearms?: number;
-  waist?: number;
-  hips?: number;
-  thigh_left?: number;
-  thigh_right?: number;
-  calves?: number;
+   id: string;
+   date: string;
+   // Standard Bodybuilding Measurements
+   weight?: number;
+   neck?: number;
+   shoulders?: number;
+   chest?: number;
+   biceps_left?: number;
+   biceps_right?: number;
+   forearms?: number;
+   waist?: number;
+   hips?: number;
+   thigh_left?: number;
+   thigh_right?: number;
+   calves?: number;
 
-  // Dynamic
-  customMeasurements?: CustomMeasurement[];
-  notes?: string;
+   // Dynamic
+   customMeasurements?: CustomMeasurement[];
+   notes?: string;
+   isDemo?: boolean;
 }
 
 export interface WorkoutSet {
@@ -82,12 +83,13 @@ export interface ActiveExercise {
 }
 
 export interface CompletedWorkout {
-  id: string;
-  date: string;
-  name?: string;
-  durationSeconds: number;
-  exercises: ActiveExercise[];
-  totalVolume: number;
+   id: string;
+   date: string;
+   name?: string;
+   durationSeconds: number;
+   exercises: ActiveExercise[];
+   totalVolume: number;
+   isDemo?: boolean;
 }
 
 export interface CategorizedExercises {
@@ -128,14 +130,15 @@ export interface OnboardingState extends UserProfile {
 }
 
 export interface WorkoutTemplate {
-  id: string;
-  name: string;
-  exercises: {
-    name: string;
-    targetSets: number;
-    targetReps: string;
-    notes?: string;
-  }[];
-  lastUsed?: string;
-  createdAt: string;
+   id: string;
+   name: string;
+   exercises: {
+     name: string;
+     targetSets: number;
+     targetReps: string;
+     notes?: string;
+   }[];
+   lastUsed?: string;
+   createdAt: string;
+   isDemo?: boolean;
 }

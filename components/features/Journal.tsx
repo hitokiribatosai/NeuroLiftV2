@@ -10,6 +10,7 @@ import { getMuscleForExercise, getLocalizedMuscleName, getExerciseTranslation } 
 import { ConfirmModal } from '../ui/ConfirmModal';
 import { generateId } from '../../utils/id';
 import { safeStorage } from '../../utils/storage';
+import { clearDemoData, hasDemoData } from '../../utils/demoData';
 
 export const Journal: React.FC = () => {
   const { t, language } = useLanguage();
@@ -24,6 +25,7 @@ export const Journal: React.FC = () => {
   const [selectedMuscleChart, setSelectedMuscleChart] = useState<string>('Total');
   const [deleteConfirm, setDeleteConfirm] = useState<{ id: string, type: 'entry' | 'workout' } | null>(null);
   const [shareFeedback, setShareFeedback] = useState(false);
+  const [clearDemoConfirm, setClearDemoConfirm] = useState(false);
 
   useEffect(() => {
     setEntries(safeStorage.getParsed<JournalEntry[]>('neuroLift_journal', []));
@@ -104,6 +106,14 @@ export const Journal: React.FC = () => {
 
   const handleDeleteWorkout = (id: string) => {
     setDeleteConfirm({ id, type: 'workout' });
+  };
+
+  const handleClearDemoData = () => {
+    clearDemoData();
+    // Refresh the data
+    setEntries(safeStorage.getParsed<JournalEntry[]>('neuroLift_journal', []));
+    setHistory(safeStorage.getParsed<CompletedWorkout[]>('neuroLift_history', []));
+    setClearDemoConfirm(false);
   };
 
   const performDeleteWorkout = (id: string) => {
@@ -217,6 +227,14 @@ export const Journal: React.FC = () => {
             <span className="w-2 h-6 bg-teal-500 rounded-full"></span>
             {t('journal_workout_sessions')}
           </h3>
+          {hasDemoData() && (
+            <button
+              onClick={() => setClearDemoConfirm(true)}
+              className="px-4 py-2 bg-rose-500/10 border border-rose-500/20 rounded-xl text-rose-400 hover:bg-rose-500/20 transition-colors text-xs font-black uppercase tracking-widest"
+            >
+              {t('demo_clear_data')}
+            </button>
+          )}
         </div>
         {history.map((workout) => (
           <Card key={workout.id} className="p-8 bg-white dark:bg-zinc-900/60 border-zinc-200 dark:border-zinc-800 rounded-[2.5rem] shadow-sm hover:shadow-md transition-all group overflow-hidden relative">
@@ -248,12 +266,17 @@ export const Journal: React.FC = () => {
                 <h4 className="text-2xl font-black text-zinc-900 dark:text-white uppercase tracking-tighter mb-1 pr-20">
                   {workout.name || t('tracker_summary')}
                 </h4>
-                <div className="flex gap-4 items-center">
-                  <span className="text-teal-600 dark:text-teal-400 font-black text-[10px] uppercase tracking-widest">{workout.date}</span>
-                  <span className="text-zinc-200 dark:text-zinc-200 font-bold text-[10px] uppercase tracking-widest">
-                    {Math.floor(workout.durationSeconds / 60)}{t('unit_min_short')} {workout.durationSeconds % 60}{t('unit_sec_short')}
-                  </span>
-                </div>
+                 <div className="flex gap-4 items-center">
+                   <span className="text-teal-600 dark:text-teal-400 font-black text-[10px] uppercase tracking-widest">{workout.date}</span>
+                   {workout.isDemo && (
+                     <span className="px-2 py-0.5 bg-zinc-700 text-zinc-300 text-[9px] font-black uppercase tracking-widest rounded">
+                       {t('demo_workout_label')}
+                     </span>
+                   )}
+                   <span className="text-zinc-200 dark:text-zinc-200 font-bold text-[10px] uppercase tracking-widest">
+                     {Math.floor(workout.durationSeconds / 60)}{t('unit_min_short')} {workout.durationSeconds % 60}{t('unit_sec_short')}
+                   </span>
+                 </div>
               </div>
               <div className="text-right">
                 <div className="text-[10px] text-zinc-300 uppercase tracking-widest mb-1 font-black">{t('journal_total_volume')}</div>
@@ -567,6 +590,17 @@ export const Journal: React.FC = () => {
           else if (deleteConfirm?.type === 'entry') performDeleteEntry(deleteConfirm.id);
         }}
         onCancel={() => setDeleteConfirm(null)}
+        isDestructive={true}
+      />
+
+      <ConfirmModal
+        isOpen={clearDemoConfirm}
+        title={t('confirm_title')}
+        message={t('demo_clear_confirm')}
+        confirmLabel={t('confirm_yes')}
+        cancelLabel={t('confirm_cancel')}
+        onConfirm={handleClearDemoData}
+        onCancel={() => setClearDemoConfirm(false)}
         isDestructive={true}
       />
 

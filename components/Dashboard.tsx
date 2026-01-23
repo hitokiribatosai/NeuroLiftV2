@@ -7,6 +7,7 @@ import { Modal } from './ui/Modal';
 import { safeStorage } from '../utils/storage';
 import { CompletedWorkout } from '../types';
 import { getMuscleForExercise, getLocalizedMuscleName, getSubMuscleForExercise } from '../utils/exerciseData';
+import { hasRealWorkouts } from '../utils/demoData';
 
 interface DashboardProps {
     setCurrentView: (view: string) => void;
@@ -18,6 +19,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ setCurrentView }) => {
     const [showScientificInfo, setShowScientificInfo] = useState(false);
     const [selectedMuscle, setSelectedMuscle] = useState('Total');
     const [activeIndex, setActiveIndex] = useState(0);
+    const [hasRealWorkoutsState, setHasRealWorkoutsState] = useState(hasRealWorkouts());
 
     const muscleGroups = ['Total', 'Chest', 'Back', 'Shoulders', 'Legs', 'Biceps', 'Triceps', 'Forearms', 'Core', 'Cardio'];
 
@@ -126,6 +128,19 @@ export const Dashboard: React.FC<DashboardProps> = ({ setCurrentView }) => {
         const width = e.currentTarget.offsetWidth;
         const index = Math.round(scrollLeft / (width * 0.85)); // 0.85 matches the 85vw width
         setActiveIndex(index);
+    };
+
+    const handleQuickStart = (workoutType: 'push' | 'pull' | 'legs') => {
+        // Pre-select exercises based on workout type and navigate to tracker
+        const muscleGroups = {
+            push: ['Chest', 'Shoulders', 'Triceps'],
+            pull: ['Back', 'Biceps', 'Forearms'],
+            legs: ['Quads', 'Hamstrings', 'Calves']
+        };
+
+        // Store the selected muscle groups in session storage for the tracker to pick up
+        sessionStorage.setItem('quickStartMuscles', JSON.stringify(muscleGroups[workoutType]));
+        setCurrentView('tracker');
     };
 
     const renderRecentSessionCard = () => {
@@ -280,6 +295,81 @@ export const Dashboard: React.FC<DashboardProps> = ({ setCurrentView }) => {
         );
     };
 
+    const renderQuickStartCard = () => {
+        if (!hasRealWorkoutsState) {
+            // Show workout quick start for new users
+            return (
+                <Card className="p-8 bg-zinc-900/40 border-zinc-800 rounded-[3rem] group hover:border-teal-500/50 transition-all shadow-sm">
+                    <h3 className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.3em] mb-6">{t('quick_start_title')}</h3>
+                    <p className="text-zinc-500 text-xs font-bold uppercase tracking-wide mb-6">{t('quick_start_subtitle')}</p>
+                    <div className="space-y-3">
+                        <SpotlightButton
+                            onClick={() => handleQuickStart('push')}
+                            className="w-full justify-between py-4 text-xs font-black uppercase tracking-widest"
+                        >
+                            <div className="flex flex-col items-start">
+                                <span>{t('quick_start_push_day')}</span>
+                                <span className="text-[9px] text-zinc-400 font-medium normal-case">{t('quick_start_push_desc')}</span>
+                            </div>
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                            </svg>
+                        </SpotlightButton>
+                        <SpotlightButton
+                            onClick={() => handleQuickStart('pull')}
+                            className="w-full justify-between py-4 text-xs font-black uppercase tracking-widest"
+                        >
+                            <div className="flex flex-col items-start">
+                                <span>{t('quick_start_pull_day')}</span>
+                                <span className="text-[9px] text-zinc-400 font-medium normal-case">{t('quick_start_pull_desc')}</span>
+                            </div>
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                            </svg>
+                        </SpotlightButton>
+                        <SpotlightButton
+                            onClick={() => handleQuickStart('legs')}
+                            className="w-full justify-between py-4 text-xs font-black uppercase tracking-widest"
+                        >
+                            <div className="flex flex-col items-start">
+                                <span>{t('quick_start_leg_day')}</span>
+                                <span className="text-[9px] text-zinc-400 font-medium normal-case">{t('quick_start_leg_desc')}</span>
+                            </div>
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                            </svg>
+                        </SpotlightButton>
+                    </div>
+                </Card>
+            );
+        }
+
+        // Show regular quick start for existing users
+        return (
+            <Card className="p-8 bg-zinc-900/40 border-zinc-800 rounded-[3rem] group hover:border-teal-500/50 transition-all shadow-sm">
+                <h3 className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.3em] mb-8">Quick Start</h3>
+                <div className="space-y-4">
+                    <SpotlightButton
+                        onClick={() => setCurrentView('tracker')}
+                        className="w-full justify-center py-5 text-xs font-black uppercase tracking-widest shadow-xl shadow-teal-500/10"
+                    >
+                        Start Workout
+                        <svg className="w-4 h-4 ml-2 rtl:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                    </SpotlightButton>
+                    <SpotlightButton
+                        variant="secondary"
+                        onClick={() => setCurrentView('planner')}
+                        className="w-full justify-center py-4 text-[10px] font-black uppercase tracking-[0.2em]"
+                    >
+                        Plan Exercises
+                    </SpotlightButton>
+                </div>
+            </Card>
+        );
+    };
+
     return (
         <section className="relative min-h-screen py-24 px-6 overflow-hidden">
             {/* Background Glow */}
@@ -332,30 +422,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ setCurrentView }) => {
                     </motion.div>
                 </div>
 
-                {/* Actionable Sections */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {/* Quick Start - Primary Action (Always Top/Left) */}
-                    <Card className="p-8 bg-zinc-900/40 border-zinc-800 rounded-[3rem] group hover:border-teal-500/50 transition-all shadow-sm">
-                        <h3 className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.3em] mb-8">Quick Start</h3>
-                        <div className="space-y-4">
-                            <SpotlightButton
-                                onClick={() => setCurrentView('tracker')}
-                                className="w-full justify-center py-5 text-xs font-black uppercase tracking-widest shadow-xl shadow-teal-500/10"
-                            >
-                                Start Workout
-                                <svg className="w-4 h-4 ml-2 rtl:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                                </svg>
-                            </SpotlightButton>
-                            <SpotlightButton
-                                variant="secondary"
-                                onClick={() => setCurrentView('planner')}
-                                className="w-full justify-center py-4 text-[10px] font-black uppercase tracking-[0.2em]"
-                            >
-                                Plan Exercises
-                            </SpotlightButton>
-                        </div>
-                    </Card>
+                 {/* Actionable Sections */}
+                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                     {/* Quick Start - Primary Action (Always Top/Left) */}
+                     {renderQuickStartCard()}
 
                     {/* Desktop View: Grid Layout for other cards */}
                     <div className="hidden md:contents">

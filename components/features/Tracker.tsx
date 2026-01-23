@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { SpotlightButton } from '../ui/SpotlightButton';
 import { Card } from '../ui/Card';
@@ -140,6 +140,22 @@ export const Tracker: React.FC = () => {
         }
       } catch (e) {
         console.error("Failed to decode shared workout", e);
+      }
+    }
+  }, []);
+
+  // Handle Quick Start from Dashboard
+  useEffect(() => {
+    const quickStartMuscles = sessionStorage.getItem('quickStartMuscles');
+    if (quickStartMuscles) {
+      try {
+        const muscles = JSON.parse(quickStartMuscles);
+        setSelectedMuscles(muscles);
+        setPhase('selection');
+        // Clear the session storage
+        sessionStorage.removeItem('quickStartMuscles');
+      } catch (e) {
+        console.error("Failed to parse quick start muscles", e);
       }
     }
   }, []);

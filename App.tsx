@@ -15,6 +15,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { OfflineIndicator } from './components/ui/OfflineIndicator';
 import { OnboardingWizard } from './components/onboarding/OnboardingWizard';
 import { migrateToIndexedDB } from './utils/storage';
+import { insertDemoData } from './utils/demoData';
 
 function App() {
   React.useEffect(() => {
@@ -98,7 +99,9 @@ function App() {
 
   const handleOnboardingComplete = () => {
     setShowOnboarding(false);
-    // Optionally redirect to a specific "First Workout" view
+    // Insert demo data for new users
+    insertDemoData();
+    // Redirect to home dashboard
     setCurrentView('home');
   };
 
