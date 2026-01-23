@@ -5,6 +5,14 @@ import { safeStorage } from '../utils/storage';
 type ClockMode = 'stopwatch' | 'timer';
 
 interface ClockContextType {
+    // Workout Timer
+    workoutDuration: number;
+    setWorkoutDuration: React.Dispatch<React.SetStateAction<number>>;
+    isWorkoutActive: boolean;
+    setIsWorkoutActive: (active: boolean) => void;
+    resetWorkout: () => void;
+
+    // Utility Clock
     mode: ClockMode;
     setMode: (mode: ClockMode) => void;
     timerActive: boolean;
@@ -13,6 +21,8 @@ interface ClockContextType {
     setDuration: React.Dispatch<React.SetStateAction<number>>;
     countdownRemaining: number | null; // For timer (counts down)
     setCountdownRemaining: React.Dispatch<React.SetStateAction<number | null>>;
+
+    // Shared / Helpers
     countdownMinutes: string;
     setCountdownMinutes: (mins: string) => void;
     countdownSeconds: string;
@@ -28,20 +38,32 @@ interface ClockContextType {
 const ClockContext = createContext<ClockContextType | undefined>(undefined);
 
 export const ClockProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    const [mode, setMode] = useState<ClockMode>(() => {
+    // --- WORKOUT TIMER STATE (Tracker) ---
+    const [workoutDuration, setWorkoutDuration] = useState(() => {
+        const saved = safeStorage.getItem('neuroLift_workout_duration');
+        return saved ? parseInt(saved) : 0;
+    });
+    const [isWorkoutActive, setIsWorkoutActive] = useState(() => {
+        return safeStorage.getItem('neuroLift_workout_active') === 'true';
+    });
+
+    // --- UTILITY CLOCK STATE (Clock Tab) ---
+    const [utilityMode, setUtilityMode] = useState<ClockMode>(() => {
         return (safeStorage.getItem('neuroLift_clock_mode') as ClockMode) || 'stopwatch';
     });
-    const [timerActive, setTimerActive] = useState(() => {
+    const [isUtilityActive, setIsUtilityActive] = useState(() => {
         return safeStorage.getItem('neuroLift_clock_active') === 'true';
     });
-    const [duration, setDuration] = useState(() => {
+    const [utilityDuration, setUtilityDuration] = useState(() => { // Stopwatch
         const saved = safeStorage.getItem('neuroLift_clock_duration');
         return saved ? parseInt(saved) : 0;
     });
-    const [countdownRemaining, setCountdownRemaining] = useState<number | null>(() => {
+    const [utilityCountdown, setUtilityCountdown] = useState<number | null>(() => { // Timer
         const saved = safeStorage.getItem('neuroLift_clock_countdown');
         return saved ? parseInt(saved) : null;
     });
+
+    // UI Helpers for Timer Input
     const [countdownMinutes, setCountdownMinutes] = useState(() => {
         return safeStorage.getItem('neuroLift_clock_mins') || '01';
     });
@@ -54,80 +76,101 @@ export const ClockProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     const [restRemaining, setRestRemaining] = useState<number | null>(null);
 
     // Initial Registration
-    // Initial Registration
     useEffect(() => {
-        // Platform check removed as notification logic is disabled
+        // Platform check removed
     }, []);
 
+    // Persistence
     useEffect(() => {
-        safeStorage.setItem('neuroLift_clock_mode', mode);
-        safeStorage.setItem('neuroLift_clock_active', timerActive.toString());
-        safeStorage.setItem('neuroLift_clock_duration', duration.toString());
-        safeStorage.setItem('neuroLift_clock_countdown', countdownRemaining?.toString() || '');
+        safeStorage.setItem('neuroLift_workout_duration', workoutDuration.toString());
+        safeStorage.setItem('neuroLift_workout_active', isWorkoutActive.toString());
+
+        safeStorage.setItem('neuroLift_clock_mode', utilityMode);
+        safeStorage.setItem('neuroLift_clock_active', isUtilityActive.toString());
+        safeStorage.setItem('neuroLift_clock_duration', utilityDuration.toString());
+        safeStorage.setItem('neuroLift_clock_countdown', utilityCountdown?.toString() || '');
+
         safeStorage.setItem('neuroLift_clock_mins', countdownMinutes);
         safeStorage.setItem('neuroLift_clock_secs', countdownSeconds);
         safeStorage.setItem('neuroLift_clock_laps', JSON.stringify(laps));
-    }, [mode, timerActive, duration, countdownRemaining, countdownMinutes, countdownSeconds, laps]);
+    }, [workoutDuration, isWorkoutActive, utilityMode, isUtilityActive, utilityDuration, utilityCountdown, countdownMinutes, countdownSeconds, laps]);
 
+    // Timer Logic
     useEffect(() => {
         let interval: any;
-        if (timerActive || (restRemaining !== null && restRemaining > 0)) {
+        if (isWorkoutActive || isUtilityActive || (restRemaining !== null && restRemaining > 0)) {
             interval = setInterval(() => {
-                if (timerActive) {
-                    if (mode === 'stopwatch') {
-                        setDuration(d => d + 1);
-                    } else if (countdownRemaining !== null && countdownRemaining > 0) {
-                        setCountdownRemaining(r => (r !== null ? r - 1 : 0));
-                    } else if (countdownRemaining === 0) {
-                        setTimerActive(false);
-                        setCountdownRemaining(null);
+                // Workout Timer (Always counts up if active)
+                if (isWorkoutActive) {
+                    setWorkoutDuration(d => d + 1);
+                }
+
+                // Utility Clock
+                if (isUtilityActive) {
+                    if (utilityMode === 'stopwatch') {
+                        setUtilityDuration(d => d + 1);
+                    } else if (utilityCountdown !== null && utilityCountdown > 0) {
+                        setUtilityCountdown(r => (r !== null ? r - 1 : 0));
+                    } else if (utilityCountdown === 0) {
+                        setIsUtilityActive(false);
+                        setUtilityCountdown(null);
                         playNotificationSound();
                     }
                 }
 
-                // Handle Rest Timer
+                // Rest Timer
                 if (restRemaining !== null && restRemaining > 0) {
                     setRestRemaining(r => (r !== null ? r - 1 : null));
                 } else if (restRemaining === 0) {
                     setRestRemaining(null);
                     playNotificationSound();
                 }
-
-                // Update Native Notification
             }, 1000);
         }
         return () => clearInterval(interval);
-    }, [timerActive, mode, countdownRemaining, restRemaining]);
+    }, [isWorkoutActive, isUtilityActive, utilityMode, utilityCountdown, restRemaining]);
 
     const addLap = () => {
-        if (mode === 'stopwatch') {
-            setLaps(prev => [duration, ...prev]);
+        if (utilityMode === 'stopwatch') {
+            setLaps(prev => [utilityDuration, ...prev]);
         }
     };
 
-    const resetClock = () => {
-        setDuration(0);
+    const resetClock = () => { // Resets Utility Clock
+        setUtilityDuration(0);
         setLaps([]);
-        setCountdownRemaining(null);
-        setTimerActive(false);
-        setRestRemaining(null);
+        setUtilityCountdown(null);
+        setIsUtilityActive(false);
+    };
+
+    const resetWorkout = () => {
+        setWorkoutDuration(0);
+        setIsWorkoutActive(false);
     };
 
     const startTimer = (mins: number, secs: number) => {
         const totalSecs = (mins * 60) + secs;
         if (totalSecs > 0) {
-            setCountdownRemaining(totalSecs);
-            setTimerActive(true);
-            setMode('timer');
+            setUtilityCountdown(totalSecs);
+            setIsUtilityActive(true);
+            setUtilityMode('timer');
         }
     };
 
     return (
         <ClockContext.Provider value={{
-            mode, setMode,
-            timerActive, setTimerActive,
-            duration, setDuration,
-            countdownRemaining, setCountdownRemaining,
+            // Workout State
+            workoutDuration, setWorkoutDuration,
+            isWorkoutActive, setIsWorkoutActive,
+            resetWorkout,
+
+            // Utility Clock State
+            mode: utilityMode, setMode: setUtilityMode,
+            timerActive: isUtilityActive, setTimerActive: setIsUtilityActive,
+            duration: utilityDuration, setDuration: setUtilityDuration,
+            countdownRemaining: utilityCountdown, setCountdownRemaining: setUtilityCountdown,
+
+            // Shared/UI
             countdownMinutes, setCountdownMinutes,
             countdownSeconds, setCountdownSeconds,
             laps, addLap,
