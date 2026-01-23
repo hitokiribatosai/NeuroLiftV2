@@ -222,6 +222,15 @@ export const translations = {
     quick_start_leg_desc: "Quads, Hamstrings, Calves",
     quick_start_get_started: "Get Started",
 
+    // Template Management
+    template_edit_title: "Edit Template",
+    template_add_exercise: "Add Exercise",
+    template_exercise_sets: "Sets",
+    template_exercise_reps: "Reps",
+    template_exercise_notes: "Notes",
+    template_delete_confirm: "Delete this template?",
+    template_delete_warning: "This action cannot be undone.",
+
     // Tooltips
     tooltip_muscle_selector_title: 'Select Muscle Groups',
     tooltip_muscle_selector_desc: 'Tap any muscle to add exercises targeting that area',
@@ -453,6 +462,15 @@ export const translations = {
     quick_start_leg_day: "Jour Jambes",
     quick_start_leg_desc: "Quadriceps, Ischio-jambiers, Mollets",
     quick_start_get_started: "Commencer",
+
+    // Template Management
+    template_edit_title: "Modifier le modèle",
+    template_add_exercise: "Ajouter un exercice",
+    template_exercise_sets: "Séries",
+    template_exercise_reps: "Répétitions",
+    template_exercise_notes: "Notes",
+    template_delete_confirm: "Supprimer ce modèle ?",
+    template_delete_warning: "Cette action ne peut pas être annulée.",
 
     // Tooltips
     tooltip_muscle_selector_title: 'Sélectionner les Groupes Musculaires',
@@ -688,6 +706,15 @@ export const translations = {
     quick_start_leg_day: "يوم الساقين",
     quick_start_leg_desc: "العضلة الرباعية، العضلة الخلفية للفخذ، السمانة",
     quick_start_get_started: "ابدأ الآن",
+
+    // Template Management
+    template_edit_title: "تعديل القالب",
+    template_add_exercise: "إضافة تمرين",
+    template_exercise_sets: "المجموعات",
+    template_exercise_reps: "التكرار",
+    template_exercise_notes: "ملاحظات",
+    template_delete_confirm: "حذف هذا القالب؟",
+    template_delete_warning: "لا يمكن التراجع عن هذا الإجراء.",
 
     // Tooltips
     tooltip_muscle_selector_title: 'اختر مجموعات العضلات',
