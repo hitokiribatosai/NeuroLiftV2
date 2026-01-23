@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence, PanInfo } from 'framer-motion';
 import { SpotlightButton } from '../ui/SpotlightButton';
 import { Card } from '../ui/Card';
@@ -17,6 +17,20 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
     localStorage.setItem('neuroLift_hasCompletedOnboarding', 'true');
     onComplete();
   };
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') {
+        paginate(-1);
+      } else if (e.key === 'ArrowRight') {
+        paginate(1);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   // Placeholder screen components - will implement next
   const screens = [
@@ -39,7 +53,7 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
       </div>
 
       {/* Progress Dots */}
-      <div className="flex justify-center mb-8">
+      <div className="flex flex-col items-center mb-8">
         <div className="flex gap-2">
           {screens.map((_, index) => (
             <div
@@ -50,6 +64,43 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
             />
           ))}
         </div>
+        {/* Swipe hint for desktop */}
+        <div className="hidden md:block mt-4 text-zinc-500 text-xs font-medium">
+          Drag to swipe or use arrow keys to navigate
+        </div>
+      </div>
+
+      {/* Navigation Buttons - Hidden on mobile, visible on desktop */}
+      <div className="hidden md:flex justify-between items-center px-6 mb-6">
+        <button
+          onClick={() => paginate(-1)}
+          disabled={currentScreen === 0}
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold uppercase tracking-widest transition-all ${
+            currentScreen === 0
+              ? 'text-zinc-600 cursor-not-allowed'
+              : 'text-zinc-400 hover:text-white hover:bg-zinc-800'
+          }`}
+        >
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+          Previous
+        </button>
+
+        <button
+          onClick={() => paginate(1)}
+          disabled={currentScreen === screens.length - 1}
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold uppercase tracking-widest transition-all ${
+            currentScreen === screens.length - 1
+              ? 'text-zinc-600 cursor-not-allowed'
+              : 'text-zinc-400 hover:text-white hover:bg-zinc-800'
+          }`}
+        >
+          Next
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
       </div>
 
       {/* Swipeable Container */}
@@ -83,7 +134,7 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
             }}
             drag="x"
             dragConstraints={{ left: 0, right: 0 }}
-            dragElastic={1}
+            dragElastic={0.7}
             onDragEnd={(e: any, { offset, velocity }: PanInfo) => {
               const swipe = swipePower(offset.x, velocity.x);
 
@@ -93,7 +144,7 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
                 paginate(-1);
               }
             }}
-            className="h-full"
+            className="h-full cursor-grab active:cursor-grabbing"
           >
             <div className="h-full px-6 py-8">
               {screens[currentScreen]}
