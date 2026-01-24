@@ -33,6 +33,7 @@ interface ClockContextType {
     startTimer: (mins: number, secs: number) => void;
     startRestTimer: (seconds: number) => void;
     stopRestTimer: () => void;
+    addRestTime: (seconds: number) => void;
     restRemaining: number | null;
     setRestRemaining: (seconds: number | null) => void;
 }
@@ -239,6 +240,17 @@ export const ClockProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         safeStorage.removeItem('neuroLift_rest_end_time');
     };
 
+    const addRestTime = (seconds: number) => {
+        if (restEndTime) {
+            const newEndTime = restEndTime + (seconds * 1000);
+            setRestEndTime(newEndTime);
+            // Update UI immediately
+            const now = Date.now();
+            const newRemaining = Math.max(0, Math.ceil((newEndTime - now) / 1000));
+            setRestRemaining(newRemaining);
+        }
+    };
+
     const handleSetIsWorkoutActive = (active: boolean) => {
         if (active) {
             if (!workoutStartTime) {
@@ -279,7 +291,8 @@ export const ClockProvider: React.FC<{ children: ReactNode }> = ({ children }) =
             restRemaining,
             setRestRemaining,
             startRestTimer,
-            stopRestTimer
+            stopRestTimer,
+            addRestTime
         }}>
             {children}
         </ClockContext.Provider>

@@ -111,6 +111,7 @@ export const Tracker: React.FC = () => {
     // Rest Timer
     startRestTimer,
     stopRestTimer,
+    addRestTime,
     restRemaining
   } = useClock();
 
@@ -1132,7 +1133,7 @@ export const Tracker: React.FC = () => {
 
                         <div className="flex items-center gap-4">
                           <button
-                            onClick={() => setRestTimerRemaining((prev) => (prev || 0) + 30)}
+                            onClick={() => addRestTime(30)}
                             className="px-8 py-4 bg-zinc-900 border border-zinc-800 rounded-2xl text-zinc-400 font-bold hover:text-white hover:border-zinc-700 transition-all uppercase tracking-widest text-xs"
                           >
                             +30s
@@ -1440,7 +1441,7 @@ export const Tracker: React.FC = () => {
       >
         {/* ... tutorial modal content ... */}
         <iframe
-          src={`https://www.youtube.com/embed/${getExerciseLinks(tutorialExercise || '', language).video}?autoplay=1&rel=0`}
+          src={`${getExerciseLinks(tutorialExercise || '').tutorial}?autoplay=1&rel=0`.replace('results?search_query', 'embed/')}
           title="Exercise Tutorial"
           className="w-full h-full rounded-2xl"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
