@@ -3,6 +3,7 @@ import { motion, AnimatePresence, PanInfo } from 'framer-motion';
 import { SpotlightButton } from '../ui/SpotlightButton';
 import { Card } from '../ui/Card';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { StepWelcome } from '../onboarding/StepWelcome';
 
 interface OnboardingProps {
   onComplete: () => void;
@@ -34,7 +35,7 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
 
   // Placeholder screen components - will implement next
   const screens = [
-    <WelcomeScreen key="welcome" />,
+    <StepWelcome key="welcome" onNext={() => paginate(1)} />,
     <TrackingScreen key="tracking" />,
     <LibraryScreen key="library" />,
     <OfflineScreen key="offline" onComplete={onComplete} />
@@ -58,9 +59,8 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
           {screens.map((_, index) => (
             <div
               key={index}
-              className={`w-2 h-2 rounded-full transition-colors ${
-                index === currentScreen ? 'bg-teal-500' : 'bg-zinc-700'
-              }`}
+              className={`w-2 h-2 rounded-full transition-colors ${index === currentScreen ? 'bg-teal-500' : 'bg-zinc-700'
+                }`}
             />
           ))}
         </div>
@@ -75,11 +75,10 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
         <button
           onClick={() => paginate(-1)}
           disabled={currentScreen === 0}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold uppercase tracking-widest transition-all ${
-            currentScreen === 0
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold uppercase tracking-widest transition-all ${currentScreen === 0
               ? 'text-zinc-600 cursor-not-allowed'
               : 'text-zinc-400 hover:text-white hover:bg-zinc-800'
-          }`}
+            }`}
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -90,11 +89,10 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
         <button
           onClick={() => paginate(1)}
           disabled={currentScreen === screens.length - 1}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold uppercase tracking-widest transition-all ${
-            currentScreen === screens.length - 1
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold uppercase tracking-widest transition-all ${currentScreen === screens.length - 1
               ? 'text-zinc-600 cursor-not-allowed'
               : 'text-zinc-400 hover:text-white hover:bg-zinc-800'
-          }`}
+            }`}
         >
           Next
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -169,23 +167,7 @@ const swipePower = (offset: number, velocity: number) => {
   return Math.abs(offset) * velocity;
 };
 
-// Screen Components
-const WelcomeScreen: React.FC = () => (
-  <div className="flex flex-col items-center justify-center h-full text-center">
-    <div className="mb-12">
-      {/* App Logo placeholder */}
-      <div className="w-24 h-24 bg-teal-500 rounded-full flex items-center justify-center mb-6">
-        <span className="text-2xl font-black text-white">NL</span>
-      </div>
-    </div>
-    <h1 className="text-3xl font-black uppercase tracking-tight text-white mb-4">
-      Welcome to NeuroLift
-    </h1>
-    <p className="text-zinc-400 font-medium text-lg max-w-sm">
-      Your science-backed fitness companion for tracking, planning, and achieving your goals.
-    </p>
-  </div>
-);
+
 
 const TrackingScreen: React.FC = () => (
   <div className="flex flex-col items-center justify-center h-full text-center">
