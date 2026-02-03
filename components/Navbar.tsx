@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useFontSize, FontSize } from '../contexts/FontSizeContext';
+import { DataManager } from '../utils/dataManager';
 import { Language } from '../types';
 interface NavbarProps {
   currentView: string;
@@ -14,6 +15,49 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) =
   const { language, setLanguage, t, dir } = useLanguage();
   const { fontSize, setFontSize } = useFontSize();
   const isNative = Capacitor.isNativePlatform();
+
+  const [isExporting, setIsExporting] = useState(false);
+  const [showImportConfirm, setShowImportConfirm] = useState(false);
+  const [importDataContent, setImportDataContent] = useState<string | null>(null);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+  const handleExport = async () => {
+    setIsExporting(true);
+    await DataManager.exportData();
+    setIsExporting(false);
+  };
+
+  const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const content = e.target?.result as string;
+      if (content) {
+        setImportDataContent(content);
+        setShowImportConfirm(true);
+      }
+    };
+    reader.readAsText(file);
+    // Reset input
+    event.target.value = '';
+  };
+
+  const confirmImport = async () => {
+    if (!importDataContent) return;
+
+    const result = await DataManager.importData(importDataContent);
+    setShowImportConfirm(false);
+    setImportDataContent(null);
+
+    if (result.success) {
+      alert(t('import_success'));
+      window.location.reload();
+    } else {
+      alert(`${t('import_error')} ${result.message}`);
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -91,10 +135,10 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) =
   ];
 
   const fontSizes: { id: FontSize; label: string }[] = [
-    { id: 'small', label: 'Small' },
-    { id: 'medium', label: 'Medium' },
-    { id: 'large', label: 'Large' },
-    { id: 'xlarge', label: 'X-Large' },
+    { id: 'small', label: t('font_size_small') },
+    { id: 'medium', label: t('font_size_medium') },
+    { id: 'large', label: t('font_size_large') },
+    { id: 'xlarge', label: t('font_size_xlarge') },
   ];
 
   const SettingsDropdown = () => (
@@ -130,7 +174,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) =
           <div>
             <h3 className="text-[0.625rem] font-black text-zinc-500 uppercase tracking-widest mb-3 px-2 flex items-center gap-2">
               <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" /></svg>
-              Font Size
+              {t('font_size')}
             </h3>
             <div className="grid grid-cols-2 gap-2">
               {fontSizes.map((size) => (
@@ -144,6 +188,54 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) =
                   <span className="font-black" style={{ fontSize: size.id === 'small' ? '0.75rem' : size.id === 'medium' ? '0.875rem' : size.id === 'large' ? '1rem' : '1.125rem' }}>Aa</span>
                 </motion.button>
               ))}
+            </div>
+          </div>
+
+          <div className="mt-6 pt-6 border-t border-zinc-800">
+            <h3 className="text-[0.625rem] font-black text-zinc-500 uppercase tracking-widest mb-3 px-2 flex items-center gap-2">
+              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+              {t('data_management')}
+            </h3>
+            <div className="flex flex-col gap-2">
+              <button
+                onClick={handleExport}
+                disabled={isExporting}
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-zinc-900/50 border border-zinc-800 hover:bg-zinc-900 hover:border-teal-500/30 text-zinc-400 hover:text-white transition-all text-xs font-bold"
+              >
+                <div className="p-1.5 bg-zinc-800 rounded-lg text-teal-500">
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
+                </div>
+                <span>{isExporting ? t('loading') : t('export_data')}</span>
+              </button>
+
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-zinc-900/50 border border-zinc-800 hover:bg-zinc-900 hover:border-teal-500/30 text-zinc-400 hover:text-white transition-all text-xs font-bold"
+              >
+                <div className="p-1.5 bg-zinc-800 rounded-lg text-teal-500">
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                </div>
+                <span>{t('import_data')}</span>
+                <input
+                  type="file"
+                  accept=".json"
+                  className="hidden"
+                  ref={fileInputRef}
+                  onChange={handleFileSelect}
+                />
+              </button>
+
+              <a
+                href="https://neurolift.vercel.app/privacy"
+                target="_blank"
+                rel="noreferrer"
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-zinc-900/50 border border-zinc-800 hover:bg-zinc-900 hover:border-teal-500/30 text-zinc-400 hover:text-white transition-all text-xs font-bold mt-2"
+              >
+                <div className="p-1.5 bg-zinc-800 rounded-lg text-zinc-500">
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                </div>
+                <span>{t('privacy_policy')}</span>
+              </a>
             </div>
           </div>
         </motion.div>
@@ -248,6 +340,42 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) =
           ))}
         </div>
       </div>
+
+      {/* Import Confirmation Modal */}
+      {showImportConfirm && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[200] flex items-center justify-center p-6">
+          <div className="bg-zinc-950 border border-zinc-900 rounded-[2rem] p-8 max-w-sm w-full shadow-2xl relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rose-500 via-orange-500 to-rose-500"></div>
+
+            <div className="w-12 h-12 rounded-full bg-rose-500/10 flex items-center justify-center mb-6 text-rose-500 mx-auto">
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+            </div>
+
+            <h3 className="text-xl font-black text-white text-center mb-2 uppercase tracking-tight">
+              {t('import_warning_title')}
+            </h3>
+
+            <p className="text-zinc-400 text-center text-sm font-medium leading-relaxed mb-8">
+              {t('import_warning_desc')}
+            </p>
+
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={confirmImport}
+                className="w-full py-4 bg-rose-500 hover:bg-rose-600 active:scale-[0.98] transition-all rounded-2xl text-white font-black uppercase tracking-widest text-xs shadow-lg shadow-rose-500/25"
+              >
+                {t('confirm_yes')}
+              </button>
+              <button
+                onClick={() => { setShowImportConfirm(false); setImportDataContent(null); }}
+                className="w-full py-4 bg-zinc-900 hover:bg-zinc-800 active:scale-[0.98] transition-all rounded-2xl text-zinc-400 font-black uppercase tracking-widest text-xs"
+              >
+                {t('confirm_cancel')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };

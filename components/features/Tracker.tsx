@@ -1530,7 +1530,7 @@ export const Tracker: React.FC = () => {
         {/* ... tutorial modal content ... */}
         <iframe
           src={`${getExerciseLinks(tutorialExercise || '').tutorial}?autoplay=1&rel=0`.replace('results?search_query', 'embed/')}
-          title="Exercise Tutorial"
+          title={t('modal_exercise_tutorial')}
           className="w-full h-full rounded-2xl"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen

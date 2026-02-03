@@ -450,7 +450,7 @@ export const Journal: React.FC = () => {
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-xl font-black text-zinc-900 dark:text-white uppercase tracking-tight">
-                  {editingId ? 'Edit Entry' : t('journal_add_entry')}
+                  {editingId ? t('journal_edit_entry') : t('journal_add_entry')}
                 </h3>
                 {editingId && (
                   <button

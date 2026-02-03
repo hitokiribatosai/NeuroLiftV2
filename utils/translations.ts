@@ -262,6 +262,24 @@ export const translations = {
     profile_delete_confirm_title: "Delete Account",
     profile_delete_confirm_desc: "This will permanently delete your account and all associated data. This action cannot be undone.",
 
+    // Data Management
+    data_management: "Data Management",
+    export_data: "Export Data",
+    import_data: "Import Data",
+    import_warning_title: "Overwrite Data?",
+    import_warning_desc: "This will overwrite your current app data with the backup file. This action cannot be undone.",
+    import_success: "Data restored successfully! The app will reload.",
+    import_error: "Failed to import data.",
+    privacy_policy: "Privacy Policy",
+    language: "Language",
+    font_size: "Font Size",
+    journal_edit_entry: "Edit Entry",
+    modal_exercise_tutorial: "Exercise Tutorial",
+    font_size_small: "Small",
+    font_size_medium: "Medium",
+    font_size_large: "Large",
+    font_size_xlarge: "X-Large",
+
     // Tooltips
     tooltip_muscle_selector_title: 'Select Muscle Groups',
     tooltip_muscle_selector_desc: 'Tap any muscle to add exercises targeting that area',
@@ -533,6 +551,24 @@ export const translations = {
     profile_avg_volume: "Volume moyen (kg)",
     profile_delete_confirm_title: "Supprimer le compte",
     profile_delete_confirm_desc: "Cela supprimera définitivement votre compte et toutes les données associées. Cette action ne peut pas être annulée.",
+
+    // Gestion des Données
+    data_management: "Gestion des Données",
+    export_data: "Exporter les Données",
+    import_data: "Importer les Données",
+    import_warning_title: "Écraser les Données?",
+    import_warning_desc: "Cela écrasera vos données actuelles avec le fichier de sauvegarde. Cette action est irréversible.",
+    import_success: "Données restaurées avec succès! L'application va redémarrer.",
+    import_error: "Échec de l'importation.",
+    privacy_policy: "Politique de Confidentialité",
+    language: "Langue",
+    font_size: "Taille de Police",
+    journal_edit_entry: "Modifier l'Entrée",
+    modal_exercise_tutorial: "Tutoriel d'Exercice",
+    font_size_small: "Petit",
+    font_size_medium: "Moyen",
+    font_size_large: "Grand",
+    font_size_xlarge: "Très Grand",
 
     // Tooltips
     tooltip_muscle_selector_title: 'Sélectionner les Groupes Musculaires',
@@ -808,6 +844,24 @@ export const translations = {
     profile_avg_volume: "متوسط الحجم (كجم)",
     profile_delete_confirm_title: "حذف الحساب",
     profile_delete_confirm_desc: "سيؤدي هذا إلى حذف حسابك نهائياً وجميع البيانات المرتبطة به. لا يمكن التراجع عن هذا الإجراء.",
+
+    // إدارة البيانات
+    data_management: "إدارة البيانات",
+    export_data: "تصدير البيانات",
+    import_data: "استيراد البيانات",
+    import_warning_title: "استبدال البيانات؟",
+    import_warning_desc: "سيؤدي هذا إلى استبدال بيانات التطبيق الحالية بملف النسخ الاحتياطي. لا يمكن التراجع عن هذا الإجراء.",
+    import_success: "تم استعادة البيانات بنجاح! سيتم إعادة تحميل التطبيق.",
+    import_error: "فشل استيراد البيانات.",
+    privacy_policy: "سياسة الخصوصية",
+    language: "اللغة",
+    font_size: "حجم الخط",
+    journal_edit_entry: "تعديل الإدخال",
+    modal_exercise_tutorial: "شرح التمرين",
+    font_size_small: "صغير",
+    font_size_medium: "متوسط",
+    font_size_large: "كبير",
+    font_size_xlarge: "كبير جداً",
 
     // Tooltips
     tooltip_muscle_selector_title: 'اختر مجموعات العضلات',
