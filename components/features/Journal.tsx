@@ -185,7 +185,7 @@ export const Journal: React.FC = () => {
     try {
       const exerciseNames = exercises.map(ex => ex.name);
       const encoded = btoa(JSON.stringify(exerciseNames));
-      const shareUrl = `https://neurolift.vercel.app?share=${encoded}${window.location.hash}`;
+      const shareUrl = `https://neurolift.netlify.app?share=${encoded}${window.location.hash}`;
 
       if (Capacitor.isNativePlatform()) {
         await Share.share({
