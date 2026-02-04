@@ -281,6 +281,8 @@ export const translations = {
     font_size_xlarge: "X-Large",
     tracker_reorder_mode: "Reorder",
     tracker_done_reordering: "Done",
+    tracker_reorder_title: "Reorder Exercises",
+    tracker_reorder_apply: "Apply Order",
 
     // Tooltips
     tooltip_muscle_selector_title: 'Select Muscle Groups',
@@ -573,6 +575,8 @@ export const translations = {
     font_size_xlarge: "Très Grand",
     tracker_reorder_mode: "Réorganiser",
     tracker_done_reordering: "Terminé",
+    tracker_reorder_title: "Réorganiser les Exercices",
+    tracker_reorder_apply: "Appliquer l'Ordre",
 
     // Tooltips
     tooltip_muscle_selector_title: 'Sélectionner les Groupes Musculaires',
@@ -868,6 +872,8 @@ export const translations = {
     font_size_xlarge: "كبير جداً",
     tracker_reorder_mode: "إعادة ترتيب",
     tracker_done_reordering: "تم",
+    tracker_reorder_title: "إعادة ترتيب التمارين",
+    tracker_reorder_apply: "تطبيق الترتيب",
 
     // Tooltips
     tooltip_muscle_selector_title: 'اختر مجموعات العضلات',
