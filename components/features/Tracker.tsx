@@ -1049,20 +1049,15 @@ export const Tracker: React.FC = () => {
                         </h3>
                       </div>
 
-                      <a
-                        href={links.tutorial}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="block aspect-video w-full rounded-2xl bg-black/60 mb-10 overflow-hidden relative group border border-zinc-800 shadow-inner"
-                      >
-                        <div className="absolute inset-0 bg-gradient-to-br from-teal-500/5 to-transparent"></div>
-                        <div className="absolute inset-0 flex flex-col items-center justify-center transition-transform group-hover:scale-105 duration-500">
-                          <div className="w-20 h-20 rounded-full bg-teal-500/10 dark:bg-teal-500/20 border-2 border-teal-500/30 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-700 backdrop-blur-sm shadow-xl">
-                            <svg className="h-10 w-10 text-teal-400 ml-1.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
-                          </div>
-                          <p className="text-xs text-teal-500 font-black uppercase tracking-[0.3em]">{t('modal_watch_video')}</p>
-                        </div>
-                      </a>
+                      <div className="block aspect-video w-full rounded-2xl bg-black/60 mb-10 overflow-hidden relative border border-zinc-800 shadow-inner">
+                        <iframe
+                          src={`${links.tutorial}&autoplay=0&rel=0`}
+                          title={t('modal_exercise_tutorial')}
+                          className="w-full h-full"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                        />
+                      </div>
 
                       <div className="flex flex-col gap-4">
                         <a
@@ -1075,16 +1070,7 @@ export const Tracker: React.FC = () => {
                             🔬 Learn the Science
                           </SpotlightButton>
                         </a>
-                        <a
-                          href={links.tutorial}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="w-full"
-                        >
-                          <button className="w-full py-4 text-[10px] text-zinc-500 hover:text-white font-black uppercase tracking-[0.3em] transition-all border border-zinc-800 rounded-2xl bg-zinc-900/40">
-                            {t('modal_watch_video')}
-                          </button>
-                        </a>
+
                         <button
                           onClick={() => setTutorialExercise(null)}
                           className="w-full py-2 text-[10px] text-zinc-600 hover:text-rose-500 font-black uppercase tracking-[0.3em] transition-all"
@@ -1523,20 +1509,7 @@ export const Tracker: React.FC = () => {
         isDestructive={true}
       />
 
-      <Modal
-        isOpen={!!tutorialExercise}
-        onClose={() => setTutorialExercise(null)}
-        title={t('modal_watch_video')}
-      >
-        {/* ... tutorial modal content ... */}
-        <iframe
-          src={`${getExerciseLinks(tutorialExercise || '').tutorial}?autoplay=1&rel=0`.replace('results?search_query', 'embed/')}
-          title={t('modal_exercise_tutorial')}
-          className="w-full h-full rounded-2xl"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-        />
-      </Modal>
+
 
       {/* Save Template Modal */}
       <Modal isOpen={showSaveTemplateModal} onClose={() => setShowSaveTemplateModal(false)}>
