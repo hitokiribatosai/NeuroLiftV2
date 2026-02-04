@@ -1,9 +1,13 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 export const Privacy = () => {
+    const { t, language } = useLanguage();
+    const isRTL = language === 'ar';
+
     return (
-        <div className="min-h-screen bg-black pb-24 pt-24 px-6 md:px-12">
+        <div className="min-h-screen bg-black pb-24 pt-24 px-6 md:px-12" dir={isRTL ? 'rtl' : 'ltr'}>
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -11,77 +15,88 @@ export const Privacy = () => {
             >
                 <div className="space-y-4">
                     <h1 className="text-4xl md:text-5xl font-black text-white uppercase tracking-tighter">
-                        Privacy <span className="text-teal-500">Policy</span>
+                        {t('privacy_policy')}
                     </h1>
                     <p className="text-zinc-400 text-sm font-bold uppercase tracking-widest">
-                        Last Updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                        {t('privacy_last_updated')}: {new Date().toLocaleDateString(language === 'ar' ? 'ar-SA' : language === 'fr' ? 'fr-FR' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
                     </p>
                 </div>
 
                 <div className="prose prose-invert prose-zinc max-w-none space-y-8 text-zinc-300">
+                    {/* 1. Introduction */}
                     <section>
-                        <h2 className="text-2xl font-bold text-white mb-4">1. Introduction</h2>
+                        <h2 className="text-2xl font-bold text-white mb-4">1. {t('privacy_intro_title')}</h2>
                         <p className="leading-relaxed">
-                            Welcome to NeuroLift. We respect your privacy and are committed to protecting your personal data.
-                            This privacy policy explains how we handle your data when you use our mobile application.
+                            {t('privacy_intro_text')}
                         </p>
                     </section>
 
+                    {/* 2. Information We Collect */}
                     <section>
-                        <h2 className="text-2xl font-bold text-white mb-4">2. Information We Collect</h2>
+                        <h2 className="text-2xl font-bold text-white mb-4">2. {t('privacy_collection_title')}</h2>
                         <p className="leading-relaxed mb-4">
-                            We collect minimal data to function effectively. This includes:
+                            {t('privacy_collection_intro')}
                         </p>
                         <ul className="list-disc pl-5 space-y-2 marker:text-teal-500">
                             <li>
-                                <strong className="text-white">Personal Information:</strong> Name, age, weight, and height (used for calculating fitness metrics).
+                                <strong className="text-white">{t('privacy_collection_personal')}:</strong> {t('privacy_collection_personal_desc')}
                             </li>
                             <li>
-                                <strong className="text-white">Workout Data:</strong> Exercises performed, sets, reps, weight, and workout logs.
+                                <strong className="text-white">{t('privacy_collection_workout')}:</strong> {t('privacy_collection_workout_desc')}
                             </li>
                             <li>
-                                <strong className="text-white">App Preferences:</strong> Theme settings, language selection, and gym modes.
+                                <strong className="text-white">{t('privacy_collection_preferences')}:</strong> {t('privacy_collection_preferences_desc')}
                             </li>
                         </ul>
                     </section>
 
+                    {/* 3. Data Storage & Security */}
                     <section>
-                        <h2 className="text-2xl font-bold text-white mb-4">3. Data Storage & Security</h2>
+                        <h2 className="text-2xl font-bold text-white mb-4">3. {t('privacy_storage_title')}</h2>
                         <p className="leading-relaxed">
-                            NeuroLift is a <strong className="text-teal-400">local-first application</strong>. All your personal information and workout history are stored locally on your device using IndexedDB and LocalStorage. We do not upload your data to any external servers, cloud storage, or third-party databases. You have full control over your data.
+                            {t('privacy_storage_text').split(t('privacy_storage_local')).map((part, i, arr) => (
+                                <React.Fragment key={i}>
+                                    {part}
+                                    {i < arr.length - 1 && <strong className="text-teal-400">{t('privacy_storage_local')}</strong>}
+                                </React.Fragment>
+                            ))}
                         </p>
                     </section>
 
+                    {/* 4. Data Sharing */}
                     <section>
-                        <h2 className="text-2xl font-bold text-white mb-4">4. Data Sharing</h2>
+                        <h2 className="text-2xl font-bold text-white mb-4">4. {t('privacy_sharing_title')}</h2>
                         <p className="leading-relaxed">
-                            Since we do not transmit your data to the cloud, we do not share, sell, or disclose your personal information to any third parties.
+                            {t('privacy_sharing_text')}
                         </p>
                     </section>
 
+                    {/* 5. Your Rights */}
                     <section>
-                        <h2 className="text-2xl font-bold text-white mb-4">5. Your Rights</h2>
+                        <h2 className="text-2xl font-bold text-white mb-4">5. {t('privacy_rights_title')}</h2>
                         <p className="leading-relaxed">
-                            Because your data is stored locally, you have the right to:
+                            {t('privacy_rights_intro')}
                         </p>
                         <ul className="list-disc pl-5 space-y-2 marker:text-teal-500 mt-4">
-                            <li>Access your data at any time by opening the app.</li>
-                            <li>Delete your data by using the "Reset Data" options in the Settings menu or by uninstalling the app.</li>
-                            <li>Correction of data by editing your profile or logs directly within the app.</li>
+                            <li>{t('privacy_rights_access')}</li>
+                            <li>{t('privacy_rights_delete')}</li>
+                            <li>{t('privacy_rights_correct')}</li>
                         </ul>
                     </section>
 
+                    {/* 6. Changes to This Policy */}
                     <section>
-                        <h2 className="text-2xl font-bold text-white mb-4">6. Changes to This Policy</h2>
+                        <h2 className="text-2xl font-bold text-white mb-4">6. {t('privacy_changes_title')}</h2>
                         <p className="leading-relaxed">
-                            We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Last Updated" date.
+                            {t('privacy_changes_text')}
                         </p>
                     </section>
 
+                    {/* 7. Contact Us */}
                     <section>
-                        <h2 className="text-2xl font-bold text-white mb-4">7. Contact Us</h2>
+                        <h2 className="text-2xl font-bold text-white mb-4">7. {t('privacy_contact_title')}</h2>
                         <p className="leading-relaxed">
-                            If you have any questions about this Privacy Policy, please contact us at:
+                            {t('privacy_contact_text')}
                         </p>
                         <a
                             href="mailto:neuroliftapp@gmail.com"
