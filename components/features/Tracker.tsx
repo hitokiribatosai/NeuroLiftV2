@@ -1049,17 +1049,21 @@ export const Tracker: React.FC = () => {
                         </h3>
                       </div>
 
-                      <div className="block aspect-video w-full rounded-2xl bg-black/60 mb-10 overflow-hidden relative border border-zinc-800 shadow-inner">
-                        <iframe
-                          src={`${links.tutorial}&autoplay=0&rel=0`}
-                          title={t('modal_exercise_tutorial')}
-                          className="w-full h-full"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowFullScreen
-                        />
-                      </div>
-
                       <div className="flex flex-col gap-4">
+                        <a
+                          href={getExerciseLinks(tutorialExercise || '').tutorial}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="block w-full aspect-video rounded-2xl bg-zinc-900 border border-zinc-800 overflow-hidden relative group"
+                        >
+                          <div className="absolute inset-0 flex flex-col items-center justify-center">
+                            <div className="w-16 h-16 rounded-full bg-red-600 flex items-center justify-center mb-4 shadow-xl group-hover:scale-110 transition-transform">
+                              <svg className="w-8 h-8 text-white ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+                            </div>
+                            <p className="text-zinc-400 font-bold uppercase tracking-widest text-xs group-hover:text-white transition-colors">{t('modal_watch_video')}</p>
+                          </div>
+                        </a>
+
                         <a
                           href={links.science}
                           target="_blank"

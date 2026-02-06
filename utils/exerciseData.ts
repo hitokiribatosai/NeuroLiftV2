@@ -542,8 +542,8 @@ export const getExerciseLinks = (exerciseName: string) => {
   const cleanName = exerciseName.replace(/\([^)]*\)/g, '').trim();
 
   return {
-    science: scienceMap[exerciseName] || `https://scholar.google.com/scholar?q=${encodeURIComponent(cleanName)}+exercise+hypertrophy+study`,
-    tutorial: `https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(cleanName + ' exercise tutorial')}`
+    science: scienceMap[exerciseName] || `https://scholar.google.com/scholar?q=${encodeURIComponent(cleanName)}+exercise+hypertrophy+study&hl=en`,
+    tutorial: `https://www.youtube.com/results?search_query=${encodeURIComponent(cleanName + ' exercise tutorial')}`
   };
 };
 
