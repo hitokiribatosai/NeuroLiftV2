@@ -1246,26 +1246,22 @@ export const Tracker: React.FC = () => {
                     <Card className="p-8 bg-zinc-900/40 border-zinc-800 rounded-[3rem] shadow-sm overflow-hidden">
                       <h3 className="text-2xl font-black text-white mb-8 flex items-center gap-4 uppercase tracking-tight">
 
-                        <span className="w-2.5 h-8 bg-teal-500 rounded-full shadow-lg shadow-teal-500/20"></span>
-                        {getExerciseTranslation(ex.name, language)}
-                        <div className="ml-auto flex items-center gap-2">
+                        <span className="w-2.5 h-8 bg-teal-500 rounded-full shadow-lg shadow-teal-500/20 flex-shrink-0"></span>
+                        <span className="flex-1 min-w-0 break-words">{getExerciseTranslation(ex.name, language)}</span>
+                        <div className="flex items-center gap-2 flex-shrink-0">
                           <button
                             onClick={() => setTutorialExercise(ex.name)}
                             className="p-2 text-zinc-600 hover:text-teal-400 transition-colors"
                             title={t('modal_watch_video')}
                           >
-                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
+                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                           </button>
                           <button
                             onClick={() => setExerciseToDelete({ name: ex.name, index: exIdx })}
                             className="p-2 text-zinc-600 hover:text-rose-500 transition-colors"
                             title={t('tracker_delete_exercise')}
                           >
-                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                            </svg>
+                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                           </button>
                         </div>
                       </h3>
@@ -1610,10 +1606,10 @@ export const Tracker: React.FC = () => {
                     {template.exercises.length} {t('tracker_exercises')} • {t('tracker_created')} {new Date(template.createdAt).toLocaleDateString()}
                   </div>
                 </button>
-                <div className="flex gap-1 opacity-0 group-hover:opacity-100">
+                <div className="flex gap-1">
                   <button
                     onClick={() => editTemplate(template)}
-                    className="p-2 text-zinc-700 hover:text-teal-500 transition-colors"
+                    className="p-2 text-zinc-500 hover:text-teal-500 transition-colors"
                     title="Edit template"
                   >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1622,7 +1618,7 @@ export const Tracker: React.FC = () => {
                   </button>
                   <button
                     onClick={() => deleteTemplate(template.id)}
-                    className="p-2 text-zinc-700 hover:text-rose-500 transition-colors"
+                    className="p-2 text-zinc-500 hover:text-rose-500 transition-colors"
                     title="Delete template"
                   >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
