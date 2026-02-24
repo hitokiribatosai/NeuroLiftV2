@@ -26,7 +26,7 @@ const PlateVisual = ({ weight }: { weight: number }) => {
 
     return (
         <div
-            className={`${colors[weight] || 'bg-zinc-500'} rounded-sm border-2 border-zinc-900 flex items-center justify-center text-[10px] md:text-xs font-black text-zinc-900 shadow-xl`}
+            className={`plate-label ${colors[weight] || 'bg-zinc-500'} rounded-sm border-2 border-zinc-900 flex items-center justify-center text-[10px] md:text-xs font-black text-zinc-900 shadow-xl`}
             style={{ width: '24px', height: `${height}px` }}
         >
             <span className="-rotate-90">{weight}</span>

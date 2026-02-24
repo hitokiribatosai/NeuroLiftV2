@@ -28,7 +28,8 @@ html {
 
 body {
   background-color: #0a0a0a;
-  color: #ededed;
+  color: #ffffff;
+  -webkit-text-fill-color: #ffffff;
   overflow-x: hidden;
   font-family: 'Outfit', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -79,17 +80,46 @@ body {
   -webkit-backdrop-filter: blur(12px);
 }
 
-/* RTL Support */
+/* ============================================================
+   RTL SUPPORT (Arabic)
+   iOS Safari re-evaluates the color cascade when dir changes.
+   We MUST re-assert every color here to prevent black text flash.
+   ============================================================ */
+
 [dir="rtl"] {
   text-align: right;
+  /* Re-assert dark background + white text for iOS Safari RTL repaint */
+  background-color: #0a0a0a;
+  color: #ffffff;
+  -webkit-text-fill-color: #ffffff;
+  color-scheme: only dark;
+  forced-color-adjust: none;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
 }
 
-[dir="rtl"] * {
+/* Force every child element to inherit white text in RTL */
+[dir="rtl"] *,
+[dir="rtl"] *::before,
+[dir="rtl"] *::after {
   word-break: break-word;
   overflow-wrap: break-word;
+  color: inherit;
+  -webkit-text-fill-color: inherit;
+  forced-color-adjust: none;
 }
 
-/* Ensure proper text rendering for Arabic */
+/* Re-assert body colors specifically under RTL */
+[dir="rtl"] body,
+body[dir="rtl"] {
+  background-color: #0a0a0a !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  color-scheme: only dark !important;
+  forced-color-adjust: none !important;
+}
+
+/* Re-assert white text on ALL elements under RTL to beat iOS auto-color */
 [dir="rtl"] h1,
 [dir="rtl"] h2,
 [dir="rtl"] h3,
@@ -98,6 +128,54 @@ body {
 [dir="rtl"] h6 {
   word-break: break-word;
   hyphens: none;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+[dir="rtl"] p,
+[dir="rtl"] span,
+[dir="rtl"] a,
+[dir="rtl"] li,
+[dir="rtl"] div,
+[dir="rtl"] label,
+[dir="rtl"] button,
+[dir="rtl"] input,
+[dir="rtl"] select,
+[dir="rtl"] textarea {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+/* Re-assert ALL grey Tailwind classes under RTL */
+[dir="rtl"] .text-zinc-400,
+[dir="rtl"] .text-zinc-500,
+[dir="rtl"] .text-zinc-600,
+[dir="rtl"] .text-zinc-700,
+[dir="rtl"] .text-gray-400,
+[dir="rtl"] .text-gray-500,
+[dir="rtl"] .text-gray-600,
+[dir="rtl"] .text-gray-700,
+[dir="rtl"] .text-slate-400,
+[dir="rtl"] .text-slate-500,
+[dir="rtl"] .text-neutral-400,
+[dir="rtl"] .text-neutral-500 {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+[dir="rtl"] .text-zinc-900,
+[dir="rtl"] .text-gray-900 {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+/* iOS Safari WebKit: force repaint via will-change when RTL is active */
+[dir="rtl"] #root {
+  color: #ffffff;
+  -webkit-text-fill-color: #ffffff;
+  background-color: #0a0a0a;
+  forced-color-adjust: none;
+  -webkit-print-color-adjust: exact;
 }
 
 /* iOS-Specific Optimizations */
@@ -169,7 +247,7 @@ input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
   -webkit-box-shadow: 0 0 0 30px #0a0a0a inset !important;
-  -webkit-text-fill-color: #ededed !important;
+  -webkit-text-fill-color: #ffffff !important;
 }
 
 /* Improve iOS animation performance */
@@ -273,25 +351,88 @@ button {
   forced-color-adjust: none;
 }
 
-/* Explicit text color overrides to beat system dark mode */
+/* ============================================================
+   EXPLICIT TEXT COLOR OVERRIDES
+   Forces white text on Android (MIUI/ColorOS/Realme UI) and iOS
+   that may try to invert or override our dark-mode colors.
+   ============================================================ */
+
+/* Core white */
 .text-white {
   color: #ffffff !important;
 }
 
-.text-gray-100 {
-  color: #f3f4f6 !important;
+/* Light greys → white */
+.text-gray-100,
+.text-zinc-100,
+.text-slate-100,
+.text-neutral-100 {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
 }
 
-.text-gray-200 {
-  color: #e5e7eb !important;
+.text-gray-200,
+.text-zinc-200,
+.text-slate-200,
+.text-neutral-200 {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
 }
 
-.text-gray-300 {
-  color: #d1d5db !important;
+.text-gray-300,
+.text-zinc-300,
+.text-slate-300,
+.text-neutral-300 {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
 }
 
-.text-gray-400 {
-  color: #9ca3af !important;
+/* Medium greys → white */
+.text-gray-400,
+.text-zinc-400,
+.text-slate-400,
+.text-neutral-400 {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+/* Dark greys (muted labels, placeholders) → white */
+.text-gray-500,
+.text-zinc-500,
+.text-slate-500,
+.text-neutral-500 {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+.text-gray-600,
+.text-zinc-600,
+.text-slate-600,
+.text-neutral-600 {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+/* Very dark greys (decorative elements) → light grey */
+.text-gray-700,
+.text-zinc-700,
+.text-slate-700,
+.text-neutral-700 {
+  color: #d4d4d8 !important;
+  -webkit-text-fill-color: #d4d4d8 !important;
+}
+
+.text-gray-800,
+.text-zinc-800,
+.text-slate-800,
+.text-neutral-800 {
+  color: #a1a1aa !important;
+  -webkit-text-fill-color: #a1a1aa !important;
+}
+
+/* Also override the base body color to pure white */
+body {
+  color: #ffffff !important;
 }
 
 /* Ensure background stays dark */
@@ -305,4 +446,37 @@ button {
 
 .bg-zinc-950 {
   background-color: #09090b !important;
+}
+
+/* ============================================================
+   DARK MODE CLASS OVERRIDES
+   When .dark is on <html>, force light-mode fallback text cols to white.
+   This beats Android system UI that strips dark: variant classes.
+   ============================================================ */
+
+.dark .text-zinc-900,
+.dark .text-gray-900,
+.dark .text-slate-900,
+.dark .text-neutral-900 {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+/* Reinforce all grey text as white inside dark mode root */
+.dark .text-zinc-400,
+.dark .text-zinc-500,
+.dark .text-zinc-600,
+.dark .text-zinc-700,
+.dark .text-gray-400,
+.dark .text-gray-500,
+.dark .text-gray-600,
+.dark .text-gray-700 {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+/* Protect plate weight labels (dark text on coloured plates is intentional) */
+.plate-label {
+  color: #18181b !important;
+  -webkit-text-fill-color: #18181b !important;
 }

@@ -20,9 +20,34 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   useEffect(() => {
     const dir = language === 'ar' ? 'rtl' : 'ltr';
-    document.documentElement.dir = dir;
-    document.documentElement.lang = language;
+    const html = document.documentElement;
+
+    // Set direction and language
+    html.dir = dir;
+    html.lang = language;
+
+    // iOS Safari fix: re-assert dark mode colors immediately after dir change.
+    // When dir switches to RTL, Safari re-evaluates the CSS cascade and may
+    // temporarily apply system auto-colors (black text). Force overrides here.
+    html.style.colorScheme = 'only dark';
+    html.style.color = '#ffffff';
+    html.style.setProperty('-webkit-text-fill-color', '#ffffff');
+    html.style.backgroundColor = '#0a0a0a';
+    document.body.style.color = '#ffffff';
+    document.body.style.setProperty('-webkit-text-fill-color', '#ffffff');
+    document.body.style.backgroundColor = '#0a0a0a';
+
+    // Re-assert after first repaint to catch delayed WebKit repaints (iOS Safari)
+    const raf = requestAnimationFrame(() => {
+      html.style.color = '#ffffff';
+      html.style.setProperty('-webkit-text-fill-color', '#ffffff');
+      document.body.style.color = '#ffffff';
+      document.body.style.setProperty('-webkit-text-fill-color', '#ffffff');
+    });
+
     safeStorage.setItem('language', language);
+
+    return () => cancelAnimationFrame(raf);
   }, [language]);
 
   const t = (key: keyof typeof translations['en']) => {
