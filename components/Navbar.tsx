@@ -263,7 +263,26 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) =
             <span className="text-white font-black tracking-tighter text-lg">NeuroLift</span>
           </motion.div>
 
-          {/* Desktop Navigation Items - Removed: bottom tab bar handles navigation at all sizes */}
+          {/* Desktop Navigation Items - Hidden on Mobile */}
+          <div className="hidden md:flex items-center gap-8 text-sm font-bold text-zinc-400 mx-8">
+            {navItems.map((item) => (
+              <motion.button
+                key={item.id}
+                onClick={() => setCurrentView(item.id)}
+                whileTap={{ y: 2 }}
+                className={`relative py-1 transition-colors hover:text-white shrink-0 uppercase tracking-widest text-[0.625rem] ${currentView === item.id ? 'text-teal-400' : 'text-zinc-300'}`}
+              >
+                <span className="relative z-10">{item.label}</span>
+                {currentView === item.id && (
+                  <motion.div
+                    layoutId="navbar-indicator-desktop"
+                    className="absolute bottom-[-4px] left-0 right-0 h-0.5 bg-teal-500 rounded-full shadow-[0_0_8px_rgba(20,184,166,0.6)]"
+                    transition={{ type: 'spring', bounce: 0.25, duration: 0.5 }}
+                  />
+                )}
+              </motion.button>
+            ))}
+          </div>
 
 
           {/* Settings Section */}
@@ -290,8 +309,8 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) =
         </div>
       </nav>
 
-      {/* Bottom Tab Bar: Always visible at all screen sizes */}
-      <div className="fixed bottom-0 left-0 right-0 z-[60] pointer-events-none">
+      {/* Bottom Tab Bar: Visible only on smaller screens */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-[60] pointer-events-none">
         <div className="w-full bg-[#0a0a0a]/95 backdrop-blur-xl border-t border-zinc-800 shadow-2xl flex items-center justify-around p-2 pb-[calc(env(safe-area-inset-bottom)+8px)] pointer-events-auto relative overflow-hidden">
           {navItems.map((item) => (
             <motion.button
