@@ -8,7 +8,12 @@ interface PlateCalculatorProps {
     initialWeight?: number;
 }
 
-const PlateVisual = ({ weight }: { weight: number }) => {
+interface PlateVisualProps {
+    weight: number;
+    key?: string;
+}
+
+const PlateVisual = ({ weight }: PlateVisualProps) => {
     const colors: Record<number, string> = {
         25: 'bg-red-500',
         20: 'bg-blue-500',

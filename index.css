@@ -201,7 +201,7 @@ button {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  border-radius: 0;
+  /* border-radius: 0 removed — was overriding all Tailwind rounded-* classes */
 }
 
 /* Fix iOS button rendering */
@@ -387,47 +387,47 @@ button {
   -webkit-text-fill-color: #ffffff !important;
 }
 
-/* Medium greys → white */
+/* Medium greys — muted but readable */
 .text-gray-400,
 .text-zinc-400,
 .text-slate-400,
 .text-neutral-400 {
-  color: #ffffff !important;
-  -webkit-text-fill-color: #ffffff !important;
+  color: #a1a1aa !important;
+  -webkit-text-fill-color: #a1a1aa !important;
 }
 
-/* Dark greys (muted labels, placeholders) → white */
+/* Secondary/label text */
 .text-gray-500,
 .text-zinc-500,
 .text-slate-500,
 .text-neutral-500 {
-  color: #ffffff !important;
-  -webkit-text-fill-color: #ffffff !important;
+  color: #71717a !important;
+  -webkit-text-fill-color: #71717a !important;
 }
 
 .text-gray-600,
 .text-zinc-600,
 .text-slate-600,
 .text-neutral-600 {
-  color: #ffffff !important;
-  -webkit-text-fill-color: #ffffff !important;
+  color: #52525b !important;
+  -webkit-text-fill-color: #52525b !important;
 }
 
-/* Very dark greys (decorative elements) → light grey */
+/* Decorative/subtle text */
 .text-gray-700,
 .text-zinc-700,
 .text-slate-700,
 .text-neutral-700 {
-  color: #d4d4d8 !important;
-  -webkit-text-fill-color: #d4d4d8 !important;
+  color: #3f3f46 !important;
+  -webkit-text-fill-color: #3f3f46 !important;
 }
 
 .text-gray-800,
 .text-zinc-800,
 .text-slate-800,
 .text-neutral-800 {
-  color: #a1a1aa !important;
-  -webkit-text-fill-color: #a1a1aa !important;
+  color: #27272a !important;
+  -webkit-text-fill-color: #27272a !important;
 }
 
 /* Also override the base body color to pure white */
@@ -462,17 +462,29 @@ body {
   -webkit-text-fill-color: #ffffff !important;
 }
 
-/* Reinforce all grey text as white inside dark mode root */
+/* Reinforce grey text hierarchy inside dark mode root */
 .dark .text-zinc-400,
+.dark .text-gray-400 {
+  color: #a1a1aa !important;
+  -webkit-text-fill-color: #a1a1aa !important;
+}
+
 .dark .text-zinc-500,
+.dark .text-gray-500 {
+  color: #71717a !important;
+  -webkit-text-fill-color: #71717a !important;
+}
+
 .dark .text-zinc-600,
+.dark .text-gray-600 {
+  color: #52525b !important;
+  -webkit-text-fill-color: #52525b !important;
+}
+
 .dark .text-zinc-700,
-.dark .text-gray-400,
-.dark .text-gray-500,
-.dark .text-gray-600,
 .dark .text-gray-700 {
-  color: #ffffff !important;
-  -webkit-text-fill-color: #ffffff !important;
+  color: #3f3f46 !important;
+  -webkit-text-fill-color: #3f3f46 !important;
 }
 
 /* Protect plate weight labels (dark text on coloured plates is intentional) */
