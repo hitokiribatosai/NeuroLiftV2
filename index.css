@@ -250,15 +250,9 @@ input:-webkit-autofill:active {
   -webkit-text-fill-color: #ffffff !important;
 }
 
-/* Improve iOS animation performance */
-@media (prefers-reduced-motion: no-preference) {
-  * {
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-    -webkit-perspective: 1000;
-    perspective: 1000;
-  }
-}
+/* iOS animation performance — moved to specific animated elements only,
+   NOT globally, as backface-visibility/perspective on * breaks
+   position: fixed on mobile browsers */
 
 /* Android-Specific Optimizations */
 
@@ -275,11 +269,9 @@ input:-webkit-autofill:active {
   touch-action: manipulation;
 }
 
-/* Fix Android WebView rendering issues */
-body {
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
-}
+/* Android WebView rendering — transform on body removed because it
+   creates a containing block that breaks position: fixed on mobile
+   browsers, causing the bottom nav to scroll instead of staying pinned */
 
 /* Prevent Android WebView from adding extra spacing */
 html,
