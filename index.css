@@ -454,18 +454,102 @@ html.dark body {
   color: #ffffff !important;
 }
 
-/* Ensure background stays dark */
-.bg-black {
+/* ============================================================
+   DARK THEME: explicit bg overrides scoped to .dark
+   Keeps dark backgrounds on MIUI/Xiaomi that try to invert.
+   ============================================================ */
+html.dark .bg-black {
   background-color: #000000 !important;
 }
 
-.bg-zinc-900 {
+html.dark .bg-zinc-900 {
   background-color: #18181b !important;
 }
 
-.bg-zinc-950 {
+html.dark .bg-zinc-950 {
   background-color: #09090b !important;
 }
+
+html.dark .bg-zinc-800 {
+  background-color: #27272a !important;
+}
+
+/* ============================================================
+   LIGHT THEME: override common dark-only bg classes
+   Many components use bg-zinc-900/bg-black/bg-zinc-950 without
+   a light: counterpart. Remap them to light-friendly greys.
+   ============================================================ */
+html.light .bg-zinc-950,
+html.light .bg-zinc-900 {
+  background-color: #f4f4f5 !important;
+}
+
+html.light .bg-zinc-800 {
+  background-color: #e4e4e7 !important;
+}
+
+html.light .bg-black {
+  background-color: #e4e4e7 !important;
+}
+
+html.light .bg-zinc-950\/95,
+html.light [class*="bg-zinc-950"] {
+  background-color: #ffffff !important;
+}
+
+/* Light mode text: dark-on-dark text classes should show dark text */
+html.light .text-white {
+  color: #09090b !important;
+  -webkit-text-fill-color: #09090b !important;
+}
+
+html.light .text-zinc-100,
+html.light .text-zinc-200,
+html.light .text-zinc-300 {
+  color: #3f3f46 !important;
+  -webkit-text-fill-color: #3f3f46 !important;
+}
+
+html.light .text-zinc-400 {
+  color: #52525b !important;
+  -webkit-text-fill-color: #52525b !important;
+}
+
+/* Border overrides for light mode */
+html.light .border-zinc-800 {
+  border-color: #d4d4d8 !important;
+}
+
+html.light .border-zinc-700 {
+  border-color: #a1a1aa !important;
+}
+
+/* ============================================================
+   LIGHT MODE: Wildcard overrides for Tailwind opacity variants
+   Tailwind generates classes like bg-zinc-900/40, bg-black/60
+   that exact selectors cannot catch. Use attribute wildcards.
+   ============================================================ */
+html.light [class*="bg-zinc-9"],
+html.light [class*="bg-zinc-8"] {
+  background-color: #f0f0f0 !important;
+}
+
+html.light [class*="bg-black"] {
+  background-color: #e4e4e7 !important;
+}
+
+/* Let teal backgrounds through (selected state) */
+html.light [class*="bg-teal-"],
+html.light [class*="bg-teal"] {
+  background-color: unset !important;
+}
+
+/* Navbar in light mode */
+html.light nav {
+  background: rgba(255, 255, 255, 0.9) !important;
+  border-color: #e4e4e7 !important;
+}
+
 
 /* ============================================================
    DARK THEME: bg overrides (iOS Safari / MIUI / Xiaomi).
