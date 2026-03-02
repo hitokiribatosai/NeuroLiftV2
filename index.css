@@ -551,9 +551,7 @@ html.light .border-zinc-700 {
 }
 
 /* ============================================================
-   LIGHT MODE: Wildcard overrides for Tailwind opacity variants
-   Tailwind generates classes like bg-zinc-900/40, bg-black/60
-   that exact selectors cannot catch. Use attribute wildcards.
+   LIGHT MODE: Wildcard overrides for dark Tailwind bg classes.
    ============================================================ */
 html.light [class*="bg-zinc-9"],
 html.light [class*="bg-zinc-8"] {
@@ -564,18 +562,21 @@ html.light [class*="bg-black"] {
   background-color: #f4f4f5 !important;
 }
 
-/* Teal ghost backgrounds: make them very subtle in light mode.
-   These create the lavender wash — almost invisible on white is better. */
-html.light [class*="bg-teal-"][class*="/5"],
-html.light [class*="bg-teal-"][class*="/10"],
-html.light [class*="bg-teal-"][class*="/20"] {
-  background-color: rgba(66, 99, 235, 0.03) !important;
+/* Hard override: ensure #root itself is always white in light mode.
+   This is the final guarantee — nothing can wash over it. */
+html.light #root {
+  background-color: #ffffff !important;
+  color: #18181b !important;
+  min-height: 100vh;
 }
 
-/* The hero blur glow blob — nearly invisible in light mode */
-html.light .blur-\[100px\],
-html.light [class*="blur-"][class*="bg-teal"] {
-  opacity: 0.05 !important;
+/* Ghost teal opacity blobs — hide completely in light mode.
+   The Home.tsx component already handles this via useTheme,
+   but this is a safety net for any other occurrences. */
+html.light [class*="bg-teal-"][class*="/20"],
+html.light [class*="bg-teal-"][class*="/10"],
+html.light [class*="bg-teal-"][class*="/5"] {
+  display: none !important;
 }
 
 /* Navbar in light mode */
