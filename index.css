@@ -26,13 +26,23 @@ html {
 }
 
 /* ---- DARK THEME body defaults ---- */
+/* ---- DARK THEME html + body ---- */
+html.dark {
+  background-color: #0a0a0a;
+}
+
 html.dark body {
   background-color: #0a0a0a;
   color: #ffffff;
   -webkit-text-fill-color: #ffffff;
 }
 
-/* ---- LIGHT THEME body defaults ---- */
+/* ---- LIGHT THEME html + body ---- */
+html.light,
+html:not(.dark) {
+  background-color: #f4f4f5;
+}
+
 html.light body,
 html:not(.dark) body {
   background-color: #f4f4f5;
@@ -601,4 +611,117 @@ html.light ::-webkit-scrollbar-thumb:hover {
 /* 5kg plate is intentionally white — use a dedicated class to bypass the global bg-white override */
 .bg-plate-white {
   background-color: #e4e4e7 !important;
+}
+
+/* ============================================================
+   ACCENT COLOR: Teal → Royal Blue
+   All teal-* Tailwind classes are remapped to a Royal Blue palette.
+   Core:  #4263eb  (Royal Blue 500)
+   Light: #748ffc  (Royal Blue 400)
+   Dark:  #3451b2  (Royal Blue 700)
+   Ghost: rgba(66, 99, 235, 0.1) for /5, /10 opacity variants
+   ============================================================ */
+
+/* --- Text colors --- */
+[class*="text-teal-300"] {
+  color: #93c5fd !important;
+  -webkit-text-fill-color: #93c5fd !important;
+}
+
+[class*="text-teal-400"] {
+  color: #748ffc !important;
+  -webkit-text-fill-color: #748ffc !important;
+}
+
+[class*="text-teal-500"] {
+  color: #4263eb !important;
+  -webkit-text-fill-color: #4263eb !important;
+}
+
+[class*="text-teal-600"] {
+  color: #3451b2 !important;
+  -webkit-text-fill-color: #3451b2 !important;
+}
+
+/* --- Solid backgrounds --- */
+[class*="bg-teal-500"]:not([class*="bg-teal-500/"]):not([class*="/5"]):not([class*="/10"]):not([class*="/20"]) {
+  background-color: #4263eb !important;
+}
+
+[class*="bg-teal-600"] {
+  background-color: #3451b2 !important;
+}
+
+[class*="bg-teal-400"] {
+  background-color: #748ffc !important;
+}
+
+/* --- Ghost / opacity backgrounds (e.g. bg-teal-500/5, bg-teal-500/10, bg-teal-500/20) --- */
+[class*="bg-teal-"][class*="/5"] {
+  background-color: rgba(66, 99, 235, 0.05) !important;
+}
+
+[class*="bg-teal-"][class*="/10"] {
+  background-color: rgba(66, 99, 235, 0.10) !important;
+}
+
+[class*="bg-teal-"][class*="/20"] {
+  background-color: rgba(66, 99, 235, 0.20) !important;
+}
+
+[class*="bg-teal-"][class*="/30"] {
+  background-color: rgba(66, 99, 235, 0.30) !important;
+}
+
+/* --- Borders --- */
+[class*="border-teal-500"]:not([class*="/"]) {
+  border-color: #4263eb !important;
+}
+
+[class*="border-teal-400"] {
+  border-color: #748ffc !important;
+}
+
+[class*="border-teal-"][class*="/20"] {
+  border-color: rgba(66, 99, 235, 0.20) !important;
+}
+
+[class*="border-teal-"][class*="/30"] {
+  border-color: rgba(66, 99, 235, 0.30) !important;
+}
+
+[class*="border-teal-"][class*="/50"] {
+  border-color: rgba(66, 99, 235, 0.50) !important;
+}
+
+/* --- Shadows --- */
+[class*="shadow-teal"] {
+  --tw-shadow-color: rgba(66, 99, 235, 0.35) !important;
+}
+
+/* --- Ring / outline --- */
+[class*="ring-teal"] {
+  --tw-ring-color: rgba(66, 99, 235, 0.5) !important;
+}
+
+[class*="divide-teal"] {
+  border-color: rgba(66, 99, 235, 0.3) !important;
+}
+
+/* --- Gradient stops (home hero gradient text) --- */
+[class*="from-teal"] {
+  --tw-gradient-from: #748ffc !important;
+}
+
+[class*="to-teal"] {
+  --tw-gradient-to: #c5cfff !important;
+}
+
+/* Scrollbar accent */
+::-webkit-scrollbar-thumb {
+  background: #4263eb;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3451b2;
 }
