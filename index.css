@@ -573,9 +573,7 @@ html.light #root {
 /* Ghost teal opacity blobs — hide completely in light mode.
    The Home.tsx component already handles this via useTheme,
    but this is a safety net for any other occurrences. */
-html.light [class*="bg-teal-"][class*="/20"],
-html.light [class*="bg-teal-"][class*="/10"],
-html.light [class*="bg-teal-"][class*="/5"] {
+html.light [class*="bg-teal-blob"] {
   display: none !important;
 }
 
