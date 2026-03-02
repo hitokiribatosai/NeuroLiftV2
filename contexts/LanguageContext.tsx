@@ -30,8 +30,8 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     // When dir switches to RTL, Safari re-evaluates the CSS cascade.
     // Use the correct color based on the current theme.
     const isDark = html.classList.contains('dark');
-    const textColor = isDark ? '#ffffff' : '#09090b';
-    const bgColor = isDark ? '#0a0a0a' : '#f4f4f5';
+    const textColor = isDark ? '#ffffff' : '#18181b';
+    const bgColor = isDark ? '#0a0a0a' : '#ffffff';
 
     html.style.color = textColor;
     html.style.setProperty('-webkit-text-fill-color', textColor);
@@ -43,7 +43,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     // Re-assert after first repaint to catch delayed WebKit repaints (iOS Safari)
     const raf = requestAnimationFrame(() => {
       const isDarkRaf = document.documentElement.classList.contains('dark');
-      const fc = isDarkRaf ? '#ffffff' : '#09090b';
+      const fc = isDarkRaf ? '#ffffff' : '#18181b';
       html.style.color = fc;
       html.style.setProperty('-webkit-text-fill-color', fc);
       document.body.style.color = fc;

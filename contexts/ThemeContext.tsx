@@ -37,10 +37,10 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             html.classList.remove('dark');
             html.classList.add('light');
             html.style.colorScheme = 'light';
-            html.style.color = '#09090b';
-            html.style.setProperty('-webkit-text-fill-color', '#09090b');
-            document.body.style.color = '#09090b';
-            document.body.style.setProperty('-webkit-text-fill-color', '#09090b');
+            html.style.color = '#18181b';
+            html.style.setProperty('-webkit-text-fill-color', '#18181b');
+            document.body.style.color = '#18181b';
+            document.body.style.setProperty('-webkit-text-fill-color', '#18181b');
             document.body.style.backgroundColor = '#ffffff';
         }
 

@@ -40,14 +40,14 @@ html.dark body {
 /* ---- LIGHT THEME html + body ---- */
 html.light,
 html:not(.dark) {
-  background-color: #f4f4f5;
+  background-color: #ffffff;
 }
 
 html.light body,
 html:not(.dark) body {
-  background-color: #f4f4f5;
-  color: #09090b;
-  -webkit-text-fill-color: #09090b;
+  background-color: #ffffff;
+  color: #18181b;
+  -webkit-text-fill-color: #18181b;
 }
 
 body {
@@ -491,15 +491,15 @@ html.dark .bg-zinc-800 {
    ============================================================ */
 html.light .bg-zinc-950,
 html.light .bg-zinc-900 {
-  background-color: #f4f4f5 !important;
+  background-color: #ffffff !important;
 }
 
 html.light .bg-zinc-800 {
-  background-color: #e4e4e7 !important;
+  background-color: #f4f4f5 !important;
 }
 
 html.light .bg-black {
-  background-color: #e4e4e7 !important;
+  background-color: #f4f4f5 !important;
 }
 
 html.light .bg-zinc-950\/95,
@@ -507,22 +507,38 @@ html.light [class*="bg-zinc-950"] {
   background-color: #ffffff !important;
 }
 
-/* Light mode text: dark-on-dark text classes should show dark text */
+/* Cards and surfaces in light mode: solid white with subtle shadow */
+html.light [class*="rounded-3xl"],
+html.light [class*="rounded-2xl"] {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+/* Light mode text: force high-contrast dark text */
 html.light .text-white {
-  color: #09090b !important;
-  -webkit-text-fill-color: #09090b !important;
+  color: #18181b !important;
+  -webkit-text-fill-color: #18181b !important;
 }
 
 html.light .text-zinc-100,
 html.light .text-zinc-200,
 html.light .text-zinc-300 {
+  color: #27272a !important;
+  -webkit-text-fill-color: #27272a !important;
+}
+
+html.light .text-zinc-400 {
   color: #3f3f46 !important;
   -webkit-text-fill-color: #3f3f46 !important;
 }
 
-html.light .text-zinc-400 {
+html.light .text-zinc-500 {
   color: #52525b !important;
   -webkit-text-fill-color: #52525b !important;
+}
+
+html.light .text-zinc-600 {
+  color: #71717a !important;
+  -webkit-text-fill-color: #71717a !important;
 }
 
 /* Border overrides for light mode */
@@ -541,17 +557,25 @@ html.light .border-zinc-700 {
    ============================================================ */
 html.light [class*="bg-zinc-9"],
 html.light [class*="bg-zinc-8"] {
-  background-color: #f0f0f0 !important;
+  background-color: #ffffff !important;
 }
 
 html.light [class*="bg-black"] {
-  background-color: #e4e4e7 !important;
+  background-color: #f4f4f5 !important;
 }
 
-/* Let teal backgrounds through (selected state) */
-html.light [class*="bg-teal-"],
-html.light [class*="bg-teal"] {
-  background-color: unset !important;
+/* Teal ghost backgrounds: make them very subtle in light mode.
+   These create the lavender wash — almost invisible on white is better. */
+html.light [class*="bg-teal-"][class*="/5"],
+html.light [class*="bg-teal-"][class*="/10"],
+html.light [class*="bg-teal-"][class*="/20"] {
+  background-color: rgba(66, 99, 235, 0.03) !important;
+}
+
+/* The hero blur glow blob — nearly invisible in light mode */
+html.light .blur-\[100px\],
+html.light [class*="blur-"][class*="bg-teal"] {
+  opacity: 0.05 !important;
 }
 
 /* Navbar in light mode */
