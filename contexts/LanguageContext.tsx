@@ -26,23 +26,28 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     html.dir = dir;
     html.lang = language;
 
-    // iOS Safari fix: re-assert dark mode colors immediately after dir change.
-    // When dir switches to RTL, Safari re-evaluates the CSS cascade and may
-    // temporarily apply system auto-colors (black text). Force overrides here.
-    html.style.colorScheme = 'only dark';
-    html.style.color = '#ffffff';
-    html.style.setProperty('-webkit-text-fill-color', '#ffffff');
-    html.style.backgroundColor = '#0a0a0a';
-    document.body.style.color = '#ffffff';
-    document.body.style.setProperty('-webkit-text-fill-color', '#ffffff');
-    document.body.style.backgroundColor = '#0a0a0a';
+    // iOS Safari fix: re-assert colors immediately after dir change.
+    // When dir switches to RTL, Safari re-evaluates the CSS cascade.
+    // Use the correct color based on the current theme.
+    const isDark = html.classList.contains('dark');
+    const textColor = isDark ? '#ffffff' : '#09090b';
+    const bgColor = isDark ? '#0a0a0a' : '#f4f4f5';
+
+    html.style.color = textColor;
+    html.style.setProperty('-webkit-text-fill-color', textColor);
+    html.style.backgroundColor = bgColor;
+    document.body.style.color = textColor;
+    document.body.style.setProperty('-webkit-text-fill-color', textColor);
+    document.body.style.backgroundColor = bgColor;
 
     // Re-assert after first repaint to catch delayed WebKit repaints (iOS Safari)
     const raf = requestAnimationFrame(() => {
-      html.style.color = '#ffffff';
-      html.style.setProperty('-webkit-text-fill-color', '#ffffff');
-      document.body.style.color = '#ffffff';
-      document.body.style.setProperty('-webkit-text-fill-color', '#ffffff');
+      const isDarkRaf = document.documentElement.classList.contains('dark');
+      const fc = isDarkRaf ? '#ffffff' : '#09090b';
+      html.style.color = fc;
+      html.style.setProperty('-webkit-text-fill-color', fc);
+      document.body.style.color = fc;
+      document.body.style.setProperty('-webkit-text-fill-color', fc);
     });
 
     safeStorage.setItem('language', language);

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useFontSize, FontSize } from '../contexts/FontSizeContext';
+import { useTheme, Theme } from '../contexts/ThemeContext';
 import { DataManager } from '../utils/dataManager';
 import { Language } from '../types';
 interface NavbarProps {
@@ -14,6 +15,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) =
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const { language, setLanguage, t, dir } = useLanguage();
   const { fontSize, setFontSize } = useFontSize();
+  const { theme, setTheme } = useTheme();
   const isNative = Capacitor.isNativePlatform();
 
   const [isExporting, setIsExporting] = useState(false);
@@ -186,6 +188,30 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) =
                 >
                   <span className="text-[0.625rem] font-bold mb-1">{size.label}</span>
                   <span className="font-black" style={{ fontSize: size.id === 'small' ? '0.75rem' : size.id === 'medium' ? '0.875rem' : size.id === 'large' ? '1rem' : '1.125rem' }}>Aa</span>
+                </motion.button>
+              ))}
+            </div>
+          </div>
+
+          {/* Theme Toggle */}
+          <div className="mt-6 pt-6 border-t border-zinc-800">
+            <h3 className="text-[0.625rem] font-black text-zinc-500 uppercase tracking-widest mb-3 px-2 flex items-center gap-2">
+              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+              {t('theme') as string || 'Theme'}
+            </h3>
+            <div className="grid grid-cols-2 gap-2">
+              {([{ id: 'dark', icon: '🌙', label: t('theme_dark') as string || 'Dark' }, { id: 'light', icon: '☀️', label: t('theme_light') as string || 'Light' }] as { id: Theme; icon: string; label: string }[]).map((th) => (
+                <motion.button
+                  key={th.id}
+                  onClick={() => setTheme(th.id)}
+                  whileTap={{ scale: 0.95 }}
+                  className={`flex flex-col items-center justify-center p-3 rounded-xl border transition-all ${theme === th.id
+                      ? 'bg-teal-500/10 border-teal-500/50 text-teal-400 shadow-sm'
+                      : 'bg-zinc-900/50 border-zinc-800 text-zinc-500 hover:border-zinc-700 hover:text-zinc-300'
+                    }`}
+                >
+                  <span className="text-lg mb-1">{th.icon}</span>
+                  <span className="text-[0.625rem] font-bold">{th.label}</span>
                 </motion.button>
               ))}
             </div>
