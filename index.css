@@ -441,6 +441,39 @@ body {
 }
 
 /* ============================================================
+   OVERRIDE: bg-white → dark equivalent
+   iOS Safari & MIUI/Xiaomi/Redmi do NOT reliably apply Tailwind
+   dark: variants. Any element with bg-white shows as pure white
+   even in dark mode, causing white cards with invisible text.
+   Force all bg-white to render as a dark surface.
+   ============================================================ */
+.bg-white {
+  background-color: #18181b !important;
+}
+
+.bg-zinc-50,
+.bg-gray-50,
+.bg-slate-50 {
+  background-color: #18181b !important;
+}
+
+.bg-zinc-100,
+.bg-gray-100,
+.bg-slate-100 {
+  background-color: #27272a !important;
+}
+
+/* Fix text-zinc-900 / text-gray-900 that goes invisible on white card fallbacks */
+.text-zinc-900,
+.text-gray-900,
+.text-slate-900 {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+
+
+/* ============================================================
    DARK MODE CLASS OVERRIDES
    When .dark is on <html>, force light-mode fallback text cols to white.
    This beats Android system UI that strips dark: variant classes.
@@ -483,4 +516,9 @@ body {
 .plate-label {
   color: #18181b !important;
   -webkit-text-fill-color: #18181b !important;
+}
+
+/* 5kg plate is intentionally white — use a dedicated class to bypass the global bg-white override */
+.bg-plate-white {
+  background-color: #e4e4e7 !important;
 }

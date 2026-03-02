@@ -19,7 +19,7 @@ const PlateVisual = ({ weight }: PlateVisualProps) => {
         20: 'bg-blue-500',
         15: 'bg-yellow-500',
         10: 'bg-green-500',
-        5: 'bg-white',
+        5: 'bg-plate-white',
         2.5: 'bg-zinc-400',
         1.25: 'bg-zinc-600',
         45: 'bg-blue-600', // lbs standard

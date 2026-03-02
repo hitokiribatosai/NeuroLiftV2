@@ -888,9 +888,11 @@ export const Tracker: React.FC = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           {allMatches.map(({ name, muscle }) => (
                             <div key={name} className="relative group">
-                              <label className={`flex items-center gap-4 p-5 border-2 rounded-2xl cursor-pointer transition-all duration-300 ${selectedExercises.includes(name)
-                                ? 'bg-teal-500/5 border-teal-500 shadow-md text-teal-600 dark:text-teal-400'
-                                : 'bg-white dark:bg-zinc-900/30 border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-200 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900/50'}`}>
+                              <label
+                                style={{ backgroundColor: selectedExercises.includes(name) ? 'rgba(20,184,166,0.05)' : 'rgba(24,24,27,0.6)', color: '#ffffff' }}
+                                className={`flex items-center gap-4 p-5 border-2 rounded-2xl cursor-pointer transition-all duration-300 ${selectedExercises.includes(name)
+                                  ? 'border-teal-500 shadow-md'
+                                  : 'border-zinc-800 hover:border-zinc-700'}`}>
                                 <input
                                   type="checkbox"
                                   checked={selectedExercises.includes(name)}
@@ -959,9 +961,11 @@ export const Tracker: React.FC = () => {
                                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     {exercises.map(ex => (
                                       <div key={ex} className="relative group">
-                                        <label className={`flex items-center gap-4 p-5 border-2 rounded-2xl cursor-pointer transition-all duration-300 ${selectedExercises.includes(ex)
-                                          ? 'bg-teal-500/5 border-teal-500 shadow-md text-teal-600 dark:text-teal-400'
-                                          : 'bg-white dark:bg-zinc-900/30 border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-200 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900/50'}`}>
+                                        <label
+                                          style={{ backgroundColor: selectedExercises.includes(ex) ? 'rgba(20,184,166,0.05)' : 'rgba(24,24,27,0.6)', color: '#ffffff' }}
+                                          className={`flex items-center gap-4 p-5 border-2 rounded-2xl cursor-pointer transition-all duration-300 ${selectedExercises.includes(ex)
+                                            ? 'border-teal-500 shadow-md'
+                                            : 'border-zinc-800 hover:border-zinc-700'}`}>
                                           <input
                                             type="checkbox"
                                             checked={selectedExercises.includes(ex)}
