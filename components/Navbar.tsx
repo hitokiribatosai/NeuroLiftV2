@@ -206,8 +206,8 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) =
                   onClick={() => setTheme(th.id)}
                   whileTap={{ scale: 0.95 }}
                   className={`flex flex-col items-center justify-center p-3 rounded-xl border transition-all ${theme === th.id
-                      ? 'bg-teal-500/10 border-teal-500/50 text-teal-400 shadow-sm'
-                      : 'bg-zinc-900/50 border-zinc-800 text-zinc-500 hover:border-zinc-700 hover:text-zinc-300'
+                    ? 'bg-teal-500/10 border-teal-500/50 text-teal-400 shadow-sm'
+                    : 'bg-zinc-900/50 border-zinc-800 text-zinc-500 hover:border-zinc-700 hover:text-zinc-300'
                     }`}
                 >
                   <span className="text-lg mb-1">{th.icon}</span>
@@ -337,13 +337,24 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) =
 
       {/* Bottom Tab Bar: Visible only on smaller screens */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 z-[60] pointer-events-none">
-        <div className="w-full bg-[#0a0a0a]/95 backdrop-blur-xl border-t border-zinc-800 shadow-2xl flex items-center justify-around p-2 pb-[calc(env(safe-area-inset-bottom)+8px)] pointer-events-auto relative overflow-hidden">
+        <div
+          className="w-full backdrop-blur-xl border-t shadow-2xl flex items-center justify-around p-2 pb-[calc(env(safe-area-inset-bottom)+8px)] pointer-events-auto relative overflow-hidden"
+          style={{
+            backgroundColor: theme === 'light' ? 'rgba(255,255,255,0.97)' : 'rgba(10,10,10,0.95)',
+            borderColor: theme === 'light' ? '#e4e4e7' : '#27272a',
+          }}
+        >
           {navItems.map((item) => (
             <motion.button
               key={item.id}
               onClick={() => setCurrentView(item.id)}
               whileTap={{ scale: 0.9, y: 4 }}
-              className={`relative flex flex-col items-center justify-center gap-1.5 py-2 px-1 rounded-2xl transition-all duration-300 min-w-[64px] ${currentView === item.id ? 'text-teal-400 scale-105' : 'text-zinc-400 hover:text-zinc-200'}`}
+              className="relative flex flex-col items-center justify-center gap-1.5 py-2 px-1 rounded-2xl transition-all duration-300 min-w-[64px]"
+              style={{
+                color: currentView === item.id
+                  ? (theme === 'light' ? '#4263eb' : '#2dd4bf')
+                  : (theme === 'light' ? '#71717a' : '#a1a1aa'),
+              }}
             >
               <div className={`transition-all duration-300 ${currentView === item.id ? 'translate-y-[-2px]' : ''}`}>
                 {item.icon}
@@ -355,7 +366,8 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) =
               {currentView === item.id && (
                 <motion.div
                   layoutId="navbar-indicator-mobile"
-                  className="absolute inset-0 bg-teal-500/10 rounded-2xl -z-10"
+                  className="absolute inset-0 rounded-2xl -z-10"
+                  style={{ backgroundColor: theme === 'light' ? 'rgba(66,99,235,0.08)' : 'rgba(45,212,191,0.1)' }}
                   initial={false}
                   transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
                 />

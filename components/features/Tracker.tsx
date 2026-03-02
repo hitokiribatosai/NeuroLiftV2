@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { useTheme } from '../../contexts/ThemeContext';
 import { SpotlightButton } from '../ui/SpotlightButton';
 import { Card } from '../ui/Card';
 import { CompletedWorkout, ActiveExercise, WorkoutSet, WorkoutTemplate } from '../../types';
@@ -25,7 +26,8 @@ export const Tracker: React.FC = () => {
     language
   } = useLanguage();
 
-
+  const { theme } = useTheme();
+  const isLight = theme === 'light';
 
   const [phase, setPhase] = useState<'setup' | 'selection' | 'active' | 'summary'>(() => {
     const saved = safeStorage.getItem('neuroLift_tracker_phase');
@@ -889,10 +891,15 @@ export const Tracker: React.FC = () => {
                           {allMatches.map(({ name, muscle }) => (
                             <div key={name} className="relative group">
                               <label
-                                style={{ backgroundColor: selectedExercises.includes(name) ? 'rgba(20,184,166,0.05)' : 'rgba(24,24,27,0.6)', color: '#ffffff' }}
+                                style={{
+                                  backgroundColor: selectedExercises.includes(name)
+                                    ? (isLight ? 'rgba(66,99,235,0.08)' : 'rgba(20,184,166,0.05)')
+                                    : (isLight ? '#ffffff' : 'rgba(24,24,27,0.6)'),
+                                  color: isLight ? '#18181b' : '#ffffff',
+                                }}
                                 className={`flex items-center gap-4 p-5 border-2 rounded-2xl cursor-pointer transition-all duration-300 ${selectedExercises.includes(name)
-                                  ? 'border-teal-500 shadow-md'
-                                  : 'border-zinc-800 hover:border-zinc-700'}`}>
+                                  ? (isLight ? 'border-blue-500 shadow-md' : 'border-teal-500 shadow-md')
+                                  : (isLight ? 'border-zinc-200 hover:border-zinc-300' : 'border-zinc-800 hover:border-zinc-700')}`}>
                                 <input
                                   type="checkbox"
                                   checked={selectedExercises.includes(name)}
@@ -902,7 +909,9 @@ export const Tracker: React.FC = () => {
                                   }}
                                   className="hidden"
                                 />
-                                <div className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all ${selectedExercises.includes(name) ? 'bg-teal-500 border-teal-500 text-white shadow-lg shadow-teal-500/20' : 'border-zinc-700'}`}>
+                                <div className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all ${selectedExercises.includes(name)
+                                  ? (isLight ? 'bg-blue-500 border-blue-500 text-white shadow-lg shadow-blue-500/20' : 'bg-teal-500 border-teal-500 text-white shadow-lg shadow-teal-500/20')
+                                  : (isLight ? 'border-zinc-300' : 'border-zinc-700')}`}>
                                   {selectedExercises.includes(name) && <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 13l4 4L19 7" /></svg>}
                                 </div>
                                 <div className="flex-1">
