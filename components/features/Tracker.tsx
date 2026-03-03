@@ -715,7 +715,13 @@ export const Tracker: React.FC = () => {
                 {selectedMuscles.length > 0 && (
                   <div className="flex flex-wrap justify-center gap-2 mb-4 animate-in fade-in zoom-in duration-300">
                     {selectedMuscles.map(m => (
-                      <span key={m} className="px-5 py-2 bg-teal-500/10 border border-teal-500/30 text-teal-300 text-[0.625rem] font-black rounded-full uppercase tracking-[0.2em] shadow-sm">
+                      <span key={m} className="px-5 py-2 text-[0.625rem] font-black rounded-full uppercase tracking-[0.2em] shadow-sm" style={{
+                        backgroundColor: isLight ? 'rgba(66,99,235,0.1)' : 'rgba(20,184,166,0.1)',
+                        borderWidth: '1px',
+                        borderStyle: 'solid',
+                        borderColor: isLight ? 'rgba(66,99,235,0.3)' : 'rgba(20,184,166,0.3)',
+                        color: isLight ? '#4263eb' : '#5eead4',
+                      }}>
                         {getLocalizedMuscleName(m, language)}
                       </span>
                     ))}
@@ -729,17 +735,23 @@ export const Tracker: React.FC = () => {
                     key={muscle}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => toggleMuscle(muscle)}
-                    className={`group relative flex flex-col p-6 rounded-3xl border transition-all duration-300 ${selectedMuscles.includes(muscle)
-                      ? 'bg-teal-500 border-teal-500 shadow-[0_0_25px_rgba(20,184,166,0.2)]'
-                      : 'bg-zinc-900/40 border-zinc-800 hover:border-zinc-700 shadow-sm hover:shadow-md'
-                      }`}
+                    className="group relative flex items-center justify-center p-6 rounded-3xl border transition-all duration-300"
+                    style={{
+                      backgroundColor: selectedMuscles.includes(muscle)
+                        ? (isLight ? '#4263eb' : '#14b8a6')
+                        : (isLight ? '#ffffff' : 'rgba(24,24,27,0.4)'),
+                      borderColor: selectedMuscles.includes(muscle)
+                        ? (isLight ? '#4263eb' : '#14b8a6')
+                        : (isLight ? '#e4e4e7' : '#3f3f46'),
+                      boxShadow: selectedMuscles.includes(muscle)
+                        ? (isLight ? '0 0 25px rgba(66,99,235,0.2)' : '0 0 25px rgba(20,184,166,0.2)')
+                        : '0 1px 3px rgba(0,0,0,0.08)',
+                      color: selectedMuscles.includes(muscle)
+                        ? '#ffffff'
+                        : (isLight ? '#18181b' : '#ffffff'),
+                    }}
                   >
-                    <div className="flex items-center justify-end mb-2">
-                      <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all ${selectedMuscles.includes(muscle) ? 'bg-white border-white' : 'border-zinc-700 group-hover:border-zinc-600'}`}>
-                        {selectedMuscles.includes(muscle) && <svg className="w-3 h-3 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 13l4 4L19 7" /></svg>}
-                      </div>
-                    </div>
-                    <span className={`text-xl font-black text-left transition-colors ${selectedMuscles.includes(muscle) ? 'text-white' : 'text-zinc-100'}`}>
+                    <span className="text-xl font-black text-center transition-colors">
                       {getLocalizedMuscleName(muscle, language)}
                     </span>
                   </motion.button>
