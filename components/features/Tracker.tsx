@@ -19,6 +19,7 @@ import { Share } from '@capacitor/share';
 import { Capacitor } from '@capacitor/core';
 import { hapticFeedback } from '../../utils/haptics';
 import { exerciseHistoryService } from '../../utils/exerciseHistory';
+import { getExerciseGif } from '../../utils/exerciseGifs';
 
 export const Tracker: React.FC = () => {
   const {
@@ -45,6 +46,7 @@ export const Tracker: React.FC = () => {
     return safeStorage.getParsed<string[]>('neuroLift_tracker_selected_exercises', []);
   });
   const [tutorialExercise, setTutorialExercise] = useState<string | null>(null);
+  const [gifLoading, setGifLoading] = useState(true);
   const [plateCalcWeight, setPlateCalcWeight] = useState<number | null>(null);
   const [barWeight, setBarWeight] = useState<number>(20);
   const [activeSetInfo, setActiveSetInfo] = useState<{ exIdx: number, setIdx: number } | null>(null);
@@ -1070,15 +1072,24 @@ export const Tracker: React.FC = () => {
               </div>
 
               {/* Tutorial Modal */}
-              <Modal isOpen={!!tutorialExercise} onClose={() => setTutorialExercise(null)}>
+              <Modal isOpen={!!tutorialExercise} onClose={() => {
+                setTutorialExercise(null);
+                setGifLoading(true);
+              }}>
                 {tutorialExercise && (() => {
-                  const links = getExerciseLinks(tutorialExercise);
+                  const gifUrl = getExerciseGif(tutorialExercise);
+                  const isFallback = !gifUrl;
+                  const fallbackSearchUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(tutorialExercise + ' exercise tutorial')}`;
+
                   return (
-                    <div className="relative w-full rounded-[3rem] border border-zinc-800 bg-zinc-950 p-10 shadow-3xl overflow-hidden">
+                    <div className="relative w-full rounded-[3rem] border border-zinc-800 bg-zinc-950 p-6 md:p-10 shadow-3xl overflow-hidden">
                       <div className="absolute top-0 left-0 w-full h-2 bg-teal-500"></div>
                       <button
-                        onClick={() => setTutorialExercise(null)}
-                        className="absolute right-8 top-8 text-zinc-400 hover:text-white transition-colors"
+                        onClick={() => {
+                          setTutorialExercise(null);
+                          setGifLoading(true);
+                        }}
+                        className="absolute right-6 top-6 md:right-8 md:top-8 text-zinc-400 hover:text-white transition-colors z-10"
                         title={t('modal_close')}
                       >
                         <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1086,42 +1097,55 @@ export const Tracker: React.FC = () => {
                         </svg>
                       </button>
 
-                      <div className="flex items-center gap-4 mb-8">
-                        <div className="w-3 h-10 bg-teal-500 rounded-full"></div>
-                        <h3 className="text-2xl font-black text-white uppercase tracking-tighter leading-tight pr-10">
+                      <div className="flex items-center gap-4 mb-6 md:mb-8 pr-10">
+                        <div className="w-2 md:w-3 h-8 md:h-10 bg-teal-500 rounded-full flex-shrink-0"></div>
+                        <h3 className="text-xl md:text-2xl font-black text-white uppercase tracking-tighter leading-tight">
                           {tutorialExercise}
                         </h3>
                       </div>
 
                       <div className="flex flex-col gap-4">
-                        <a
-                          href={getExerciseLinks(tutorialExercise || '').tutorial}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="block w-full aspect-video rounded-2xl bg-zinc-900 border border-zinc-800 overflow-hidden relative group"
-                        >
-                          <div className="absolute inset-0 flex flex-col items-center justify-center">
-                            <div className="w-16 h-16 rounded-full bg-red-600 flex items-center justify-center mb-4 shadow-xl group-hover:scale-110 transition-transform">
-                              <svg className="w-8 h-8 text-white ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
-                            </div>
-                            <p className="text-zinc-400 font-bold uppercase tracking-widest text-xs group-hover:text-white transition-colors">{t('modal_watch_video')}</p>
+                        {isFallback ? (
+                          <div className="w-full aspect-square md:aspect-video rounded-2xl bg-zinc-900 border border-zinc-800 flex flex-col items-center justify-center p-6 text-center">
+                            <svg className="w-12 h-12 text-zinc-600 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                            </svg>
+                            <p className="text-zinc-400 text-sm font-bold uppercase tracking-widest leading-relaxed mb-6">
+                              No preview available
+                            </p>
+                            <a
+                              href={fallbackSearchUrl}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="px-6 py-3 bg-teal-500 hover:bg-teal-400 text-white font-black text-xs uppercase tracking-widest rounded-xl transition-all shadow-lg shadow-teal-500/20 flex items-center gap-2"
+                            >
+                              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+                              Search Tutorial
+                            </a>
                           </div>
-                        </a>
-
-                        <a
-                          href={links.science}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="w-full"
-                        >
-                          <SpotlightButton className="w-full py-5 text-sm font-black uppercase tracking-[0.2em] shadow-lg shadow-teal-500/20">
-                            🔬 Learn the Science
-                          </SpotlightButton>
-                        </a>
+                        ) : (
+                          <div className="relative w-full rounded-2xl bg-zinc-900 border border-zinc-800 overflow-hidden flex items-center justify-center" style={{ minHeight: '300px' }}>
+                            {gifLoading && (
+                              <div className="absolute inset-0 flex items-center justify-center bg-zinc-900/80 backdrop-blur-sm z-10">
+                                <div className="w-10 h-10 border-4 border-teal-500/30 border-t-teal-500 rounded-full animate-spin"></div>
+                              </div>
+                            )}
+                            <img
+                              src={gifUrl}
+                              alt={`${tutorialExercise} animation`}
+                              className="w-full h-auto object-cover max-h-[400px]"
+                              onLoad={() => setGifLoading(false)}
+                              onError={() => setGifLoading(false)}
+                            />
+                          </div>
+                        )}
 
                         <button
-                          onClick={() => setTutorialExercise(null)}
-                          className="w-full py-2 text-[10px] text-zinc-600 hover:text-rose-500 font-black uppercase tracking-[0.3em] transition-all"
+                          onClick={() => {
+                            setTutorialExercise(null);
+                            setGifLoading(true);
+                          }}
+                          className="w-full mt-2 py-4 text-xs text-zinc-500 hover:text-white bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 rounded-2xl font-black uppercase tracking-[0.3em] transition-all"
                         >
                           {t('modal_close')}
                         </button>
