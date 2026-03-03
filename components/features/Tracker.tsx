@@ -671,6 +671,9 @@ export const Tracker: React.FC = () => {
                 color: selectedMuscles.includes(muscle)
                   ? '#ffffff'
                   : (isLight ? '#18181b' : '#ffffff'),
+                WebkitTextFillColor: selectedMuscles.includes(muscle)
+                  ? '#ffffff'
+                  : (isLight ? '#18181b' : '#ffffff'),
               }}
             >
               <span className="text-xl font-black text-center transition-colors">
@@ -747,6 +750,9 @@ export const Tracker: React.FC = () => {
                         ? (isLight ? '0 0 25px rgba(66,99,235,0.2)' : '0 0 25px rgba(20,184,166,0.2)')
                         : '0 1px 3px rgba(0,0,0,0.08)',
                       color: selectedMuscles.includes(muscle)
+                        ? '#ffffff'
+                        : (isLight ? '#18181b' : '#ffffff'),
+                      WebkitTextFillColor: selectedMuscles.includes(muscle)
                         ? '#ffffff'
                         : (isLight ? '#18181b' : '#ffffff'),
                     }}
