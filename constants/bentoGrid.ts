@@ -8,14 +8,6 @@ export const HERO_FEATURES = [
         className: 'md:col-span-2 md:row-span-2 bg-gradient-to-br from-teal-500/10 to-transparent border-teal-500/20'
     },
     {
-        id: 'gym_mode',
-        title: 'home_gym_mode',
-        description: 'home_gym_mode_desc',
-        icon: '🏋️',
-        link: '#',
-        className: 'bg-zinc-900 border-zinc-800'
-    },
-    {
         id: 'analytics',
         title: 'home_analytics',
         description: 'home_analytics_desc',
