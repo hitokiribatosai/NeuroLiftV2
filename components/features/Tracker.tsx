@@ -1277,14 +1277,16 @@ export const Tracker: React.FC = () => {
                         <div className="flex items-center gap-2 flex-shrink-0">
                           <button
                             onClick={() => setTutorialExercise(ex.name)}
-                            className="p-2 text-zinc-600 hover:text-teal-400 transition-colors"
+                            className="p-2 transition-colors"
+                            style={{ color: isLight ? '#4263eb' : '#a1a1aa' }}
                             title={t('modal_watch_video')}
                           >
                             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                           </button>
                           <button
                             onClick={() => setExerciseToDelete({ name: ex.name, index: exIdx })}
-                            className="p-2 text-zinc-600 hover:text-rose-500 transition-colors"
+                            className="p-2 transition-colors"
+                            style={{ color: isLight ? '#71717a' : '#52525b' }}
                             title={t('tracker_delete_exercise')}
                           >
                             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
