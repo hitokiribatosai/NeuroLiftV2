@@ -19,7 +19,7 @@ import { Share } from '@capacitor/share';
 import { Capacitor } from '@capacitor/core';
 import { hapticFeedback } from '../../utils/haptics';
 import { exerciseHistoryService } from '../../utils/exerciseHistory';
-import { getExerciseGif } from '../../utils/exerciseGifs';
+import { getExerciseImages } from '../../utils/exerciseGifs';
 
 export const Tracker: React.FC = () => {
   const {
@@ -952,7 +952,7 @@ export const Tracker: React.FC = () => {
                                   e.stopPropagation();
                                   setTutorialExercise(name);
                                 }}
-                                className="absolute right-4 rtl:right-auto rtl:left-4 top-1/2 -translate-y-1/2 p-2 text-zinc-600 hover:text-teal-400 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all z-10"
+                                className="absolute right-4 rtl:right-auto rtl:left-4 top-1/2 -translate-y-1/2 p-2 text-zinc-600 hover:text-teal-400 opacity-100 transition-all z-10"
                                 title={t('modal_watch_video')}
                               >
                                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1077,8 +1077,8 @@ export const Tracker: React.FC = () => {
                 setGifLoading(true);
               }}>
                 {tutorialExercise && (() => {
-                  const gifUrl = getExerciseGif(tutorialExercise);
-                  const isFallback = !gifUrl;
+                  const images = getExerciseImages(tutorialExercise);
+                  const isFallback = !images;
                   const fallbackSearchUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(tutorialExercise + ' exercise tutorial')}`;
 
                   return (
@@ -1100,7 +1100,7 @@ export const Tracker: React.FC = () => {
                       <div className="flex items-center gap-4 mb-6 md:mb-8 pr-10">
                         <div className="w-2 md:w-3 h-8 md:h-10 bg-teal-500 rounded-full flex-shrink-0"></div>
                         <h3 className="text-xl md:text-2xl font-black text-white uppercase tracking-tighter leading-tight">
-                          {tutorialExercise}
+                          {getExerciseTranslation(tutorialExercise, language)}
                         </h3>
                       </div>
 
@@ -1124,19 +1124,30 @@ export const Tracker: React.FC = () => {
                             </a>
                           </div>
                         ) : (
-                          <div className="relative w-full rounded-2xl bg-zinc-900 border border-zinc-800 overflow-hidden flex items-center justify-center" style={{ minHeight: '300px' }}>
-                            {gifLoading && (
-                              <div className="absolute inset-0 flex items-center justify-center bg-zinc-900/80 backdrop-blur-sm z-10">
-                                <div className="w-10 h-10 border-4 border-teal-500/30 border-t-teal-500 rounded-full animate-spin"></div>
-                              </div>
-                            )}
-                            <img
-                              src={gifUrl}
-                              alt={`${tutorialExercise} animation`}
-                              className="w-full h-auto object-cover max-h-[400px]"
-                              onLoad={() => setGifLoading(false)}
-                              onError={() => setGifLoading(false)}
-                            />
+                          <div className="grid grid-cols-2 gap-3">
+                            <div className="relative rounded-2xl bg-zinc-900 border border-zinc-800 overflow-hidden">
+                              <div className="absolute top-2 left-2 bg-zinc-950/80 backdrop-blur-sm text-[10px] font-black text-teal-400 uppercase tracking-widest px-2 py-1 rounded-lg z-10">Start</div>
+                              {gifLoading && (
+                                <div className="absolute inset-0 flex items-center justify-center bg-zinc-900/80 backdrop-blur-sm z-10">
+                                  <div className="w-8 h-8 border-3 border-teal-500/30 border-t-teal-500 rounded-full animate-spin"></div>
+                                </div>
+                              )}
+                              <img
+                                src={images.start}
+                                alt={`${tutorialExercise} start position`}
+                                className="w-full h-auto object-cover"
+                                onLoad={() => setGifLoading(false)}
+                                onError={() => setGifLoading(false)}
+                              />
+                            </div>
+                            <div className="relative rounded-2xl bg-zinc-900 border border-zinc-800 overflow-hidden">
+                              <div className="absolute top-2 left-2 bg-zinc-950/80 backdrop-blur-sm text-[10px] font-black text-teal-400 uppercase tracking-widest px-2 py-1 rounded-lg z-10">End</div>
+                              <img
+                                src={images.end}
+                                alt={`${tutorialExercise} end position`}
+                                className="w-full h-auto object-cover"
+                              />
+                            </div>
                           </div>
                         )}
 
