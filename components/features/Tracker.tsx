@@ -19,7 +19,6 @@ import { Share } from '@capacitor/share';
 import { Capacitor } from '@capacitor/core';
 import { hapticFeedback } from '../../utils/haptics';
 import { exerciseHistoryService } from '../../utils/exerciseHistory';
-import { getExerciseImages } from '../../utils/exerciseGifs';
 
 export const Tracker: React.FC = () => {
   const {
@@ -46,7 +45,7 @@ export const Tracker: React.FC = () => {
     return safeStorage.getParsed<string[]>('neuroLift_tracker_selected_exercises', []);
   });
   const [tutorialExercise, setTutorialExercise] = useState<string | null>(null);
-  const [gifLoading, setGifLoading] = useState(true);
+
   const [plateCalcWeight, setPlateCalcWeight] = useState<number | null>(null);
   const [barWeight, setBarWeight] = useState<number>(20);
   const [activeSetInfo, setActiveSetInfo] = useState<{ exIdx: number, setIdx: number } | null>(null);
@@ -1072,98 +1071,47 @@ export const Tracker: React.FC = () => {
               </div>
 
               {/* Tutorial Modal */}
-              <Modal isOpen={!!tutorialExercise} onClose={() => {
-                setTutorialExercise(null);
-                setGifLoading(true);
-              }}>
-                {tutorialExercise && (() => {
-                  const images = getExerciseImages(tutorialExercise);
-                  const isFallback = !images;
-                  const fallbackSearchUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(tutorialExercise + ' exercise tutorial')}`;
+              <Modal isOpen={!!tutorialExercise} onClose={() => setTutorialExercise(null)}>
+                {tutorialExercise && (
+                  <div className="relative w-full rounded-[3rem] border border-zinc-800 bg-zinc-950 p-6 md:p-10 shadow-3xl overflow-hidden">
+                    <div className="absolute top-0 left-0 w-full h-2 bg-teal-500"></div>
+                    <button
+                      onClick={() => setTutorialExercise(null)}
+                      className="absolute right-6 top-6 md:right-8 md:top-8 text-zinc-400 hover:text-white transition-colors z-10"
+                      title={t('modal_close')}
+                    >
+                      <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
 
-                  return (
-                    <div className="relative w-full rounded-[3rem] border border-zinc-800 bg-zinc-950 p-6 md:p-10 shadow-3xl overflow-hidden">
-                      <div className="absolute top-0 left-0 w-full h-2 bg-teal-500"></div>
-                      <button
-                        onClick={() => {
-                          setTutorialExercise(null);
-                          setGifLoading(true);
-                        }}
-                        className="absolute right-6 top-6 md:right-8 md:top-8 text-zinc-400 hover:text-white transition-colors z-10"
-                        title={t('modal_close')}
-                      >
-                        <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                      </button>
-
-                      <div className="flex items-center gap-4 mb-6 md:mb-8 pr-10">
-                        <div className="w-2 md:w-3 h-8 md:h-10 bg-teal-500 rounded-full flex-shrink-0"></div>
-                        <h3 className="text-xl md:text-2xl font-black text-white uppercase tracking-tighter leading-tight">
-                          {getExerciseTranslation(tutorialExercise, language)}
-                        </h3>
-                      </div>
-
-                      <div className="flex flex-col gap-4">
-                        {isFallback ? (
-                          <div className="w-full aspect-square md:aspect-video rounded-2xl bg-zinc-900 border border-zinc-800 flex flex-col items-center justify-center p-6 text-center">
-                            <svg className="w-12 h-12 text-zinc-600 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                            </svg>
-                            <p className="text-zinc-400 text-sm font-bold uppercase tracking-widest leading-relaxed mb-6">
-                              No preview available
-                            </p>
-                            <a
-                              href={fallbackSearchUrl}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="px-6 py-3 bg-teal-500 hover:bg-teal-400 text-white font-black text-xs uppercase tracking-widest rounded-xl transition-all shadow-lg shadow-teal-500/20 flex items-center gap-2"
-                            >
-                              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
-                              Search Tutorial
-                            </a>
-                          </div>
-                        ) : (
-                          <div className="grid grid-cols-2 gap-3">
-                            <div className="relative rounded-2xl bg-zinc-900 border border-zinc-800 overflow-hidden">
-                              <div className="absolute top-2 left-2 bg-zinc-950/80 backdrop-blur-sm text-[10px] font-black text-teal-400 uppercase tracking-widest px-2 py-1 rounded-lg z-10">Start</div>
-                              {gifLoading && (
-                                <div className="absolute inset-0 flex items-center justify-center bg-zinc-900/80 backdrop-blur-sm z-10">
-                                  <div className="w-8 h-8 border-3 border-teal-500/30 border-t-teal-500 rounded-full animate-spin"></div>
-                                </div>
-                              )}
-                              <img
-                                src={images.start}
-                                alt={`${tutorialExercise} start position`}
-                                className="w-full h-auto object-cover"
-                                onLoad={() => setGifLoading(false)}
-                                onError={() => setGifLoading(false)}
-                              />
-                            </div>
-                            <div className="relative rounded-2xl bg-zinc-900 border border-zinc-800 overflow-hidden">
-                              <div className="absolute top-2 left-2 bg-zinc-950/80 backdrop-blur-sm text-[10px] font-black text-teal-400 uppercase tracking-widest px-2 py-1 rounded-lg z-10">End</div>
-                              <img
-                                src={images.end}
-                                alt={`${tutorialExercise} end position`}
-                                className="w-full h-auto object-cover"
-                              />
-                            </div>
-                          </div>
-                        )}
-
-                        <button
-                          onClick={() => {
-                            setTutorialExercise(null);
-                            setGifLoading(true);
-                          }}
-                          className="w-full mt-2 py-4 text-xs text-zinc-500 hover:text-white bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 rounded-2xl font-black uppercase tracking-[0.3em] transition-all"
-                        >
-                          {t('modal_close')}
-                        </button>
-                      </div>
+                    <div className="flex items-center gap-4 mb-8 md:mb-10 pr-10">
+                      <div className="w-2 md:w-3 h-8 md:h-10 bg-teal-500 rounded-full flex-shrink-0"></div>
+                      <h3 className="text-xl md:text-2xl font-black text-white uppercase tracking-tighter leading-tight">
+                        {getExerciseTranslation(tutorialExercise, language)}
+                      </h3>
                     </div>
-                  );
-                })()}
+
+                    <div className="flex flex-col gap-4">
+                      <a
+                        href={`https://www.youtube.com/results?search_query=${encodeURIComponent(tutorialExercise + ' exercise tutorial short')}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="w-full flex items-center justify-center gap-3 py-5 bg-red-600 hover:bg-red-500 text-white font-black text-sm uppercase tracking-widest rounded-2xl transition-all shadow-lg shadow-red-600/30"
+                      >
+                        <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0C.488 3.45.029 5.804 0 12c.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0C23.512 20.55 23.971 18.196 24 12c-.029-6.185-.484-8.549-4.385-8.816zM9 16V8l8 4-8 4z" /></svg>
+                        {t('modal_watch_video')}
+                      </a>
+
+                      <button
+                        onClick={() => setTutorialExercise(null)}
+                        className="w-full py-4 text-xs text-zinc-500 hover:text-white bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 rounded-2xl font-black uppercase tracking-[0.3em] transition-all"
+                      >
+                        {t('modal_close')}
+                      </button>
+                    </div>
+                  </div>
+                )}
               </Modal>
             </div>
           )}
