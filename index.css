@@ -13,54 +13,6 @@
   /* color-scheme is set dynamically by ThemeContext per theme */
   forced-color-adjust: none;
   /* Stops system from overriding colors */
-
-  /* --- ACCENT COLORS (Default Teal in Dark Mode) --- */
-  --accent-300: 94 234 212;
-  /* #5eead4 */
-  --accent-400: 45 212 191;
-  /* #2dd4bf */
-  --accent-500: 20 184 166;
-  /* #14b8a6 */
-  --accent-600: 15 118 110;
-  /* #0f766e */
-}
-
-/* --- THEME OVERRIDES --- */
-
-/* Pink Theme */
-html[data-accent="pink"] {
-  --accent-300: 249 168 212;
-  /* #f9a8d4 */
-  --accent-400: 244 114 182;
-  /* #f472b6 */
-  --accent-500: 236 72 153;
-  /* #ec4899 */
-  --accent-600: 219 39 119;
-  /* #db2777 */
-}
-
-/* Red Theme */
-html[data-accent="red"] {
-  --accent-300: 252 165 165;
-  /* #fca5a5 */
-  --accent-400: 248 113 113;
-  /* #f87171 */
-  --accent-500: 239 68 68;
-  /* #ef4444 */
-  --accent-600: 220 38 38;
-  /* #dc2626 */
-}
-
-/* Yellow Theme */
-html[data-accent="yellow"] {
-  --accent-300: 252 211 77;
-  /* #fcd34d */
-  --accent-400: 251 191 36;
-  /* #fbbf24 */
-  --accent-500: 245 158 11;
-  /* #f59e0b */
-  --accent-600: 217 119 6;
-  /* #d97706 */
 }
 
 html {
@@ -706,25 +658,16 @@ html.light [class*="from-zinc-"] {
 
 /* ============================================================
    ACCENT COLOR: Teal → Royal Blue  (LIGHT MODE ONLY)
-   Dark mode keeps 100% of its original teal colours by default.
-   All light-mode teal-* Tailwind classes now use CSS variables.
-   If "default" is selected, we override those base variables with Royal Blue.
+   Dark mode keeps 100% of its original teal colours.
+   All light-mode teal-* Tailwind classes are remapped to
+   a Royal Blue palette:
+     Core:  #4263eb  (Royal Blue 500)
+     Light: #748ffc  (Royal Blue 400)
+     Dark:  #3451b2  (Royal Blue 700)
    ============================================================ */
 
-html.light:not([data-accent]),
-html.light[data-accent="default"] {
-  --accent-300: 147 197 253;
-  /* #93c5fd */
-  --accent-400: 116 143 252;
-  /* #748ffc */
-  --accent-500: 66 99 235;
-  /* #4263eb */
-  --accent-600: 52 81 178;
-  /* #3451b2 */
-}
-
-/* --- White text on solid-blue/accent selected cards in light mode --- */
-/* When a card has a solid accent background (selected state),
+/* --- White text on solid-blue selected cards in light mode --- */
+/* When a card has a solid teal/blue background (selected state),
    child text must be white regardless of html.light .text-white override */
 html.light [class*="bg-teal-5"]:not([class*="/5"]):not([class*="/10"]):not([class*="/20"]) .text-white,
 html.light [class*="bg-teal-5"]:not([class*="/5"]):not([class*="/10"]):not([class*="/20"]) [class*="text-zinc"],
@@ -733,22 +676,104 @@ html.light [class*="bg-teal-5"]:not([class*="/5"]):not([class*="/10"]):not([clas
   -webkit-text-fill-color: #ffffff !important;
 }
 
-/* --- Shadows & Rings (Light Mode defaults to accent color opacity) --- */
-html.light [class*="shadow-teal"] {
-  --tw-shadow-color: rgb(var(--accent-500) / 0.35) !important;
+/* --- Text colors (light mode) --- */
+html.light [class*="text-teal-300"] {
+  color: #93c5fd !important;
+  -webkit-text-fill-color: #93c5fd !important;
 }
 
+html.light [class*="text-teal-400"] {
+  color: #748ffc !important;
+  -webkit-text-fill-color: #748ffc !important;
+}
+
+html.light [class*="text-teal-500"] {
+  color: #4263eb !important;
+  -webkit-text-fill-color: #4263eb !important;
+}
+
+html.light [class*="text-teal-600"] {
+  color: #3451b2 !important;
+  -webkit-text-fill-color: #3451b2 !important;
+}
+
+/* --- Solid backgrounds (light mode) --- */
+html.light [class*="bg-teal-500"]:not([class*="/5"]):not([class*="/10"]):not([class*="/20"]):not([class*="/30"]) {
+  background-color: #4263eb !important;
+}
+
+html.light [class*="bg-teal-600"] {
+  background-color: #3451b2 !important;
+}
+
+html.light [class*="bg-teal-400"] {
+  background-color: #748ffc !important;
+}
+
+/* --- Ghost / opacity backgrounds (light mode) --- */
+html.light [class*="bg-teal-"][class*="/5"] {
+  background-color: rgba(66, 99, 235, 0.05) !important;
+}
+
+html.light [class*="bg-teal-"][class*="/10"] {
+  background-color: rgba(66, 99, 235, 0.10) !important;
+}
+
+html.light [class*="bg-teal-"][class*="/20"] {
+  background-color: rgba(66, 99, 235, 0.20) !important;
+}
+
+html.light [class*="bg-teal-"][class*="/30"] {
+  background-color: rgba(66, 99, 235, 0.30) !important;
+}
+
+/* --- Borders (light mode) --- */
+html.light [class*="border-teal-500"]:not([class*="/"]) {
+  border-color: #4263eb !important;
+}
+
+html.light [class*="border-teal-400"] {
+  border-color: #748ffc !important;
+}
+
+html.light [class*="border-teal-"][class*="/20"] {
+  border-color: rgba(66, 99, 235, 0.20) !important;
+}
+
+html.light [class*="border-teal-"][class*="/30"] {
+  border-color: rgba(66, 99, 235, 0.30) !important;
+}
+
+html.light [class*="border-teal-"][class*="/50"] {
+  border-color: rgba(66, 99, 235, 0.50) !important;
+}
+
+/* --- Shadows (light mode) --- */
+html.light [class*="shadow-teal"] {
+  --tw-shadow-color: rgba(66, 99, 235, 0.35) !important;
+}
+
+/* --- Ring (light mode) --- */
 html.light [class*="ring-teal"] {
-  --tw-ring-color: rgb(var(--accent-500) / 0.5) !important;
+  --tw-ring-color: rgba(66, 99, 235, 0.5) !important;
+}
+
+/* --- Gradient stops (light mode only) --- */
+html.light [class*="from-teal"] {
+  --tw-gradient-from: #748ffc !important;
+}
+
+html.light [class*="to-teal"] {
+  --tw-gradient-to: #c5cfff !important;
 }
 
 /* Light mode scrollbar */
 html.light ::-webkit-scrollbar-thumb {
-  background: rgb(var(--accent-500));
+  background: #4263eb;
 }
 
 html.light ::-webkit-scrollbar-thumb:hover {
-  background: rgb(var(--accent-600));
+  background: #3451b2;
 }
 
 /* Dark mode scrollbar keeps classic dark style */

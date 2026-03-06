@@ -13,15 +13,9 @@ export default {
       colors: {
         background: '#0a0a0a',
         surface: '#111111',
-        primary: 'rgb(var(--accent-500) / <alpha-value>)',
-        secondary: 'rgb(var(--accent-400) / <alpha-value>)',
+        primary: '#14b8a6', // Teal-500 matches reference
+        secondary: '#2dd4bf', // Teal-400
         accent: '#f43f5e',
-        teal: {
-          300: 'rgb(var(--accent-300) / <alpha-value>)',
-          400: 'rgb(var(--accent-400) / <alpha-value>)',
-          500: 'rgb(var(--accent-500) / <alpha-value>)',
-          600: 'rgb(var(--accent-600) / <alpha-value>)',
-        }
       },
       animation: {
         'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
