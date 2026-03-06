@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { useTheme, AccentColor } from '../../contexts/ThemeContext';
 import { SpotlightButton } from '../ui/SpotlightButton';
 import { Card } from '../ui/Card';
 import { authService, AuthUser } from '../../utils/authService';
@@ -14,6 +15,7 @@ interface ProfileProps {
 
 export const Profile: React.FC<ProfileProps> = ({ user, onSignOut }) => {
   const { t, language, setLanguage } = useLanguage();
+  const { accent, setAccent } = useTheme();
   const [workouts, setWorkouts] = useState<CompletedWorkout[]>([]);
   const [isDeletingAccount, setIsDeletingAccount] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -134,9 +136,28 @@ export const Profile: React.FC<ProfileProps> = ({ user, onSignOut }) => {
                 value={safeStorage.getItem('neuroLift_units') || 'metric'}
                 onChange={(e) => safeStorage.setItem('neuroLift_units', e.target.value)}
                 className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:border-teal-500 focus:outline-none transition-colors"
+                style={{ borderColor: 'var(--accent-500, #14b8a6)' }}
               >
                 <option value="metric">Metric (kg)</option>
                 <option value="imperial">Imperial (lbs)</option>
+              </select>
+            </div>
+
+            {/* Accent Color Setting */}
+            <div>
+              <label className="block text-sm font-bold text-zinc-400 uppercase tracking-widest mb-3">
+                {t('profile_accent') || 'Accent Color'}
+              </label>
+              <select
+                value={accent}
+                onChange={(e) => setAccent(e.target.value as AccentColor)}
+                className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:border-teal-500 focus:outline-none transition-colors"
+                style={{ borderColor: 'var(--accent-500, #14b8a6)' }}
+              >
+                <option value="default">{t('accent_default') || 'Default'}</option>
+                <option value="pink">{t('accent_pink') || 'Pink'}</option>
+                <option value="red">{t('accent_red') || 'Red'}</option>
+                <option value="yellow">{t('accent_yellow') || 'Yellow'}</option>
               </select>
             </div>
           </div>

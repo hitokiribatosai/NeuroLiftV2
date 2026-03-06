@@ -13,9 +13,15 @@ export default {
       colors: {
         background: '#0a0a0a',
         surface: '#111111',
-        primary: '#14b8a6', // Teal-500 matches reference
-        secondary: '#2dd4bf', // Teal-400
+        primary: 'var(--accent-500)', // Dynamically matches selected accent
+        secondary: 'var(--accent-400)',
         accent: '#f43f5e',
+        teal: {
+          300: 'var(--accent-300)',
+          400: 'var(--accent-400)',
+          500: 'var(--accent-500)',
+          600: 'var(--accent-600)',
+        }
       },
       animation: {
         'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
