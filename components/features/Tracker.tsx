@@ -662,13 +662,13 @@ export const Tracker: React.FC = () => {
               className="group relative flex items-center justify-center p-6 rounded-3xl border transition-all duration-300"
               style={{
                 backgroundColor: selectedMuscles.includes(muscle)
-                  ? (isLight ? '#4263eb' : '#14b8a6')
+                  ? 'rgb(var(--accent-500))'
                   : (isLight ? '#ffffff' : 'rgba(24,24,27,0.4)'),
                 borderColor: selectedMuscles.includes(muscle)
-                  ? (isLight ? '#4263eb' : '#14b8a6')
+                  ? 'rgb(var(--accent-500))'
                   : (isLight ? '#e4e4e7' : '#3f3f46'),
                 boxShadow: selectedMuscles.includes(muscle)
-                  ? (isLight ? '0 0 25px rgba(66,99,235,0.2)' : '0 0 25px rgba(20,184,166,0.2)')
+                  ? '0 0 25px rgb(var(--accent-500) / 0.2)'
                   : '0 1px 3px rgba(0,0,0,0.08)',
                 color: selectedMuscles.includes(muscle)
                   ? '#ffffff'
@@ -721,11 +721,11 @@ export const Tracker: React.FC = () => {
                   <div className="flex flex-wrap justify-center gap-2 mb-4 animate-in fade-in zoom-in duration-300">
                     {selectedMuscles.map(m => (
                       <span key={m} className="px-5 py-2 text-[0.625rem] font-black rounded-full uppercase tracking-[0.2em] shadow-sm" style={{
-                        backgroundColor: isLight ? 'rgba(66,99,235,0.1)' : 'rgba(20,184,166,0.1)',
+                        backgroundColor: 'rgb(var(--accent-500) / 0.1)',
                         borderWidth: '1px',
                         borderStyle: 'solid',
-                        borderColor: isLight ? 'rgba(66,99,235,0.3)' : 'rgba(20,184,166,0.3)',
-                        color: isLight ? '#4263eb' : '#5eead4',
+                        borderColor: 'rgb(var(--accent-500) / 0.3)',
+                        color: 'rgb(var(--accent-300))',
                       }}>
                         {getLocalizedMuscleName(m, language)}
                       </span>
@@ -743,13 +743,13 @@ export const Tracker: React.FC = () => {
                     className="group relative flex items-center justify-center p-6 rounded-3xl border transition-all duration-300"
                     style={{
                       backgroundColor: selectedMuscles.includes(muscle)
-                        ? (isLight ? '#4263eb' : '#14b8a6')
+                        ? 'rgb(var(--accent-500))'
                         : (isLight ? '#ffffff' : 'rgba(24,24,27,0.4)'),
                       borderColor: selectedMuscles.includes(muscle)
-                        ? (isLight ? '#4263eb' : '#14b8a6')
+                        ? 'rgb(var(--accent-500))'
                         : (isLight ? '#e4e4e7' : '#3f3f46'),
                       boxShadow: selectedMuscles.includes(muscle)
-                        ? (isLight ? '0 0 25px rgba(66,99,235,0.2)' : '0 0 25px rgba(20,184,166,0.2)')
+                        ? '0 0 25px rgb(var(--accent-500) / 0.2)'
                         : '0 1px 3px rgba(0,0,0,0.08)',
                       color: selectedMuscles.includes(muscle)
                         ? '#ffffff'
@@ -919,12 +919,12 @@ export const Tracker: React.FC = () => {
                               <label
                                 style={{
                                   backgroundColor: selectedExercises.includes(name)
-                                    ? (isLight ? 'rgba(66,99,235,0.08)' : 'rgba(20,184,166,0.05)')
+                                    ? 'rgb(var(--accent-500) / 0.08)'
                                     : (isLight ? '#ffffff' : 'rgba(24,24,27,0.6)'),
                                   color: isLight ? '#18181b' : '#ffffff',
                                 }}
                                 className={`flex items-center gap-4 p-5 border-2 rounded-2xl cursor-pointer transition-all duration-300 ${selectedExercises.includes(name)
-                                  ? (isLight ? 'border-blue-500 shadow-md' : 'border-teal-500 shadow-md')
+                                  ? 'border-teal-500 shadow-md'
                                   : (isLight ? 'border-zinc-200 hover:border-zinc-300' : 'border-zinc-800 hover:border-zinc-700')}`}>
                                 <input
                                   type="checkbox"
@@ -936,7 +936,7 @@ export const Tracker: React.FC = () => {
                                   className="hidden"
                                 />
                                 <div className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all ${selectedExercises.includes(name)
-                                  ? (isLight ? 'bg-blue-500 border-blue-500 text-white shadow-lg shadow-blue-500/20' : 'bg-teal-500 border-teal-500 text-white shadow-lg shadow-teal-500/20')
+                                  ? 'bg-teal-500 border-teal-500 text-white shadow-lg shadow-teal-500/20'
                                   : (isLight ? 'border-zinc-300' : 'border-zinc-700')}`}>
                                   {selectedExercises.includes(name) && <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 13l4 4L19 7" /></svg>}
                                 </div>
@@ -992,12 +992,12 @@ export const Tracker: React.FC = () => {
                             <label
                               style={{
                                 backgroundColor: selectedExercises.includes(ex)
-                                  ? (isLight ? 'rgba(66,99,235,0.08)' : 'rgba(20,184,166,0.05)')
+                                  ? 'rgb(var(--accent-500) / 0.08)'
                                   : (isLight ? '#ffffff' : 'rgba(24,24,27,0.6)'),
                                 color: isLight ? '#18181b' : '#ffffff',
                               }}
                               className={`flex items-center gap-4 p-5 border-2 rounded-2xl cursor-pointer transition-all duration-300 ${selectedExercises.includes(ex)
-                                ? (isLight ? 'border-blue-500 shadow-md' : 'border-teal-500 shadow-md')
+                                ? 'border-teal-500 shadow-md'
                                 : (isLight ? 'border-zinc-200 hover:border-zinc-300' : 'border-zinc-800 hover:border-zinc-700')}`}>
                               <input
                                 type="checkbox"
@@ -1006,7 +1006,7 @@ export const Tracker: React.FC = () => {
                                 className="hidden"
                               />
                               <div className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all ${selectedExercises.includes(ex)
-                                ? (isLight ? 'bg-blue-500 border-blue-500 text-white shadow-lg shadow-blue-500/20' : 'bg-teal-500 border-teal-500 text-white shadow-lg shadow-teal-500/20')
+                                ? 'bg-teal-500 border-teal-500 text-white shadow-lg shadow-teal-500/20'
                                 : (isLight ? 'border-zinc-300' : 'border-zinc-700')}`}>
                                 {selectedExercises.includes(ex) && <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 13l4 4L19 7" /></svg>}
                               </div>
@@ -1062,9 +1062,9 @@ export const Tracker: React.FC = () => {
                               {emgExercises.length > 0 && (
                                 <div>
                                   <h5 className="text-[0.625rem] font-black uppercase tracking-[0.4em] mb-6 ml-1 flex items-center gap-4"
-                                    style={{ color: isLight ? '#0d9488' : '#2dd4bf' }}>
+                                    style={{ color: 'rgb(var(--accent-400))' }}>
                                     {t('emg_tested_title')}
-                                    <div className="h-px flex-1" style={{ backgroundColor: isLight ? '#0d948840' : '#2dd4bf30' }}></div>
+                                    <div className="h-px flex-1" style={{ backgroundColor: 'rgb(var(--accent-400) / 0.3)' }}></div>
                                   </h5>
                                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     {emgExercises.map(ex => renderExerciseCard(ex, true))}
@@ -1326,7 +1326,7 @@ export const Tracker: React.FC = () => {
                           <button
                             onClick={() => setTutorialExercise(ex.name)}
                             className="p-2 transition-colors"
-                            style={{ color: isLight ? '#4263eb' : '#a1a1aa' }}
+                            style={{ color: 'rgb(var(--accent-500))' }}
                             title={t('modal_watch_video')}
                           >
                             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>

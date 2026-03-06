@@ -766,7 +766,7 @@ const VolumeChart = ({ history, t, selectedMuscle, onMuscleChange, language }: {
           <path
             d={pathData}
             fill="none"
-            stroke="#14b8a6"
+            stroke="rgb(var(--accent-500))"
             strokeWidth="3"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -778,7 +778,7 @@ const VolumeChart = ({ history, t, selectedMuscle, onMuscleChange, language }: {
               cx={p.x}
               cy={p.y}
               r="3"
-              fill="#14b8a6"
+              fill="rgb(var(--accent-500))"
               className="animate-pulse"
             />
           ))}

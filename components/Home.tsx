@@ -31,7 +31,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentView }) => {
 
           <h1 className={`text-5xl md:text-7xl font-black uppercase tracking-tighter leading-tight ${isLight ? 'text-zinc-900' : 'text-white'}`}>
             {t('home_hero_title_1')} <br />
-            <span className={`text-transparent bg-clip-text bg-gradient-to-r ${isLight ? 'from-blue-600 to-blue-400' : 'from-teal-400 to-teal-200'}`}>{t('home_hero_title_2')}</span>
+            <span className={`text-transparent bg-clip-text bg-gradient-to-r ${isLight ? 'from-teal-600 to-teal-400' : 'from-teal-400 to-teal-200'}`}>{t('home_hero_title_2')}</span>
           </h1>
 
           <p className={`text-lg max-w-lg mx-auto leading-relaxed ${isLight ? 'text-zinc-600' : 'text-zinc-400'}`}>
@@ -100,12 +100,12 @@ export const Home: React.FC<HomeProps> = ({ setCurrentView }) => {
                 target="_blank"
                 rel="noreferrer"
                 className={`group p-5 rounded-2xl border transition-all duration-300 hover:scale-[1.02] ${isLight
-                  ? 'bg-white border-zinc-200 hover:border-blue-300 hover:shadow-md'
+                  ? 'bg-white border-zinc-200 hover:border-teal-300 hover:shadow-md'
                   : 'bg-zinc-900/50 border-zinc-800 hover:border-teal-500/50 hover:shadow-lg hover:shadow-teal-500/5'
                   }`}
               >
                 <div className="flex items-start gap-3">
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5 ${isLight ? 'bg-blue-50 text-blue-600' : 'bg-teal-500/10 text-teal-400'}`}>
+                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5 ${isLight ? 'bg-teal-500/10 text-teal-600' : 'bg-teal-500/10 text-teal-400'}`}>
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>

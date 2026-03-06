@@ -381,7 +381,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) =
               className="relative flex flex-col items-center justify-center gap-1.5 py-2 px-1 rounded-2xl transition-all duration-300 min-w-[64px]"
               style={{
                 color: currentView === item.id
-                  ? (theme === 'light' ? '#4263eb' : '#2dd4bf')
+                  ? 'rgb(var(--accent-400))'
                   : (theme === 'light' ? '#71717a' : '#a1a1aa'),
               }}
             >

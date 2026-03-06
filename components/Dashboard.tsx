@@ -223,23 +223,23 @@ export const Dashboard: React.FC<DashboardProps> = ({ setCurrentView }) => {
 
     const renderVolumeChartCard = () => {
         if (!chartData) return null;
-    return (
-      <Card className="p-8 bg-zinc-900/40 border-zinc-800 rounded-[3rem] shadow-sm h-full">
-        <div ref={chartRef} className="flex justify-between items-center mb-10">
-          <div>
-            <h3 className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.4em]">Volume Progress</h3>
-            <div className="text-[9px] text-teal-500 font-bold uppercase tracking-widest mt-1 opacity-70">7 Sessions</div>
-          </div>
-          <select
-            value={selectedMuscle}
-            onChange={(e) => setSelectedMuscle(e.target.value)}
-            className="bg-zinc-800/50 border border-zinc-800 rounded-xl px-4 py-2 text-[10px] font-black uppercase tracking-widest text-teal-400 outline-none focus:border-teal-500 transition-all cursor-pointer"
-          >
-            {muscleGroups.map(m => (
-              <option key={m} value={m}>{m === 'Total' ? 'Overall' : getLocalizedMuscleName(m, language)}</option>
-            ))}
-          </select>
-        </div>
+        return (
+            <Card className="p-8 bg-zinc-900/40 border-zinc-800 rounded-[3rem] shadow-sm h-full">
+                <div ref={chartRef} className="flex justify-between items-center mb-10">
+                    <div>
+                        <h3 className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.4em]">Volume Progress</h3>
+                        <div className="text-[9px] text-teal-500 font-bold uppercase tracking-widest mt-1 opacity-70">7 Sessions</div>
+                    </div>
+                    <select
+                        value={selectedMuscle}
+                        onChange={(e) => setSelectedMuscle(e.target.value)}
+                        className="bg-zinc-800/50 border border-zinc-800 rounded-xl px-4 py-2 text-[10px] font-black uppercase tracking-widest text-teal-400 outline-none focus:border-teal-500 transition-all cursor-pointer"
+                    >
+                        {muscleGroups.map(m => (
+                            <option key={m} value={m}>{m === 'Total' ? 'Overall' : getLocalizedMuscleName(m, language)}</option>
+                        ))}
+                    </select>
+                </div>
 
                 <div className="relative h-48 w-full group">
                     <svg viewBox="0 0 300 100" className="w-full h-full drop-shadow-[0_10px_15px_rgba(0,0,0,0.5)]">
@@ -278,7 +278,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ setCurrentView }) => {
                                     animate={{ scale: 1 }}
                                     transition={{ delay: i * 0.1 }}
                                     cx={x} cy={y} r="3"
-                                    fill="#14b8a6"
+                                    fill="rgb(var(--accent-500))"
                                     className="shadow-lg"
                                 />
                             );
@@ -286,8 +286,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ setCurrentView }) => {
 
                         <defs>
                             <linearGradient id="chartGradient" x1="0" y1="0" x2="1" y2="0">
-                                <stop offset="0%" stopColor="#14b8a6" />
-                                <stop offset="100%" stopColor="#2dd4bf" />
+                                <stop offset="0%" stopColor="rgb(var(--accent-500))" />
+                                <stop offset="100%" stopColor="rgb(var(--accent-400))" />
                             </linearGradient>
                         </defs>
                     </svg>
@@ -295,22 +295,22 @@ export const Dashboard: React.FC<DashboardProps> = ({ setCurrentView }) => {
                     <div className="flex justify-between mt-6 text-[9px] text-zinc-600 font-black uppercase tracking-widest px-2">
                         <span>{chartData.data[0].date}</span>
                         <span>{chartData.data[chartData.data.length - 1].date}</span>
-          </div>
-        </div>
+                    </div>
+                </div>
 
-        <Tooltip
-          id="dashboard_volume_chart"
-          isOpen={volumeChartTooltip.isOpen}
-          onDismiss={volumeChartTooltip.dismiss}
-          position="top"
-          targetRef={chartRef}
-        >
-          <p className="text-sm font-bold mb-1">{t('tooltip_volume_chart_title')}</p>
-          <p className="text-xs opacity-90">{t('tooltip_volume_chart_desc')}</p>
-        </Tooltip>
-      </Card>
-    );
-  };
+                <Tooltip
+                    id="dashboard_volume_chart"
+                    isOpen={volumeChartTooltip.isOpen}
+                    onDismiss={volumeChartTooltip.dismiss}
+                    position="top"
+                    targetRef={chartRef}
+                >
+                    <p className="text-sm font-bold mb-1">{t('tooltip_volume_chart_title')}</p>
+                    <p className="text-xs opacity-90">{t('tooltip_volume_chart_desc')}</p>
+                </Tooltip>
+            </Card>
+        );
+    };
 
     const renderQuickStartCard = () => {
         if (!hasRealWorkoutsState) {
@@ -439,10 +439,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ setCurrentView }) => {
                     </motion.div>
                 </div>
 
-                 {/* Actionable Sections */}
-                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                     {/* Quick Start - Primary Action (Always Top/Left) */}
-                     {renderQuickStartCard()}
+                {/* Actionable Sections */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {/* Quick Start - Primary Action (Always Top/Left) */}
+                    {renderQuickStartCard()}
 
                     {/* Desktop View: Grid Layout for other cards */}
                     <div className="hidden md:contents">
@@ -476,7 +476,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ setCurrentView }) => {
                                 key={i}
                                 animate={{
                                     width: activeIndex === i ? 24 : 6,
-                                    backgroundColor: activeIndex === i ? '#14b8a6' : '#27272a'
+                                    backgroundColor: activeIndex === i ? 'rgb(var(--accent-500))' : '#27272a'
                                 }}
                                 className="h-1.5 rounded-full"
                             />
