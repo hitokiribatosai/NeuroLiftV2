@@ -520,6 +520,22 @@ export const getExerciseTranslation = (name: string, toLang: Language): string =
   return name;
 };
 
+/** Given any translated exercise name, return the English name */
+export const getEnglishExerciseName = (name: string): string => {
+  for (const major of Object.values(db)) {
+    for (const sub of Object.values(major)) {
+      for (const cat of Object.values(sub)) {
+        for (const ex of cat) {
+          if (ex.en === name || ex.fr === name || ex.ar === name) {
+            return ex.en;
+          }
+        }
+      }
+    }
+  }
+  return name;
+};
+
 export const getExerciseLinks = (exerciseName: string) => {
   const scienceMap: Record<string, string> = {
     "Incline Dumbbell Press": "https://www.strengthlog.com/incline-dumbbell-press/",

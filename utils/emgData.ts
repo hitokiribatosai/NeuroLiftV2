@@ -2,6 +2,8 @@
 // Data sourced from ACE (American Council on Exercise) commissioned studies,
 // peer-reviewed EMG research, and established exercise science publications.
 
+import { getEnglishExerciseName } from './exerciseData';
+
 export interface EmgEntry {
     activation: string;   // e.g. "98% MVC" or "High"
     source: string;       // e.g. "ACE 2012"
@@ -141,12 +143,14 @@ export const EMG_SOURCES = [
     { name: "Lehman et al. (2004)", description: "EMG analysis of rowing exercises", url: "https://pubmed.ncbi.nlm.nih.gov/" },
 ];
 
-/** Check if an exercise is EMG verified */
+/** Check if an exercise is EMG verified (works with any language) */
 export const isEmgVerified = (exerciseName: string): boolean => {
-    return exerciseName in EMG_DATA;
+    const englishName = getEnglishExerciseName(exerciseName);
+    return englishName in EMG_DATA;
 };
 
-/** Get EMG data for an exercise (null if not verified) */
+/** Get EMG data for an exercise (works with any language, null if not verified) */
 export const getEmgData = (exerciseName: string): EmgEntry | null => {
-    return EMG_DATA[exerciseName] || null;
+    const englishName = getEnglishExerciseName(exerciseName);
+    return EMG_DATA[englishName] || null;
 };
