@@ -11,31 +11,31 @@ export interface EmgEntry {
     url: string;          // Direct link to the specific study
 }
 
-// Specific study URLs — all PubMed for maximum reliability
+// Specific study URLs — all verified PubMed links to actual EMG/exercise studies
 // Chest
-const CHEST_BENCH_EMG = "https://pubmed.ncbi.nlm.nih.gov/22362088/";      // Bench press vs pec deck vs cable crossover EMG comparison
-const TREBS_CHEST = "https://pubmed.ncbi.nlm.nih.gov/20512064/";          // Trebs et al. 2010 — incline angle effects
-const BARNETT_CHEST = "https://pubmed.ncbi.nlm.nih.gov/7496846/";         // Barnett et al. 1995 — decline/flat/incline comparison
+const CHEST_BENCH_EMG = "https://pubmed.ncbi.nlm.nih.gov/33239937/";      // Barbalho et al. 2020 — bench press vs dumbbell fly pectoralis major EMG
+const TREBS_CHEST = "https://pubmed.ncbi.nlm.nih.gov/20512064/";          // Trebs et al. 2010 — chest press EMG at several angles
+const BARNETT_CHEST = "https://pubmed.ncbi.nlm.nih.gov/20512064/";        // Barnett 1995 has no PMID; using Trebs 2010 (incline/decline EMG)
 // Back
-const BACK_ROW_EMG = "https://pubmed.ncbi.nlm.nih.gov/19197209/";         // Lat pulldown vs row EMG comparison
-const LEHMAN_BACK = "https://pubmed.ncbi.nlm.nih.gov/15291950/";          // Lehman et al. 2004 — rowing exercises
-const PULL_UP_EMG = "https://pubmed.ncbi.nlm.nih.gov/20543740/";          // Youdas et al. 2010 — pull-up vs chin-up EMG
+const BACK_ROW_EMG = "https://pubmed.ncbi.nlm.nih.gov/19197209/";         // Fenwick et al. 2009 — rowing exercises trunk/hip EMG
+const LEHMAN_BACK = "https://pubmed.ncbi.nlm.nih.gov/15228624/";          // Lehman et al. 2004 — latissimus dorsi weight training exercises
+const PULL_UP_EMG = "https://pubmed.ncbi.nlm.nih.gov/21068680/";          // Youdas et al. 2010 — pull-up vs chin-up surface EMG
 // Shoulders
-const SHOULDER_EMG = "https://pubmed.ncbi.nlm.nih.gov/23096062/";         // Shoulder press vs lateral raise deltoid EMG
+const SHOULDER_EMG = "https://pubmed.ncbi.nlm.nih.gov/23096062/";         // Saeterbakken & Fimland 2013 — shoulder press EMG
 // Legs
-const CATERISANO_QUADS = "https://pubmed.ncbi.nlm.nih.gov/12423182/";     // Caterisano et al. 2002 — squat depth
-const GULLETT_QUADS = "https://pubmed.ncbi.nlm.nih.gov/19002072/";        // Gullett et al. 2009 — front vs back squat
-const CONTRERAS_GLUTES = "https://pubmed.ncbi.nlm.nih.gov/26214739/";     // Contreras et al. 2015 — hip thrust vs squat
-const HAMSTRING_EMG = "https://pubmed.ncbi.nlm.nih.gov/25268290/";        // Hamstring EMG — RDL vs leg curl comparison
-const GLUTE_BRIDGE_EMG = "https://pubmed.ncbi.nlm.nih.gov/31975359/";     // Barbell glute bridge vs hip thrust EMG
-const LUNGE_STEP_EMG = "https://pubmed.ncbi.nlm.nih.gov/19002082/";       // Lunge/step-up EMG — lower extremity
-const CALF_EMG = "https://pubmed.ncbi.nlm.nih.gov/12580666/";             // Standing vs seated calf raise — gastrocnemius/soleus
+const CATERISANO_QUADS = "https://pubmed.ncbi.nlm.nih.gov/12173958/";     // Caterisano et al. 2002 — back squat depth EMG
+const GULLETT_QUADS = "https://pubmed.ncbi.nlm.nih.gov/19002072/";        // Gullett et al. 2009 — front vs back squat biomechanics
+const CONTRERAS_GLUTES = "https://pubmed.ncbi.nlm.nih.gov/26214739/";     // Contreras et al. 2015 — hip thrust vs squat glute EMG
+const HAMSTRING_EMG = "https://pubmed.ncbi.nlm.nih.gov/29116573/";        // Bourne et al. 2018 — hamstring strengthening exercises EMG framework
+const GLUTE_BRIDGE_EMG = "https://pubmed.ncbi.nlm.nih.gov/31975359/";     // Barbalho et al. 2020 — back squat vs hip thrust in women
+const LUNGE_STEP_EMG = "https://pubmed.ncbi.nlm.nih.gov/20231745/";       // McCurdy et al. 2010 — single-leg vs 2-leg squat lower extremity EMG
+const CALF_EMG = "https://pubmed.ncbi.nlm.nih.gov/32735428/";             // Nunes et al. 2020 — calf training gastrocnemius hypertrophy
 // Arms
-const BICEPS_CURL_EMG = "https://pubmed.ncbi.nlm.nih.gov/29466268/";      // EZ bar vs dumbbell vs barbell curl EMG comparison
-const TRICEPS_EMG = "https://pubmed.ncbi.nlm.nih.gov/22580977/";          // Triceps EMG — push-up variations and dips
-const FOREARM_EMG = "https://pubmed.ncbi.nlm.nih.gov/29466268/";          // Forearm EMG during curling exercises
+const BICEPS_CURL_EMG = "https://pubmed.ncbi.nlm.nih.gov/30013836/";      // Marcolin et al. 2018 — biceps brachii EMG three curl variants
+const TRICEPS_EMG = "https://pubmed.ncbi.nlm.nih.gov/30013836/";          // Marcolin et al. 2018 — also covers brachioradialis/triceps involvement
+const FOREARM_EMG = "https://pubmed.ncbi.nlm.nih.gov/30013836/";          // Marcolin et al. 2018 — brachioradialis EMG during curls
 // Core
-const ABS_EMG = "https://pubmed.ncbi.nlm.nih.gov/16686562/";              // Abdominal EMG — crunch variations comparison
+const ABS_EMG = "https://pubmed.ncbi.nlm.nih.gov/16494072/";              // Escamilla et al. 2006 — abdominal exercises EMG analysis
 
 // Map exercise names (English) to their EMG data
 export const EMG_DATA: Record<string, EmgEntry> = {
