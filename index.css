@@ -10,9 +10,50 @@
   --safe-area-left: env(safe-area-inset-left, 0px);
   --safe-area-right: env(safe-area-inset-right, 0px);
 
+  /* Accent color variables — default is Teal */
+  --accent-300: 94 234 212;
+  --accent-400: 45 212 191;
+  --accent-500: 20 184 166;
+  --accent-600: 13 148 136;
+
   /* color-scheme is set dynamically by ThemeContext per theme */
   forced-color-adjust: none;
   /* Stops system from overriding colors */
+}
+
+/* ══════ Accent Color Overrides ══════ */
+
+/* Pink accent */
+[data-accent="pink"] {
+  --accent-300: 249 168 212;
+  --accent-400: 244 114 182;
+  --accent-500: 236 72 153;
+  --accent-600: 219 39 119;
+}
+
+/* Red accent */
+[data-accent="red"] {
+  --accent-300: 252 165 165;
+  --accent-400: 248 113 113;
+  --accent-500: 239 68 68;
+  --accent-600: 220 38 38;
+}
+
+/* Yellow accent */
+[data-accent="yellow"] {
+  --accent-300: 253 224 71;
+  --accent-400: 250 204 21;
+  --accent-500: 245 158 11;
+  --accent-600: 217 119 6;
+}
+
+/* Light mode: default accent switches to Royal Blue */
+html.light:not([data-accent]),
+html.light[data-accent="default"] {
+  --accent-300: 147 197 253;
+  --accent-400: 116 143 252;
+  --accent-500: 66 99 235;
+  --accent-600: 52 81 178;
 }
 
 html {

@@ -2,15 +2,20 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { safeStorage } from '../utils/storage';
 
 export type Theme = 'dark' | 'light';
+export type AccentColor = 'default' | 'pink' | 'red' | 'yellow';
 
 interface ThemeContextType {
     theme: Theme;
     setTheme: (t: Theme) => void;
+    accent: AccentColor;
+    setAccent: (a: AccentColor) => void;
 }
 
 const ThemeContext = createContext<ThemeContextType>({
     theme: 'dark',
     setTheme: () => { },
+    accent: 'default',
+    setAccent: () => { },
 });
 
 export const useTheme = () => useContext(ThemeContext);
@@ -19,6 +24,11 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const [theme, setThemeState] = useState<Theme>(() => {
         const saved = safeStorage.getItem('neuroLift_theme') as Theme;
         return saved === 'light' ? 'light' : 'dark';
+    });
+
+    const [accent, setAccentState] = useState<AccentColor>(() => {
+        const saved = safeStorage.getItem('neuroLift_accent') as AccentColor;
+        return (['default', 'pink', 'red', 'yellow'].includes(saved) ? saved : 'default') as AccentColor;
     });
 
     useEffect(() => {
@@ -47,11 +57,18 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         safeStorage.setItem('neuroLift_theme', theme);
     }, [theme]);
 
+    useEffect(() => {
+        document.documentElement.setAttribute('data-accent', accent);
+        safeStorage.setItem('neuroLift_accent', accent);
+    }, [accent]);
+
     const setTheme = (t: Theme) => setThemeState(t);
+    const setAccent = (a: AccentColor) => setAccentState(a);
 
     return (
-        <ThemeContext.Provider value={{ theme, setTheme }}>
+        <ThemeContext.Provider value={{ theme, setTheme, accent, setAccent }}>
             {children}
         </ThemeContext.Provider>
     );
 };
+
