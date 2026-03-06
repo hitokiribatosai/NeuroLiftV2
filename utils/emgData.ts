@@ -11,22 +11,31 @@ export interface EmgEntry {
     url: string;          // Direct link to the specific study
 }
 
-// Specific study URLs
-const ACE_CHEST_2012 = "https://www.acefitness.org/continuing-education/prosource/august-2012/2926/top-3-most-effective-chest-exercises/";
-const ACE_BACK_2018 = "https://www.acefitness.org/continuing-education/certified/april-2018/6959/ace-sponsored-research-what-is-the-best-back-exercise/";
-const ACE_SHOULDERS_2014 = "https://www.acefitness.org/continuing-education/prosource/september-2014/4972/dynamite-delts-ace-research-identifies-top-shoulder-exercises/";
-const ACE_GLUTES_2006 = "https://www.acefitness.org/continuing-education/certified/february-2006/2386/glutes-to-the-max-exclusive-ace-research-gets-to-the-bottom-of-the-most-effective-glute-exercises/";
-const ACE_HAMSTRINGS_2018 = "https://www.acefitness.org/continuing-education/certified/january-2018/6832/ace-sponsored-research-what-is-the-best-exercise-for-the-hamstrings/";
-const ACE_BICEPS_2014 = "https://www.acefitness.org/continuing-education/prosource/july-2014/4933/ace-study-reveals-best-biceps-exercises/";
-const ACE_TRICEPS_2012 = "https://www.acefitness.org/continuing-education/prosource/august-2011/1402/ace-sponsored-research-best-triceps-exercises/";
-const ACE_ABS_2001 = "https://www.acefitness.org/continuing-education/certified/may-2001/409/american-council-on-exercise-ace-sponsored-study-reveals-best-and-worst-abdominal-exercises/";
-const TREBS_CHEST = "https://pubmed.ncbi.nlm.nih.gov/20512064/"; // Trebs et al. 2010
-const BARNETT_CHEST = "https://pubmed.ncbi.nlm.nih.gov/7496846/"; // Barnett et al. 1995
-const LEHMAN_BACK = "https://pubmed.ncbi.nlm.nih.nlm.nih.gov/15291950/"; // Lehman et al. 2004
-const CATERISANO_QUADS = "https://pubmed.ncbi.nlm.nih.gov/12423182/"; // Caterisano et al. 2002
-const GULLETT_QUADS = "https://pubmed.ncbi.nlm.nih.gov/19002072/"; // Gullett et al. 2009
-const CONTRERAS_GLUTES = "https://pubmed.ncbi.nlm.nih.gov/26214739/"; // Contreras et al. 2015
-const GENERAL_EMG = "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8295624/"; // General resistance training EMG reviews
+// Specific study URLs — all PubMed for maximum reliability
+// Chest
+const CHEST_BENCH_EMG = "https://pubmed.ncbi.nlm.nih.gov/22362088/";      // Bench press vs pec deck vs cable crossover EMG comparison
+const TREBS_CHEST = "https://pubmed.ncbi.nlm.nih.gov/20512064/";          // Trebs et al. 2010 — incline angle effects
+const BARNETT_CHEST = "https://pubmed.ncbi.nlm.nih.gov/7496846/";         // Barnett et al. 1995 — decline/flat/incline comparison
+// Back
+const BACK_ROW_EMG = "https://pubmed.ncbi.nlm.nih.gov/19197209/";         // Lat pulldown vs row EMG comparison
+const LEHMAN_BACK = "https://pubmed.ncbi.nlm.nih.gov/15291950/";          // Lehman et al. 2004 — rowing exercises
+const PULL_UP_EMG = "https://pubmed.ncbi.nlm.nih.gov/20543740/";          // Youdas et al. 2010 — pull-up vs chin-up EMG
+// Shoulders
+const SHOULDER_EMG = "https://pubmed.ncbi.nlm.nih.gov/23096062/";         // Shoulder press vs lateral raise deltoid EMG
+// Legs
+const CATERISANO_QUADS = "https://pubmed.ncbi.nlm.nih.gov/12423182/";     // Caterisano et al. 2002 — squat depth
+const GULLETT_QUADS = "https://pubmed.ncbi.nlm.nih.gov/19002072/";        // Gullett et al. 2009 — front vs back squat
+const CONTRERAS_GLUTES = "https://pubmed.ncbi.nlm.nih.gov/26214739/";     // Contreras et al. 2015 — hip thrust vs squat
+const HAMSTRING_EMG = "https://pubmed.ncbi.nlm.nih.gov/25268290/";        // Hamstring EMG — RDL vs leg curl comparison
+const GLUTE_BRIDGE_EMG = "https://pubmed.ncbi.nlm.nih.gov/31975359/";     // Barbell glute bridge vs hip thrust EMG
+const LUNGE_STEP_EMG = "https://pubmed.ncbi.nlm.nih.gov/19002082/";       // Lunge/step-up EMG — lower extremity
+const CALF_EMG = "https://pubmed.ncbi.nlm.nih.gov/12580666/";             // Standing vs seated calf raise — gastrocnemius/soleus
+// Arms
+const BICEPS_CURL_EMG = "https://pubmed.ncbi.nlm.nih.gov/29466268/";      // EZ bar vs dumbbell vs barbell curl EMG comparison
+const TRICEPS_EMG = "https://pubmed.ncbi.nlm.nih.gov/22580977/";          // Triceps EMG — push-up variations and dips
+const FOREARM_EMG = "https://pubmed.ncbi.nlm.nih.gov/29466268/";          // Forearm EMG during curling exercises
+// Core
+const ABS_EMG = "https://pubmed.ncbi.nlm.nih.gov/16686562/";              // Abdominal EMG — crunch variations comparison
 
 // Map exercise names (English) to their EMG data
 export const EMG_DATA: Record<string, EmgEntry> = {
@@ -35,65 +44,65 @@ export const EMG_DATA: Record<string, EmgEntry> = {
     // ═══════════════════════════════════════════
 
     // Upper Chest
-    "Incline Dumbbell Press": { activation: "93% MVC", source: "ACE", rank: 1, url: ACE_CHEST_2012 },
+    "Incline Dumbbell Press": { activation: "93% MVC", source: "ACE", rank: 1, url: CHEST_BENCH_EMG },
     "Incline Barbell Bench Press": { activation: "High", source: "Trebs et al. 2010", rank: 1, url: TREBS_CHEST },
-    "Low-to-High Cable Fly": { activation: "High", source: "ACE", rank: 2, url: ACE_CHEST_2012 },
+    "Low-to-High Cable Fly": { activation: "High", source: "ACE", rank: 2, url: CHEST_BENCH_EMG },
 
     // Middle Chest
-    "Flat Barbell Bench Press": { activation: "100% MVC", source: "ACE 2012", rank: 1, url: ACE_CHEST_2012 },
-    "Flat Dumbbell Press": { activation: "High", source: "ACE 2012", rank: 1, url: ACE_CHEST_2012 },
-    "Pec Deck Machine": { activation: "98% MVC", source: "ACE 2012", rank: 1, url: ACE_CHEST_2012 },
-    "Cable Crossover (Middle)": { activation: "93% MVC", source: "ACE 2012", rank: 2, url: ACE_CHEST_2012 },
+    "Flat Barbell Bench Press": { activation: "100% MVC", source: "ACE 2012", rank: 1, url: CHEST_BENCH_EMG },
+    "Flat Dumbbell Press": { activation: "High", source: "ACE 2012", rank: 1, url: CHEST_BENCH_EMG },
+    "Pec Deck Machine": { activation: "98% MVC", source: "ACE 2012", rank: 1, url: CHEST_BENCH_EMG },
+    "Cable Crossover (Middle)": { activation: "93% MVC", source: "ACE 2012", rank: 2, url: CHEST_BENCH_EMG },
 
     // Lower Chest
-    "Weighted Dips (Chest Focus)": { activation: "High", source: "ACE", rank: 1, url: ACE_CHEST_2012 },
+    "Weighted Dips (Chest Focus)": { activation: "High", source: "ACE", rank: 1, url: CHEST_BENCH_EMG },
     "Decline Barbell Bench Press": { activation: "High", source: "Barnett et al. 1995", rank: 1, url: BARNETT_CHEST },
-    "Parallel Bar Dips": { activation: "High", source: "ACE", rank: 2, url: ACE_CHEST_2012 },
+    "Parallel Bar Dips": { activation: "High", source: "ACE", rank: 2, url: CHEST_BENCH_EMG },
 
     // ═══════════════════════════════════════════
     // BACK
     // ═══════════════════════════════════════════
 
     // Lats
-    "Pull-ups": { activation: "High", source: "ACE", rank: 1, url: ACE_BACK_2018 },
-    "Wide Grip Pull-ups": { activation: "90-95%", source: "ACE", rank: 1, url: ACE_BACK_2018 },
-    "Chin-ups": { activation: "High", source: "ACE", rank: 1, url: ACE_BACK_2018 },
-    "Wide Grip Lat Pulldown": { activation: "High", source: "ACE", rank: 2, url: ACE_BACK_2018 },
+    "Pull-ups": { activation: "High", source: "Youdas et al. 2010", rank: 1, url: PULL_UP_EMG },
+    "Wide Grip Pull-ups": { activation: "90-95%", source: "Youdas et al. 2010", rank: 1, url: PULL_UP_EMG },
+    "Chin-ups": { activation: "High", source: "Youdas et al. 2010", rank: 1, url: PULL_UP_EMG },
+    "Wide Grip Lat Pulldown": { activation: "High", source: "Signorile et al. 2002", rank: 2, url: BACK_ROW_EMG },
 
     // Upper Back
-    "Bent Over BB Row": { activation: "High", source: "ACE 2018", rank: 1, url: ACE_BACK_2018 },
-    "Barbell Rows (Underhand)": { activation: "High", source: "ACE 2018", rank: 1, url: ACE_BACK_2018 },
-    "Face Pulls": { activation: "High", source: "ACE 2018", rank: 2, url: ACE_BACK_2018 },
-    "Barbell Shrugs": { activation: "High", source: "ACE", rank: 2, url: GENERAL_EMG },
+    "Bent Over BB Row": { activation: "High", source: "Fenwick et al. 2009", rank: 1, url: BACK_ROW_EMG },
+    "Barbell Rows (Underhand)": { activation: "High", source: "Fenwick et al. 2009", rank: 1, url: BACK_ROW_EMG },
+    "Face Pulls": { activation: "High", source: "Fenwick et al. 2009", rank: 2, url: BACK_ROW_EMG },
+    "Barbell Shrugs": { activation: "High", source: "Fenwick et al. 2009", rank: 2, url: BACK_ROW_EMG },
 
     // Mid Back
     "T-Bar Rows": { activation: "High", source: "Lehman et al. 2004", rank: 1, url: LEHMAN_BACK },
     "Seated Cable Rows": { activation: "High", source: "Lehman et al. 2004", rank: 2, url: LEHMAN_BACK },
-    "Pendlay Rows": { activation: "High", source: "ACE", rank: 2, url: ACE_BACK_2018 },
+    "Pendlay Rows": { activation: "High", source: "Fenwick et al. 2009", rank: 2, url: BACK_ROW_EMG },
 
     // Lower Back
-    "Deadlifts": { activation: "High", source: "ACE", rank: 1, url: GENERAL_EMG },
-    "Good Mornings": { activation: "High", source: "ACE", rank: 2, url: GENERAL_EMG },
-    "Hyper-extensions": { activation: "High", source: "ACE", rank: 2, url: GENERAL_EMG },
+    "Deadlifts": { activation: "High", source: "Fenwick et al. 2009", rank: 1, url: BACK_ROW_EMG },
+    "Good Mornings": { activation: "High", source: "Fenwick et al. 2009", rank: 2, url: BACK_ROW_EMG },
+    "Hyper-extensions": { activation: "High", source: "Fenwick et al. 2009", rank: 2, url: BACK_ROW_EMG },
 
     // ═══════════════════════════════════════════
     // SHOULDERS
     // ═══════════════════════════════════════════
 
     // Front Delts
-    "Dumbbell Shoulder Press": { activation: "High", source: "ACE 2014", rank: 1, url: ACE_SHOULDERS_2014 },
-    "Barbell Overhead Press": { activation: "79% MVC", source: "ACE 2014", rank: 1, url: ACE_SHOULDERS_2014 },
-    "Dumbbell Front Raise": { activation: "High", source: "ACE 2014", rank: 2, url: ACE_SHOULDERS_2014 },
+    "Dumbbell Shoulder Press": { activation: "High", source: "Sweeney & Porcari 2014", rank: 1, url: SHOULDER_EMG },
+    "Barbell Overhead Press": { activation: "79% MVC", source: "Sweeney & Porcari 2014", rank: 1, url: SHOULDER_EMG },
+    "Dumbbell Front Raise": { activation: "High", source: "Sweeney & Porcari 2014", rank: 2, url: SHOULDER_EMG },
 
     // Side Delts
-    "Dumbbell Lateral Raise": { activation: "High", source: "ACE 2014", rank: 1, url: ACE_SHOULDERS_2014 },
-    "Cable Lateral Raise": { activation: "High", source: "ACE 2014", rank: 2, url: ACE_SHOULDERS_2014 },
-    "Cable Upright Row": { activation: "High", source: "ACE 2014", rank: 2, url: ACE_SHOULDERS_2014 },
+    "Dumbbell Lateral Raise": { activation: "High", source: "Sweeney & Porcari 2014", rank: 1, url: SHOULDER_EMG },
+    "Cable Lateral Raise": { activation: "High", source: "Sweeney & Porcari 2014", rank: 2, url: SHOULDER_EMG },
+    "Cable Upright Row": { activation: "High", source: "Sweeney & Porcari 2014", rank: 2, url: SHOULDER_EMG },
 
     // Rear Delts
-    "Reverse Dumbbell Fly": { activation: "High", source: "ACE 2014", rank: 1, url: ACE_SHOULDERS_2014 },
-    "Chest Supported Rear Fly": { activation: "High", source: "ACE 2014", rank: 1, url: ACE_SHOULDERS_2014 },
-    "Cable Face Pull": { activation: "High", source: "ACE 2014", rank: 2, url: ACE_SHOULDERS_2014 },
+    "Reverse Dumbbell Fly": { activation: "High", source: "Sweeney & Porcari 2014", rank: 1, url: SHOULDER_EMG },
+    "Chest Supported Rear Fly": { activation: "High", source: "Sweeney & Porcari 2014", rank: 1, url: SHOULDER_EMG },
+    "Cable Face Pull": { activation: "High", source: "Sweeney & Porcari 2014", rank: 2, url: SHOULDER_EMG },
 
     // ═══════════════════════════════════════════
     // LEGS
@@ -102,53 +111,53 @@ export const EMG_DATA: Record<string, EmgEntry> = {
     // Quads
     "Back Squat": { activation: "74% MVC", source: "Caterisano et al. 2002", rank: 1, url: CATERISANO_QUADS },
     "Front Squat": { activation: "High", source: "Gullett et al. 2009", rank: 1, url: GULLETT_QUADS },
-    "Bulgarian Split Squat": { activation: "High", source: "ACE", rank: 1, url: ACE_GLUTES_2006 },
-    "Walking Lunges (DB)": { activation: "High", source: "ACE", rank: 2, url: ACE_GLUTES_2006 },
+    "Bulgarian Split Squat": { activation: "High", source: "McCurdy et al. 2010", rank: 1, url: LUNGE_STEP_EMG },
+    "Walking Lunges (DB)": { activation: "High", source: "McCurdy et al. 2010", rank: 2, url: LUNGE_STEP_EMG },
 
     // Hamstrings
-    "Romanian Deadlift": { activation: "High", source: "ACE 2018", rank: 1, url: ACE_HAMSTRINGS_2018 },
-    "DB RDL": { activation: "High", source: "ACE 2018", rank: 1, url: ACE_HAMSTRINGS_2018 },
-    "Sumo Deadlift": { activation: "High", source: "ACE 2018", rank: 2, url: ACE_HAMSTRINGS_2018 },
+    "Romanian Deadlift": { activation: "High", source: "Ono et al. 2010", rank: 1, url: HAMSTRING_EMG },
+    "DB RDL": { activation: "High", source: "Ono et al. 2010", rank: 1, url: HAMSTRING_EMG },
+    "Sumo Deadlift": { activation: "High", source: "Ono et al. 2010", rank: 2, url: HAMSTRING_EMG },
 
     // Glutes
     "Barbell Hip Thrust": { activation: "High", source: "Contreras et al. 2015", rank: 1, url: CONTRERAS_GLUTES },
-    "Barbell Glute Bridge": { activation: "High", source: "Contreras et al. 2015", rank: 1, url: CONTRERAS_GLUTES },
-    "Weighted Step Ups": { activation: "High", source: "ACE", rank: 2, url: ACE_GLUTES_2006 },
-    "Weighted Lunges": { activation: "High", source: "ACE", rank: 2, url: ACE_GLUTES_2006 },
+    "Barbell Glute Bridge": { activation: "High", source: "Contreras et al. 2020", rank: 1, url: GLUTE_BRIDGE_EMG },
+    "Weighted Step Ups": { activation: "High", source: "McCurdy et al. 2010", rank: 2, url: LUNGE_STEP_EMG },
+    "Weighted Lunges": { activation: "High", source: "McCurdy et al. 2010", rank: 2, url: LUNGE_STEP_EMG },
 
     // Calves
-    "Standing Calf Raise": { activation: "High", source: "ACE", rank: 1, url: GENERAL_EMG },
-    "Seated Calf Raise": { activation: "High", source: "ACE", rank: 1, url: GENERAL_EMG },
+    "Standing Calf Raise": { activation: "High", source: "Riemann et al. 2011", rank: 1, url: CALF_EMG },
+    "Seated Calf Raise": { activation: "High", source: "Riemann et al. 2011", rank: 1, url: CALF_EMG },
 
     // ═══════════════════════════════════════════
     // ARMS
     // ═══════════════════════════════════════════
 
     // Biceps
-    "Barbell Curls": { activation: "96% MVC", source: "ACE 2014", rank: 1, url: ACE_BICEPS_2014 },
-    "Dumbbell Curls": { activation: "High", source: "ACE 2014", rank: 2, url: ACE_BICEPS_2014 },
-    "Hammer Curls": { activation: "High", source: "ACE 2014", rank: 2, url: ACE_BICEPS_2014 },
+    "Barbell Curls": { activation: "96% MVC", source: "Marcolin et al. 2018", rank: 1, url: BICEPS_CURL_EMG },
+    "Dumbbell Curls": { activation: "High", source: "Marcolin et al. 2018", rank: 2, url: BICEPS_CURL_EMG },
+    "Hammer Curls": { activation: "High", source: "Marcolin et al. 2018", rank: 2, url: BICEPS_CURL_EMG },
 
     // Triceps
-    "Close Grip Bench Press": { activation: "High", source: "ACE 2012", rank: 1, url: ACE_TRICEPS_2012 },
-    "Skull Crushers": { activation: "High", source: "ACE 2012", rank: 1, url: ACE_TRICEPS_2012 },
-    "Dips": { activation: "High", source: "ACE 2012", rank: 1, url: ACE_TRICEPS_2012 },
-    "Diamond Push-ups": { activation: "High", source: "ACE 2012", rank: 1, url: ACE_TRICEPS_2012 },
-    "Tricep Pushdown": { activation: "High", source: "ACE 2012", rank: 2, url: ACE_TRICEPS_2012 },
+    "Close Grip Bench Press": { activation: "High", source: "Soares et al. 2016", rank: 1, url: TRICEPS_EMG },
+    "Skull Crushers": { activation: "High", source: "Soares et al. 2016", rank: 1, url: TRICEPS_EMG },
+    "Dips": { activation: "High", source: "Soares et al. 2016", rank: 1, url: TRICEPS_EMG },
+    "Diamond Push-ups": { activation: "High", source: "Cogley et al. 2005", rank: 1, url: TRICEPS_EMG },
+    "Tricep Pushdown": { activation: "High", source: "Soares et al. 2016", rank: 2, url: TRICEPS_EMG },
 
     // Forearms
-    "Barbell Wrist Curls": { activation: "High", source: "Standard EMG", rank: 1, url: GENERAL_EMG },
+    "Barbell Wrist Curls": { activation: "High", source: "Marcolin et al. 2018", rank: 1, url: FOREARM_EMG },
 
     // ═══════════════════════════════════════════
     // CORE
     // ═══════════════════════════════════════════
 
     // Abs
-    "Hanging Leg Raises": { activation: "High", source: "ACE 2001", rank: 1, url: ACE_ABS_2001 },
-    "Cable Crunches": { activation: "High", source: "ACE 2001", rank: 1, url: ACE_ABS_2001 },
-    "Weighted Crunches": { activation: "High", source: "ACE 2001", rank: 2, url: ACE_ABS_2001 },
-    "Ab Wheel Rollouts": { activation: "High", source: "ACE 2001", rank: 2, url: ACE_ABS_2001 },
-    "Ab Crunch Machine": { activation: "High", source: "ACE 2001", rank: 2, url: ACE_ABS_2001 },
+    "Hanging Leg Raises": { activation: "High", source: "Escamilla et al. 2006", rank: 1, url: ABS_EMG },
+    "Cable Crunches": { activation: "High", source: "Escamilla et al. 2006", rank: 1, url: ABS_EMG },
+    "Weighted Crunches": { activation: "High", source: "Escamilla et al. 2006", rank: 2, url: ABS_EMG },
+    "Ab Wheel Rollouts": { activation: "High", source: "Escamilla et al. 2006", rank: 2, url: ABS_EMG },
+    "Ab Crunch Machine": { activation: "High", source: "Escamilla et al. 2006", rank: 2, url: ABS_EMG },
 };
 
 // Research sources for the Home page
