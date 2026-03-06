@@ -33,7 +33,7 @@ export const Hero: React.FC<HeroProps> = ({ setCurrentView }) => {
             </svg>
           </SpotlightButton>
           <SpotlightButton variant="secondary" onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}>
-            {t('btn_learn')}
+            {t('nav_exercises')}
           </SpotlightButton>
         </div>
       </div>

@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { Card } from '../ui/Card';
 import { SpotlightButton } from '../ui/SpotlightButton';
-import { getExerciseDatabase, getLocalizedMuscleName, getExerciseLinks, getExerciseTranslation } from '../../utils/exerciseData';
+import { getExerciseDatabase, getLocalizedMuscleName, getExerciseTranslation } from '../../utils/exerciseData';
+import { isEmgVerified, getEmgData } from '../../utils/emgData';
 import { Modal } from '../ui/Modal';
 
 export const ProgramPlanner: React.FC = () => {
@@ -112,7 +113,7 @@ export const ProgramPlanner: React.FC = () => {
                         setSelectedExercise(feat.name);
                       }}
                     >
-                      {t('btn_learn')}
+                      {t('modal_watch_video')}
                     </SpotlightButton>
                   </Card>
                 ))}
@@ -144,59 +145,84 @@ export const ProgramPlanner: React.FC = () => {
               </div>
 
               <div className="space-y-12">
-                {selectedSubCategory && (['machines', 'weightlifting', 'cables', 'bodyweight'] as const).map(category => {
-                  const exercises = exerciseDB[selectedMuscle]?.[selectedSubCategory]?.[category] || [];
-                  if (exercises.length === 0) return null;
+                {selectedSubCategory && (() => {
+                  // Collect all exercises from all categories for this sub
+                  const allExercises: string[] = [];
+                  (['machines', 'weightlifting', 'cables', 'bodyweight'] as const).forEach(cat => {
+                    const exs = exerciseDB[selectedMuscle]?.[selectedSubCategory]?.[cat] || [];
+                    exs.forEach(ex => { if (!allExercises.includes(ex)) allExercises.push(ex); });
+                  });
+
+                  const emgExercises = allExercises.filter(ex => isEmgVerified(ex));
+
+                  const renderCard = (ex: string, i: number, showBadge: boolean) => (
+                    <Card
+                      key={`${ex}-${i}`}
+                      onClick={() => setSelectedExercise(ex)}
+                      className="p-6 flex flex-col gap-5 bg-white dark:bg-zinc-900/40 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 cursor-pointer group transition-all duration-300 border-zinc-200 dark:border-zinc-800 shadow-sm"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-xl bg-zinc-50 dark:bg-zinc-800 flex items-center justify-center text-zinc-400 dark:text-zinc-500 font-black font-mono text-xs border border-zinc-100 dark:border-zinc-700 group-hover:border-teal-500/50 group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-all">
+                          {i + 1}
+                        </div>
+                        <div className="flex-1 min-w-0 pr-10 rtl:pr-0 rtl:pl-10">
+                          <span className="block text-zinc-900 dark:text-zinc-200 font-black text-xs uppercase tracking-tight">{getExerciseTranslation(ex, language)}</span>
+                          {showBadge && (() => {
+                            const emg = getEmgData(ex);
+                            return emg ? (
+                              <span className="inline-flex items-center gap-1 mt-1 text-[9px] font-black uppercase tracking-widest text-teal-600 dark:text-teal-400">
+                                <span>🧬</span> {emg.activation} · {emg.source}
+                              </span>
+                            ) : null;
+                          })()}
+                        </div>
+                      </div>
+
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedExercise(ex);
+                        }}
+                        className="absolute right-6 rtl:right-auto rtl:left-6 top-6 p-2 text-zinc-400 hover:text-teal-500 transition-all"
+                        title={t('modal_watch_video')}
+                      >
+                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 16v-4m0-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                      </button>
+                    </Card>
+                  );
 
                   return (
-                    <div key={category}>
-                      <h4 className="text-[10px] font-black text-zinc-300 dark:text-zinc-200 uppercase tracking-[0.4em] mb-6 flex items-center gap-4 ml-1">
-                        {category}
-                        <div className="h-px flex-1 bg-zinc-100 dark:bg-zinc-900"></div>
-                      </h4>
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {exercises.map((ex, i) => (
-                          <Card
-                            key={i}
-                            onClick={() => setSelectedExercise(ex)}
-                            className="p-6 flex flex-col gap-5 bg-white dark:bg-zinc-900/40 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 cursor-pointer group transition-all duration-300 border-zinc-200 dark:border-zinc-800 shadow-sm"
-                          >
-                            <div className="flex items-center gap-4">
-                              <div className="w-10 h-10 rounded-xl bg-zinc-50 dark:bg-zinc-800 flex items-center justify-center text-zinc-400 dark:text-zinc-500 font-black font-mono text-xs border border-zinc-100 dark:border-zinc-700 group-hover:border-teal-500/50 group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-all">
-                                {i + 1}
-                              </div>
-                              <span className="text-zinc-900 dark:text-zinc-200 font-black text-xs uppercase tracking-tight pr-10 rtl:pr-0 rtl:pl-10">{ex}</span>
-                            </div>
+                    <>
+                      {/* EMG Tested Section */}
+                      {emgExercises.length > 0 && (
+                        <div>
+                          <h4 className="text-[10px] font-black uppercase tracking-[0.4em] mb-6 flex items-center gap-4 ml-1 text-teal-600 dark:text-teal-400">
+                            {t('emg_tested_title')}
+                            <div className="h-px flex-1 bg-teal-500/20"></div>
+                          </h4>
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {emgExercises.map((ex, i) => renderCard(ex, i, true))}
+                          </div>
+                        </div>
+                      )}
 
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setSelectedExercise(ex);
-                              }}
-                              className="absolute right-6 rtl:right-auto rtl:left-6 top-6 p-2 text-zinc-400 hover:text-teal-500 transition-all"
-                              title={t('modal_watch_video')}
-                            >
-                              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 16v-4m0-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                              </svg>
-                            </button>
-
-                            <SpotlightButton
-                              variant="secondary"
-                              className="w-full text-[10px] py-3 mt-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all font-black uppercase tracking-widest shadow-sm"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setSelectedExercise(ex);
-                              }}
-                            >
-                              {t('btn_learn')}
-                            </SpotlightButton>
-                          </Card>
-                        ))}
-                      </div>
-                    </div>
+                      {/* Full Library */}
+                      {allExercises.length > 0 && (
+                        <div>
+                          <h4 className="text-[10px] font-black text-zinc-300 dark:text-zinc-500 uppercase tracking-[0.4em] mb-6 flex items-center gap-4 ml-1">
+                            {t('full_library_title')}
+                            <div className="h-px flex-1 bg-zinc-100 dark:bg-zinc-900"></div>
+                          </h4>
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {allExercises.map((ex, i) => renderCard(ex, i, isEmgVerified(ex)))}
+                          </div>
+                        </div>
+                      )}
+                    </>
                   );
-                })}
+                })()}
               </div>
             </div>
           ) : (
@@ -215,7 +241,8 @@ export const ProgramPlanner: React.FC = () => {
       {/* Video/Image Modal */}
       <Modal isOpen={!!selectedExercise} onClose={() => setSelectedExercise(null)}>
         {selectedExercise && (() => {
-          const links = getExerciseLinks(selectedExercise);
+          const tutorialUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(selectedExercise + ' exercise tutorial short')}`;
+          const emg = getEmgData(selectedExercise);
           return (
             <div className="relative w-full max-w-2xl mx-auto rounded-[3rem] border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-10 shadow-3xl overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-2 bg-teal-500"></div>
@@ -227,46 +254,28 @@ export const ProgramPlanner: React.FC = () => {
                 <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
               </button>
 
-              <div className="flex items-center gap-4 mb-8 pr-12">
+              <div className="flex items-center gap-4 mb-4 pr-12">
                 <div className="w-3 h-10 bg-teal-500 rounded-full"></div>
-                <h3 className="text-3xl font-black text-zinc-900 dark:text-white uppercase tracking-tighter leading-tight">{selectedExercise}</h3>
+                <h3 className="text-3xl font-black text-zinc-900 dark:text-white uppercase tracking-tighter leading-tight">{getExerciseTranslation(selectedExercise, language)}</h3>
               </div>
 
-              <a
-                href={links.tutorial}
-                target="_blank"
-                rel="noreferrer"
-                className="block aspect-video w-full rounded-2xl bg-zinc-50 dark:bg-black/60 mb-10 overflow-hidden relative group border border-zinc-100 dark:border-zinc-800 shadow-inner"
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-teal-500/5 to-transparent"></div>
-                <div className="absolute inset-0 flex flex-col items-center justify-center transition-transform group-hover:scale-105 duration-500">
-                  <div className="w-20 h-20 rounded-full bg-teal-500/10 dark:bg-teal-500/20 border-2 border-teal-500/30 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-700 backdrop-blur-sm shadow-xl">
-                    <svg className="h-10 w-10 text-teal-600 dark:text-teal-400 ml-1.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
-                  </div>
-                  <p className="text-xs text-zinc-400 dark:text-zinc-500 font-black uppercase tracking-[0.3em] font-mono group-hover:text-teal-500 transition-colors">{t('modal_watch_video')}</p>
+              {emg && (
+                <div className="mb-8 ml-7">
+                  <span className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-teal-600 dark:text-teal-400 bg-teal-500/10 px-3 py-1.5 rounded-lg">
+                    🧬 {t('emg_verified')} · {emg.activation} · {emg.source}
+                  </span>
                 </div>
-              </a>
+              )}
 
               <div className="flex flex-col gap-4">
                 <a
-                  href={links.science}
+                  href={tutorialUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="w-full"
+                  className="w-full flex items-center justify-center gap-3 py-5 bg-red-600 hover:bg-red-500 text-white font-black text-sm uppercase tracking-widest rounded-2xl transition-all shadow-lg shadow-red-600/30"
                 >
-                  <SpotlightButton className="w-full py-5 text-sm font-black uppercase tracking-[0.2em] shadow-lg shadow-teal-500/20">
-                    🔬 Learn the Science
-                  </SpotlightButton>
-                </a>
-                <a
-                  href={links.tutorial}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="w-full"
-                >
-                  <button className="w-full py-4 text-[10px] text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 font-black uppercase tracking-[0.3em] transition-all border border-zinc-100 dark:border-zinc-800 rounded-2xl bg-zinc-50 dark:bg-zinc-900/40">
-                    {t('modal_watch_video')}
-                  </button>
+                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0C.488 3.45.029 5.804 0 12c.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0C23.512 20.55 23.971 18.196 24 12c-.029-6.185-.484-8.549-4.385-8.816zM9 16V8l8 4-8 4z" /></svg>
+                  {t('modal_watch_video')}
                 </a>
                 <button
                   onClick={() => setSelectedExercise(null)}
