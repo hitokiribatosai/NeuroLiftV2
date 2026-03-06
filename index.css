@@ -15,40 +15,52 @@
   /* Stops system from overriding colors */
 
   /* --- ACCENT COLORS (Default Teal in Dark Mode) --- */
-  --accent-300: #5eead4;
-  /* teal-300 */
-  --accent-400: #2dd4bf;
-  /* teal-400 */
-  --accent-500: #14b8a6;
-  /* teal-500 */
-  --accent-600: #0f766e;
-  /* teal-600 */
+  --accent-300: 94 234 212;
+  /* #5eead4 */
+  --accent-400: 45 212 191;
+  /* #2dd4bf */
+  --accent-500: 20 184 166;
+  /* #14b8a6 */
+  --accent-600: 15 118 110;
+  /* #0f766e */
 }
 
 /* --- THEME OVERRIDES --- */
 
 /* Pink Theme */
 html[data-accent="pink"] {
-  --accent-300: #f9a8d4;
-  --accent-400: #f472b6;
-  --accent-500: #ec4899;
-  --accent-600: #db2777;
+  --accent-300: 249 168 212;
+  /* #f9a8d4 */
+  --accent-400: 244 114 182;
+  /* #f472b6 */
+  --accent-500: 236 72 153;
+  /* #ec4899 */
+  --accent-600: 219 39 119;
+  /* #db2777 */
 }
 
 /* Red Theme */
 html[data-accent="red"] {
-  --accent-300: #fca5a5;
-  --accent-400: #f87171;
-  --accent-500: #ef4444;
-  --accent-600: #dc2626;
+  --accent-300: 252 165 165;
+  /* #fca5a5 */
+  --accent-400: 248 113 113;
+  /* #f87171 */
+  --accent-500: 239 68 68;
+  /* #ef4444 */
+  --accent-600: 220 38 38;
+  /* #dc2626 */
 }
 
 /* Yellow Theme */
 html[data-accent="yellow"] {
-  --accent-300: #fcd34d;
-  --accent-400: #fbbf24;
-  --accent-500: #f59e0b;
-  --accent-600: #d97706;
+  --accent-300: 252 211 77;
+  /* #fcd34d */
+  --accent-400: 251 191 36;
+  /* #fbbf24 */
+  --accent-500: 245 158 11;
+  /* #f59e0b */
+  --accent-600: 217 119 6;
+  /* #d97706 */
 }
 
 html {
@@ -701,10 +713,14 @@ html.light [class*="from-zinc-"] {
 
 html.light:not([data-accent]),
 html.light[data-accent="default"] {
-  --accent-300: #93c5fd;
-  --accent-400: #748ffc;
-  --accent-500: #4263eb;
-  --accent-600: #3451b2;
+  --accent-300: 147 197 253;
+  /* #93c5fd */
+  --accent-400: 116 143 252;
+  /* #748ffc */
+  --accent-500: 66 99 235;
+  /* #4263eb */
+  --accent-600: 52 81 178;
+  /* #3451b2 */
 }
 
 /* --- White text on solid-blue/accent selected cards in light mode --- */
@@ -719,20 +735,20 @@ html.light [class*="bg-teal-5"]:not([class*="/5"]):not([class*="/10"]):not([clas
 
 /* --- Shadows & Rings (Light Mode defaults to accent color opacity) --- */
 html.light [class*="shadow-teal"] {
-  --tw-shadow-color: rgba(var(--accent-500-rgb, 66, 99, 235), 0.35) !important;
+  --tw-shadow-color: rgb(var(--accent-500) / 0.35) !important;
 }
 
 html.light [class*="ring-teal"] {
-  --tw-ring-color: rgba(var(--accent-500-rgb, 66, 99, 235), 0.5) !important;
+  --tw-ring-color: rgb(var(--accent-500) / 0.5) !important;
 }
 
 /* Light mode scrollbar */
 html.light ::-webkit-scrollbar-thumb {
-  background: var(--accent-500);
+  background: rgb(var(--accent-500));
 }
 
 html.light ::-webkit-scrollbar-thumb:hover {
-  background: var(--accent-600);
+  background: rgb(var(--accent-600));
 }
 
 /* Dark mode scrollbar keeps classic dark style */

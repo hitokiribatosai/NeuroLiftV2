@@ -13,14 +13,14 @@ export default {
       colors: {
         background: '#0a0a0a',
         surface: '#111111',
-        primary: 'var(--accent-500)', // Dynamically matches selected accent
-        secondary: 'var(--accent-400)',
+        primary: 'rgb(var(--accent-500) / <alpha-value>)',
+        secondary: 'rgb(var(--accent-400) / <alpha-value>)',
         accent: '#f43f5e',
         teal: {
-          300: 'var(--accent-300)',
-          400: 'var(--accent-400)',
-          500: 'var(--accent-500)',
-          600: 'var(--accent-600)',
+          300: 'rgb(var(--accent-300) / <alpha-value>)',
+          400: 'rgb(var(--accent-400) / <alpha-value>)',
+          500: 'rgb(var(--accent-500) / <alpha-value>)',
+          600: 'rgb(var(--accent-600) / <alpha-value>)',
         }
       },
       animation: {
