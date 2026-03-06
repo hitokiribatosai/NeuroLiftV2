@@ -1,5 +1,14 @@
 @import "tailwindcss";
 
+@theme {
+  --color-teal-300: rgb(var(--accent-300));
+  --color-teal-400: rgb(var(--accent-400));
+  --color-teal-500: rgb(var(--accent-500));
+  --color-teal-600: rgb(var(--accent-600));
+  --color-primary: rgb(var(--accent-500));
+  --color-secondary: rgb(var(--accent-400));
+}
+
 :root {
   --base-font-size: 1rem;
   /* Default medium, controlled by FontSizeContext */
@@ -23,30 +32,6 @@
 
 /* ══════ Accent Color Overrides ══════ */
 
-/* Pink accent */
-[data-accent="pink"] {
-  --accent-300: 249 168 212;
-  --accent-400: 244 114 182;
-  --accent-500: 236 72 153;
-  --accent-600: 219 39 119;
-}
-
-/* Red accent */
-[data-accent="red"] {
-  --accent-300: 252 165 165;
-  --accent-400: 248 113 113;
-  --accent-500: 239 68 68;
-  --accent-600: 220 38 38;
-}
-
-/* Yellow accent */
-[data-accent="yellow"] {
-  --accent-300: 253 224 71;
-  --accent-400: 250 204 21;
-  --accent-500: 245 158 11;
-  --accent-600: 217 119 6;
-}
-
 /* Light mode: default accent switches to Royal Blue */
 html.light:not([data-accent]),
 html.light[data-accent="default"] {
@@ -54,6 +39,33 @@ html.light[data-accent="default"] {
   --accent-400: 116 143 252;
   --accent-500: 66 99 235;
   --accent-600: 52 81 178;
+}
+
+/* Pink accent — must come AFTER light-mode defaults for cascade priority */
+[data-accent="pink"],
+html.light[data-accent="pink"] {
+  --accent-300: 249 168 212;
+  --accent-400: 244 114 182;
+  --accent-500: 236 72 153;
+  --accent-600: 219 39 119;
+}
+
+/* Red accent */
+[data-accent="red"],
+html.light[data-accent="red"] {
+  --accent-300: 252 165 165;
+  --accent-400: 248 113 113;
+  --accent-500: 239 68 68;
+  --accent-600: 220 38 38;
+}
+
+/* Yellow accent */
+[data-accent="yellow"],
+html.light[data-accent="yellow"] {
+  --accent-300: 253 224 71;
+  --accent-400: 250 204 21;
+  --accent-500: 245 158 11;
+  --accent-600: 217 119 6;
 }
 
 html {
