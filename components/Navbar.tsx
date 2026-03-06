@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useFontSize, FontSize } from '../contexts/FontSizeContext';
-import { useTheme, Theme } from '../contexts/ThemeContext';
+import { useTheme, Theme, AccentColor } from '../contexts/ThemeContext';
 import { DataManager } from '../utils/dataManager';
 import { Language } from '../types';
 interface NavbarProps {
@@ -15,7 +15,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) =
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const { language, setLanguage, t, dir } = useLanguage();
   const { fontSize, setFontSize } = useFontSize();
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, accent, setAccent } = useTheme();
   const isNative = Capacitor.isNativePlatform();
 
   const [isExporting, setIsExporting] = useState(false);
@@ -188,6 +188,35 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) =
                 >
                   <span className="text-[0.625rem] font-bold mb-1">{size.label}</span>
                   <span className="font-black" style={{ fontSize: size.id === 'small' ? '0.75rem' : size.id === 'medium' ? '0.875rem' : size.id === 'large' ? '1rem' : '1.125rem' }}>Aa</span>
+                </motion.button>
+              ))}
+            </div>
+          </div>
+
+          {/* Accent Color Toggle */}
+          <div className="mt-6 pt-6 border-t border-zinc-800">
+            <h3 className="text-[0.625rem] font-black text-zinc-500 uppercase tracking-widest mb-3 px-2 flex items-center gap-2">
+              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" /></svg>
+              {t('profile_accent') as string || 'Accent Color'}
+            </h3>
+            <div className="grid grid-cols-2 gap-2">
+              {([
+                { id: 'default', label: t('accent_default') as string || 'Default', color: theme === 'light' ? 'bg-[#4263eb]' : 'bg-[#14b8a6]' },
+                { id: 'pink', label: t('accent_pink') as string || 'Pink', color: 'bg-[#ec4899]' },
+                { id: 'red', label: t('accent_red') as string || 'Red', color: 'bg-[#ef4444]' },
+                { id: 'yellow', label: t('accent_yellow') as string || 'Yellow', color: 'bg-[#f59e0b]' }
+              ] as { id: AccentColor; label: string; color: string }[]).map((acc) => (
+                <motion.button
+                  key={acc.id}
+                  onClick={() => setAccent(acc.id)}
+                  whileTap={{ scale: 0.95 }}
+                  className={`flex items-center justify-start gap-2 p-2.5 rounded-xl border transition-all ${accent === acc.id
+                    ? 'bg-zinc-800 border-zinc-600 text-white shadow-sm'
+                    : 'bg-zinc-900/50 border-zinc-800 text-zinc-500 hover:border-zinc-700 hover:text-zinc-300'
+                    }`}
+                >
+                  <div className={`w-3.5 h-3.5 rounded-full shadow-inner ${acc.color}`} />
+                  <span className="text-[0.625rem] font-bold truncate">{acc.label}</span>
                 </motion.button>
               ))}
             </div>
