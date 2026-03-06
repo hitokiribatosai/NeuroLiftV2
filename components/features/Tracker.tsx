@@ -4,7 +4,8 @@ import { useTheme } from '../../contexts/ThemeContext';
 import { SpotlightButton } from '../ui/SpotlightButton';
 import { Card } from '../ui/Card';
 import { CompletedWorkout, ActiveExercise, WorkoutSet, WorkoutTemplate } from '../../types';
-import { getExerciseDatabase, getLocalizedMuscleName, getMuscleForExercise, getExerciseTranslation, getExerciseLinks } from '../../utils/exerciseData';
+import { getExerciseDatabase, getLocalizedMuscleName, getMuscleForExercise, getExerciseTranslation } from '../../utils/exerciseData';
+import { isEmgVerified, getEmgData } from '../../utils/emgData';
 import { useClock } from '../../contexts/ClockContext';
 import { playNotificationSound } from '../../utils/audio';
 import { ConfirmModal } from '../ui/ConfirmModal';
@@ -974,73 +975,108 @@ export const Tracker: React.FC = () => {
                       </h3>
 
                       {/* Render functional sub-groups */}
-                      {Object.keys(exercisesByMuscle[majorMuscle] || {}).map(subGroup => (
-                        <div key={subGroup} className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                          <h4 className="text-xl font-black text-zinc-200 mb-8 uppercase tracking-widest flex items-center gap-4 ml-4">
-                            <span className="w-1.5 h-6 bg-teal-500/50 rounded-full"></span>
-                            {getLocalizedMuscleName(subGroup, language)}
-                          </h4>
+                      {Object.keys(exercisesByMuscle[majorMuscle] || {}).map(subGroup => {
+                        // Collect ALL exercises for this sub-group across all categories
+                        const allExercises: string[] = [];
+                        (['machines', 'weightlifting', 'cables', 'bodyweight'] as const).forEach(cat => {
+                          const exs = exercisesByMuscle[majorMuscle]?.[subGroup]?.[cat] || [];
+                          exs.forEach(ex => { if (!allExercises.includes(ex)) allExercises.push(ex); });
+                        });
 
-                          <div className="space-y-12 ml-4">
-                            {(['machines', 'weightlifting', 'cables', 'bodyweight'] as const).map(category => {
-                              const exercises = exercisesByMuscle[majorMuscle]?.[subGroup]?.[category] || [];
-                              if (exercises.length === 0) return null;
+                        // Split into EMG-verified and unverified
+                        const emgExercises = allExercises.filter(ex => isEmgVerified(ex));
+                        const otherExercises = allExercises;
 
-                              return (
-                                <div key={category}>
-                                  <h5 className="text-[0.625rem] font-black text-zinc-100 uppercase tracking-[0.4em] mb-6 ml-1 flex items-center gap-4">
-                                    {category}
+                        const renderExerciseCard = (ex: string, showEmgBadge: boolean) => (
+                          <div key={ex} className="relative group">
+                            <label
+                              style={{
+                                backgroundColor: selectedExercises.includes(ex)
+                                  ? (isLight ? 'rgba(66,99,235,0.08)' : 'rgba(20,184,166,0.05)')
+                                  : (isLight ? '#ffffff' : 'rgba(24,24,27,0.6)'),
+                                color: isLight ? '#18181b' : '#ffffff',
+                              }}
+                              className={`flex items-center gap-4 p-5 border-2 rounded-2xl cursor-pointer transition-all duration-300 ${selectedExercises.includes(ex)
+                                ? (isLight ? 'border-blue-500 shadow-md' : 'border-teal-500 shadow-md')
+                                : (isLight ? 'border-zinc-200 hover:border-zinc-300' : 'border-zinc-800 hover:border-zinc-700')}`}>
+                              <input
+                                type="checkbox"
+                                checked={selectedExercises.includes(ex)}
+                                onChange={() => toggleExercise(ex)}
+                                className="hidden"
+                              />
+                              <div className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all ${selectedExercises.includes(ex)
+                                ? (isLight ? 'bg-blue-500 border-blue-500 text-white shadow-lg shadow-blue-500/20' : 'bg-teal-500 border-teal-500 text-white shadow-lg shadow-teal-500/20')
+                                : (isLight ? 'border-zinc-300' : 'border-zinc-700')}`}>
+                                {selectedExercises.includes(ex) && <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 13l4 4L19 7" /></svg>}
+                              </div>
+                              <div className="flex-1 min-w-0 pr-10 rtl:pr-0 rtl:pl-10">
+                                <span className="block text-sm font-black tracking-wide uppercase">{getExerciseTranslation(ex, language)}</span>
+                                {showEmgBadge && (() => {
+                                  const emg = getEmgData(ex);
+                                  return emg ? (
+                                    <span className="inline-flex items-center gap-1 mt-1 text-[9px] font-black uppercase tracking-widest text-teal-400">
+                                      <span>🧬</span> {emg.activation} · {emg.source}
+                                    </span>
+                                  ) : null;
+                                })()}
+                              </div>
+                            </label>
+
+                            <button
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                setTutorialExercise(ex);
+                              }}
+                              className="absolute right-4 rtl:right-auto rtl:left-4 top-1/2 -translate-y-1/2 p-2 text-zinc-600 hover:text-teal-400 opacity-100 transition-all z-10"
+                              title={t('modal_watch_video')}
+                            >
+                              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 16v-4m0-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              </svg>
+                            </button>
+                          </div>
+                        );
+
+                        return (
+                          <div key={subGroup} className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                            <h4 className="text-xl font-black text-zinc-200 mb-8 uppercase tracking-widest flex items-center gap-4 ml-4">
+                              <span className="w-1.5 h-6 bg-teal-500/50 rounded-full"></span>
+                              {getLocalizedMuscleName(subGroup, language)}
+                            </h4>
+
+                            <div className="space-y-12 ml-4">
+                              {/* ═══ EMG TESTED — SCIENCE BASED ═══ */}
+                              {emgExercises.length > 0 && (
+                                <div>
+                                  <h5 className="text-[0.625rem] font-black uppercase tracking-[0.4em] mb-6 ml-1 flex items-center gap-4"
+                                    style={{ color: isLight ? '#0d9488' : '#2dd4bf' }}>
+                                    {t('emg_tested_title')}
+                                    <div className="h-px flex-1" style={{ backgroundColor: isLight ? '#0d948840' : '#2dd4bf30' }}></div>
+                                  </h5>
+                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {emgExercises.map(ex => renderExerciseCard(ex, true))}
+                                  </div>
+                                </div>
+                              )}
+
+                              {/* ═══ FULL LIBRARY ═══ */}
+                              {otherExercises.length > 0 && (
+                                <div>
+                                  <h5 className="text-[0.625rem] font-black text-zinc-400 uppercase tracking-[0.4em] mb-6 ml-1 flex items-center gap-4">
+                                    {t('full_library_title')}
                                     <div className="h-px flex-1 bg-zinc-800"></div>
                                   </h5>
                                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    {exercises.map(ex => (
-                                      <div key={ex} className="relative group">
-                                        <label
-                                          style={{
-                                            backgroundColor: selectedExercises.includes(ex)
-                                              ? (isLight ? 'rgba(66,99,235,0.08)' : 'rgba(20,184,166,0.05)')
-                                              : (isLight ? '#ffffff' : 'rgba(24,24,27,0.6)'),
-                                            color: isLight ? '#18181b' : '#ffffff',
-                                          }}
-                                          className={`flex items-center gap-4 p-5 border-2 rounded-2xl cursor-pointer transition-all duration-300 ${selectedExercises.includes(ex)
-                                            ? (isLight ? 'border-blue-500 shadow-md' : 'border-teal-500 shadow-md')
-                                            : (isLight ? 'border-zinc-200 hover:border-zinc-300' : 'border-zinc-800 hover:border-zinc-700')}`}>
-                                          <input
-                                            type="checkbox"
-                                            checked={selectedExercises.includes(ex)}
-                                            onChange={() => toggleExercise(ex)}
-                                            className="hidden"
-                                          />
-                                          <div className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all ${selectedExercises.includes(ex)
-                                            ? (isLight ? 'bg-blue-500 border-blue-500 text-white shadow-lg shadow-blue-500/20' : 'bg-teal-500 border-teal-500 text-white shadow-lg shadow-teal-500/20')
-                                            : (isLight ? 'border-zinc-300' : 'border-zinc-700')}`}>
-                                            {selectedExercises.includes(ex) && <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 13l4 4L19 7" /></svg>}
-                                          </div>
-                                          <span className="text-sm font-black tracking-wide flex-1 uppercase pr-10 rtl:pr-0 rtl:pl-10">{getExerciseTranslation(ex, language)}</span>
-                                        </label>
-
-                                        <button
-                                          onClick={(e) => {
-                                            e.preventDefault();
-                                            e.stopPropagation();
-                                            setTutorialExercise(ex);
-                                          }}
-                                          className="absolute right-4 rtl:right-auto rtl:left-4 top-1/2 -translate-y-1/2 p-2 text-zinc-600 hover:text-teal-400 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all z-10"
-                                          title={t('modal_watch_video')}
-                                        >
-                                          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 16v-4m0-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                          </svg>
-                                        </button>
-                                      </div>
-                                    ))}
+                                    {otherExercises.map(ex => renderExerciseCard(ex, isEmgVerified(ex)))}
                                   </div>
                                 </div>
-                              );
-                            })}
+                              )}
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   ))
                 )}

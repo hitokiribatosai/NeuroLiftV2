@@ -119,6 +119,11 @@ export const translations = {
 
     modal_watch_video: "Watch Tutorial",
     modal_close: "Close",
+    emg_tested_title: "🧬 EMG Tested — Science Based",
+    full_library_title: "📚 Full Library",
+    emg_verified: "EMG Verified",
+    home_sources_title: "Backed by Science",
+    home_sources_subtitle: "Our exercise rankings are based on EMG studies from these organizations",
 
     // Calories
     cal_title: "Calorie Tracker",
@@ -445,6 +450,11 @@ export const translations = {
 
     modal_watch_video: "Voir Tutoriel",
     modal_close: "Fermer",
+    emg_tested_title: "🧬 Testé par EMG — Base Scientifique",
+    full_library_title: "📚 Bibliothèque Complète",
+    emg_verified: "Vérifié par EMG",
+    home_sources_title: "Fondé sur la Science",
+    home_sources_subtitle: "Nos classements d'exercices sont basés sur des études EMG de ces organisations",
 
     cal_title: "Compteur Calories",
     cal_consumed: "Consommé Aujourd'hui",
@@ -782,6 +792,11 @@ export const translations = {
 
     modal_watch_video: "شاهد الشرح",
     modal_close: "إإغلاق",
+    emg_tested_title: "🧬 مُختبر بالـ EMG — قائم على العلم",
+    full_library_title: "📚 المكتبة الكاملة",
+    emg_verified: "مُوثق بالـ EMG",
+    home_sources_title: "مدعوم بالعلم",
+    home_sources_subtitle: "تصنيفاتنا للتمارين مبنية على دراسات EMG من هذه المؤسسات",
 
     cal_title: "عداد السعرات",
     cal_consumed: "المستهلك اليوم",
