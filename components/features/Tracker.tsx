@@ -883,17 +883,24 @@ export const Tracker: React.FC = () => {
                   /* Search Results View */
                   <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
                     {(() => {
-                      const allMatches: { name: string; muscle: string }[] = [];
+                      const categoryMeta: Record<string, { icon: string; key: string }> = {
+                        dumbbells: { icon: '🏋️', key: 'cat_dumbbells' },
+                        barbells: { icon: '🔩', key: 'cat_barbells' },
+                        cables: { icon: '🔗', key: 'cat_cables' },
+                        bodyweight: { icon: '🤸', key: 'cat_bodyweight' },
+                        machines: { icon: '⚙️', key: 'cat_machines' },
+                      };
+                      const allMatches: { name: string; muscle: string; category: string }[] = [];
                       // Global search across all muscles
                       Object.keys(exercisesByMuscle).forEach(muscle => {
                         Object.keys(exercisesByMuscle[muscle]).forEach(subGroup => {
-                          (['machines', 'dumbbells', 'barbells', 'cables', 'bodyweight'] as const).forEach(category => {
+                          (['dumbbells', 'barbells', 'cables', 'bodyweight', 'machines'] as const).forEach(category => {
                             const exercises = exercisesByMuscle[muscle][subGroup][category] || [];
                             const normalize = (str: string) => str.toLowerCase().replace(/[^a-z0-9]/g, '');
                             exercises.filter(ex => normalize(ex).includes(normalize(searchQuery))).forEach(ex => {
                               // De-duplicate if needed, or just push
                               if (!allMatches.some(m => m.name === ex)) {
-                                allMatches.push({ name: ex, muscle });
+                                allMatches.push({ name: ex, muscle, category });
                               }
                             });
                           });
@@ -914,7 +921,7 @@ export const Tracker: React.FC = () => {
 
                       return (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          {allMatches.map(({ name, muscle }) => (
+                          {allMatches.map(({ name, muscle, category }) => (
                             <div key={name} className="relative group">
                               <label
                                 style={{
@@ -931,7 +938,6 @@ export const Tracker: React.FC = () => {
                                   checked={selectedExercises.includes(name)}
                                   onChange={() => {
                                     toggleExercise(name);
-                                    // Optional: clear search after selection? No, better to keep searching.
                                   }}
                                   className="hidden"
                                 />
@@ -942,7 +948,9 @@ export const Tracker: React.FC = () => {
                                 </div>
                                 <div className="flex-1">
                                   <span className="block text-sm font-black tracking-wide uppercase pr-10 rtl:pr-0 rtl:pl-10">{getExerciseTranslation(name, language)}</span>
-                                  <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">{getLocalizedMuscleName(muscle, language)}</span>
+                                  <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">
+                                    {getLocalizedMuscleName(muscle, language)} · {categoryMeta[category]?.icon} {t(categoryMeta[category]?.key || '')}
+                                  </span>
                                 </div>
                               </label>
 
@@ -965,6 +973,7 @@ export const Tracker: React.FC = () => {
                       );
                     })()}
                   </div>
+
                 ) : (
                   selectedMuscles.map(majorMuscle => (
                     <div key={majorMuscle} className="space-y-12">
@@ -976,16 +985,14 @@ export const Tracker: React.FC = () => {
 
                       {/* Render functional sub-groups */}
                       {Object.keys(exercisesByMuscle[majorMuscle] || {}).map(subGroup => {
-                        // Collect ALL exercises for this sub-group across all categories
-                        const allExercises: string[] = [];
-                        (['machines', 'dumbbells', 'barbells', 'cables', 'bodyweight'] as const).forEach(cat => {
-                          const exs = exercisesByMuscle[majorMuscle]?.[subGroup]?.[cat] || [];
-                          exs.forEach(ex => { if (!allExercises.includes(ex)) allExercises.push(ex); });
-                        });
-
-                        // Split into EMG-verified and unverified
-                        const emgExercises = allExercises.filter(ex => isEmgVerified(ex));
-                        const otherExercises = allExercises;
+                        const categoryMeta: Record<string, { icon: string; key: string }> = {
+                          dumbbells: { icon: '🏋️', key: 'cat_dumbbells' },
+                          barbells: { icon: '🔩', key: 'cat_barbells' },
+                          cables: { icon: '🔗', key: 'cat_cables' },
+                          bodyweight: { icon: '🤸', key: 'cat_bodyweight' },
+                          machines: { icon: '⚙️', key: 'cat_machines' },
+                        };
+                        const categories = (['dumbbells', 'barbells', 'cables', 'bodyweight', 'machines'] as const);
 
                         const renderExerciseCard = (ex: string, showEmgBadge: boolean) => (
                           <div key={ex} className="relative group">
@@ -1057,33 +1064,27 @@ export const Tracker: React.FC = () => {
                               {getLocalizedMuscleName(subGroup, language)}
                             </h4>
 
-                            <div className="space-y-12 ml-4">
-                              {/* ═══ EMG TESTED — SCIENCE BASED ═══ */}
-                              {emgExercises.length > 0 && (
-                                <div>
-                                  <h5 className="text-[0.625rem] font-black uppercase tracking-[0.4em] mb-6 ml-1 flex items-center gap-4"
-                                    style={{ color: 'rgb(var(--accent-400))' }}>
-                                    {t('emg_tested_title')}
-                                    <div className="h-px flex-1" style={{ backgroundColor: 'rgb(var(--accent-400) / 0.3)' }}></div>
-                                  </h5>
-                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    {emgExercises.map(ex => renderExerciseCard(ex, true))}
-                                  </div>
-                                </div>
-                              )}
+                            <div className="space-y-10 ml-4">
+                              {categories.map(cat => {
+                                const exercises = exercisesByMuscle[majorMuscle]?.[subGroup]?.[cat] || [];
+                                if (exercises.length === 0) return null;
+                                const meta = categoryMeta[cat];
 
-                              {/* ═══ FULL LIBRARY ═══ */}
-                              {otherExercises.length > 0 && (
-                                <div>
-                                  <h5 className="text-[0.625rem] font-black text-zinc-400 uppercase tracking-[0.4em] mb-6 ml-1 flex items-center gap-4">
-                                    {t('full_library_title')}
-                                    <div className="h-px flex-1 bg-zinc-800"></div>
-                                  </h5>
-                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    {otherExercises.map(ex => renderExerciseCard(ex, isEmgVerified(ex)))}
+                                return (
+                                  <div key={cat}>
+                                    <h5 className="text-[0.625rem] font-black uppercase tracking-[0.4em] mb-6 ml-1 flex items-center gap-3"
+                                      style={{ color: isLight ? '#71717a' : '#a1a1aa' }}>
+                                      <span className="text-base">{meta.icon}</span>
+                                      {t(meta.key)}
+                                      <div className="h-px flex-1" style={{ backgroundColor: isLight ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.1)' }}></div>
+                                      <span className="text-zinc-600 font-medium">{exercises.length}</span>
+                                    </h5>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                      {exercises.map(ex => renderExerciseCard(ex, isEmgVerified(ex)))}
+                                    </div>
                                   </div>
-                                </div>
-                              )}
+                                );
+                              })}
                             </div>
                           </div>
                         );
@@ -1091,6 +1092,7 @@ export const Tracker: React.FC = () => {
                     </div>
                   ))
                 )}
+
               </div>
 
               <div className="sticky bottom-0 md:bottom-6 p-6 md:p-8 flex items-center justify-between z-40 pb-[calc(2rem+env(safe-area-inset-bottom))] md:pb-8">
