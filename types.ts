@@ -46,26 +46,26 @@ export interface CustomMeasurement {
 }
 
 export interface JournalEntry {
-   id: string;
-   date: string;
-   // Standard Bodybuilding Measurements
-   weight?: number;
-   neck?: number;
-   shoulders?: number;
-   chest?: number;
-   biceps_left?: number;
-   biceps_right?: number;
-   forearms?: number;
-   waist?: number;
-   hips?: number;
-   thigh_left?: number;
-   thigh_right?: number;
-   calves?: number;
+  id: string;
+  date: string;
+  // Standard Bodybuilding Measurements
+  weight?: number;
+  neck?: number;
+  shoulders?: number;
+  chest?: number;
+  biceps_left?: number;
+  biceps_right?: number;
+  forearms?: number;
+  waist?: number;
+  hips?: number;
+  thigh_left?: number;
+  thigh_right?: number;
+  calves?: number;
 
-   // Dynamic
-   customMeasurements?: CustomMeasurement[];
-   notes?: string;
-   isDemo?: boolean;
+  // Dynamic
+  customMeasurements?: CustomMeasurement[];
+  notes?: string;
+  isDemo?: boolean;
 }
 
 export interface WorkoutSet {
@@ -83,17 +83,18 @@ export interface ActiveExercise {
 }
 
 export interface CompletedWorkout {
-   id: string;
-   date: string;
-   name?: string;
-   durationSeconds: number;
-   exercises: ActiveExercise[];
-   totalVolume: number;
-   isDemo?: boolean;
+  id: string;
+  date: string;
+  name?: string;
+  durationSeconds: number;
+  exercises: ActiveExercise[];
+  totalVolume: number;
+  isDemo?: boolean;
 }
 
 export interface CategorizedExercises {
-  weightlifting: string[];
+  dumbbells: string[];
+  barbells: string[];
   cables: string[];
   bodyweight: string[];
   machines: string[];
@@ -130,15 +131,15 @@ export interface OnboardingState extends UserProfile {
 }
 
 export interface WorkoutTemplate {
-   id: string;
-   name: string;
-   exercises: {
-     name: string;
-     targetSets: number;
-     targetReps: string;
-     notes?: string;
-   }[];
-   lastUsed?: string;
-   createdAt: string;
-   isDemo?: boolean;
+  id: string;
+  name: string;
+  exercises: {
+    name: string;
+    targetSets: number;
+    targetReps: string;
+    notes?: string;
+  }[];
+  lastUsed?: string;
+  createdAt: string;
+  isDemo?: boolean;
 }

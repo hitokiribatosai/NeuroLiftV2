@@ -36,14 +36,16 @@ export const getLocalizedMuscleName = (muscle: string, lang: Language): string =
 
 type Translation = { [key in Language]: string };
 
-const db: Record<string, Record<string, { weightlifting: Translation[], cables: Translation[], bodyweight: Translation[], machines: Translation[] }>> = {
+const db: Record<string, Record<string, { dumbbells: Translation[], barbells: Translation[], cables: Translation[], bodyweight: Translation[], machines: Translation[] }>> = {
   "Chest": {
     "Upper Chest": {
-      weightlifting: [
+      dumbbells: [
         { en: "Incline Dumbbell Press", fr: "DC Incliné Haltères", ar: "بنش برس مائل بالدمبل" },
-        { en: "Incline Barbell Bench Press", fr: "DC Incliné Barre", ar: "بنش برس مائل بالبار" },
         { en: "Dumbbell Incline Fly", fr: "Écarté Incliné Haltères", ar: "تجميع مائل بالدمبل" },
-        { en: "Incline Hammer Strength Press", fr: "Presse Inclinée Hammer", ar: "ضغط مائل هامر" },
+        { en: "Incline Hammer Strength Press", fr: "Presse Inclinée Hammer", ar: "ضغط مائل هامر" }
+      ],
+      barbells: [
+        { en: "Incline Barbell Bench Press", fr: "DC Incliné Barre", ar: "بنش برس مائل بالبار" },
         { en: "Reverse Grip BB Bench Press", fr: "DC Prise Inversée", ar: "بنش برس قبضة معكوسة" }
       ],
       cables: [
@@ -65,12 +67,14 @@ const db: Record<string, Record<string, { weightlifting: Translation[], cables: 
       ]
     },
     "Middle Chest": {
-      weightlifting: [
-        { en: "Flat Barbell Bench Press", fr: "DC Barre", ar: "بنش برس مستوي بالبار" },
+      dumbbells: [
         { en: "Flat Dumbbell Press", fr: "DC Haltères", ar: "بنش برس مستوي بالدمبل" },
         { en: "Dumbbell Flat Fly", fr: "Écarté Couché", ar: "تجميع مستوي بالدمبل" },
         { en: "Hammer Strength Chest Press", fr: "Presse Poitrine Hammer", ar: "ضغط صدر هامر" },
         { en: "Floor Press (Dumbbell)", fr: "Floor Press Haltères", ar: "ضغط أرضي بالدمبل" }
+      ],
+      barbells: [
+        { en: "Flat Barbell Bench Press", fr: "DC Barre", ar: "بنش برس مستوي بالبار" }
       ],
       cables: [
         { en: "Middle Cable Fly", fr: "Écarté Poulie Vis-à-vis", ar: "تجميع كابل مستوي" },
@@ -91,12 +95,14 @@ const db: Record<string, Record<string, { weightlifting: Translation[], cables: 
       ]
     },
     "Lower Chest": {
-      weightlifting: [
-        { en: "Weighted Dips (Chest Focus)", fr: "Dips Lestés", ar: "متوازي بأوزان للصدر" },
-        { en: "Decline Barbell Bench Press", fr: "DC Décliné Barre", ar: "بنش برس مائل للأسفل بالبار" },
+      dumbbells: [
         { en: "Decline Dumbbell Press", fr: "DC Décliné Haltères", ar: "بنش برس مائل للأسفل دمبل" },
-        { en: "Decline Hammer Strength Press", fr: "Presse Déclinée Hammer", ar: "ضغط مائل للأسفل هامر" },
-        { en: "Dumbbell Pullover", fr: "Pull-over Haltère", ar: "بلوفر دمبل" }
+        { en: "Dumbbell Pullover", fr: "Pull-over Haltère", ar: "بلوفر دمبل" },
+        { en: "Decline Hammer Strength Press", fr: "Presse Déclinée Hammer", ar: "ضغط مائل للأسفل هامر" }
+      ],
+      barbells: [
+        { en: "Weighted Dips (Chest Focus)", fr: "Dips Lestés", ar: "متوازي بأوزان للصدر" },
+        { en: "Decline Barbell Bench Press", fr: "DC Décliné Barre", ar: "بنش برس مائل للأسفل بالبار" }
       ],
       cables: [
         { en: "High-to-Low Cable Fly", fr: "Poulie Haut en Bas", ar: "تجميع كابل من الأعلى" },
@@ -118,12 +124,14 @@ const db: Record<string, Record<string, { weightlifting: Translation[], cables: 
   },
   "Back": {
     "Lats": {
-      weightlifting: [
+      dumbbells: [
+        { en: "One-Arm Dumbbell Row", fr: "Rowing Unilatéral Haltère", ar: "تجديف دمبل فردي" },
+        { en: "DB Pullover (Lat Focus)", fr: "Pull-over Haltère", ar: "بلوفر دمبل للمجنص" }
+      ],
+      barbells: [
         { en: "Barbell Rows (Underhand)", fr: "Rowing Barre Supination", ar: "تجديف بالبار قبضة معكوسة" },
         { en: "Bent Over BB Row", fr: "Rowing Barre Pronation", ar: "تجديف بالبار" },
-        { en: "One-Arm Dumbbell Row", fr: "Rowing Unilatéral Haltère", ar: "تجديف دمبل فردي" },
-        { en: "Meadows Rows", fr: "Rowing Meadows", ar: "تجديف ميدوز" },
-        { en: "DB Pullover (Lat Focus)", fr: "Pull-over Haltère", ar: "بلوفر دمبل للمجنص" }
+        { en: "Meadows Rows", fr: "Rowing Meadows", ar: "تجديف ميدوز" }
       ],
       cables: [
         { en: "Front Lat Pulldown", fr: "Tirage Poitrine", ar: "سحب عالي أمامي" },
@@ -145,9 +153,11 @@ const db: Record<string, Record<string, { weightlifting: Translation[], cables: 
       ]
     },
     "Upper Back": {
-      weightlifting: [
+      dumbbells: [
+        { en: "Dumbbell Shrugs", fr: "Haussements d'Épaules Haltères", ar: "هزات أكتاف بالدمبل" }
+      ],
+      barbells: [
         { en: "Barbell Shrugs", fr: "Haussements d'Épaules Barre", ar: "هزات أكتاف بالبار" },
-        { en: "Dumbbell Shrugs", fr: "Haussements d'Épaules Haltères", ar: "هزات أكتاف بالدمبل" },
         { en: "Snatch Grip High Pull", fr: "Tirage Haut Prise Large", ar: "سحب عالي قبضة واسعة" },
         { en: "Barbell Upright Row", fr: "Tirage Menton Barre", ar: "سحب للذقن بالبار" },
         { en: "Behind the Back Shrugs", fr: "Shrugs Derrière Dos", ar: "هزات أكتاف خلفية" }
@@ -170,11 +180,13 @@ const db: Record<string, Record<string, { weightlifting: Translation[], cables: 
       ]
     },
     "Mid Back": {
-      weightlifting: [
+      dumbbells: [
+        { en: "One-Arm Dumbbell Row", fr: "Rowing Unilatéral Haltère", ar: "تجديف دمبل فردي" }
+      ],
+      barbells: [
         { en: "Bent Over BB Row", fr: "Rowing Barre Pronation", ar: "تجديف بالبار" },
         { en: "T-Bar Rows", fr: "Rowing T-Bar", ar: "تجديف تي بار" },
         { en: "Pendlay Rows", fr: "Rowing Pendlay", ar: "تجديف بيندلاي" },
-        { en: "One-Arm Dumbbell Row", fr: "Rowing Unilatéral Haltère", ar: "تجديف دمبل فردي" },
         { en: "Seal Row", fr: "Rowing Seal", ar: "تجديف سيل" }
       ],
       cables: [
@@ -195,7 +207,8 @@ const db: Record<string, Record<string, { weightlifting: Translation[], cables: 
       ]
     },
     "Lower Back": {
-      weightlifting: [
+      dumbbells: [],
+      barbells: [
         { en: "Deadlifts", fr: "Soulevé de Terre", ar: "رفعة مميتة" },
         { en: "Rack Pulls", fr: "Rack Pulls", ar: "راك بول" },
         { en: "Stiff Leg Deadlift", fr: "DL Jambes Tendues", ar: "رفعة أرجل مستقيمة" },
@@ -222,12 +235,14 @@ const db: Record<string, Record<string, { weightlifting: Translation[], cables: 
   },
   "Shoulders": {
     "Front Delts": {
-      weightlifting: [
-        { en: "Barbell Overhead Press", fr: "Overhead Press Barre", ar: "ضغط أكتاف بالبار" },
+      dumbbells: [
         { en: "Dumbbell Shoulder Press", fr: "Overhead Press Haltères", ar: "ضغط أكتاف بالدمبل" },
         { en: "Arnold Press", fr: "Développé Arnold", ar: "ضغط أرنولد" },
-        { en: "Smith Machine Press", fr: "Shoulder Press Smith", ar: "ضغط أكتاف سميث" },
         { en: "Dumbbell Front Raise", fr: "Élévations Frontales Haltères", ar: "رفرفة أمامي بالدمبل" }
+      ],
+      barbells: [
+        { en: "Barbell Overhead Press", fr: "Overhead Press Barre", ar: "ضغط أكتاف بالبار" },
+        { en: "Smith Machine Press", fr: "Shoulder Press Smith", ar: "ضغط أكتاف سميث" }
       ],
       cables: [
         { en: "Cable Front Raise", fr: "Élévations Frontales Poulie", ar: "رفرفة أمامي كابل" },
@@ -245,11 +260,13 @@ const db: Record<string, Record<string, { weightlifting: Translation[], cables: 
       ]
     },
     "Side Delts": {
-      weightlifting: [
+      dumbbells: [
         { en: "Dumbbell Lateral Raise", fr: "Élévations Latérales Haltères", ar: "رفرفة جانبي بالدمبل" },
         { en: "Lean-Away DB Raise", fr: "Élévations Latérales Appui", ar: "رفرفة جانبي مائل" },
-        { en: "Barbell Upright Row", fr: "Tirage Menton Barre", ar: "سحب للذقن بالبار" },
         { en: "Behind the Back Raise", fr: "Élévations Arrière Dos", ar: "رفرفة خلف الظهر" }
+      ],
+      barbells: [
+        { en: "Barbell Upright Row", fr: "Tirage Menton Barre", ar: "سحب للذقن بالبار" }
       ],
       cables: [
         { en: "Cable Lateral Raise", fr: "Élévations Latérales Poulie", ar: "رفرفة جانبي كابل" },
@@ -266,11 +283,12 @@ const db: Record<string, Record<string, { weightlifting: Translation[], cables: 
       ]
     },
     "Rear Delts": {
-      weightlifting: [
+      dumbbells: [
         { en: "Reverse Dumbbell Fly", fr: "Oiseau Haltères", ar: "رفرفة خلفي بالدمبل" },
         { en: "Chest Supported Rear Fly", fr: "Oiseau Appui Thoracique", ar: "رفرفة خلفي مسنود الصدر" },
         { en: "Face Pull (DB)", fr: "Face Pull Haltères", ar: "سحب للوجه دمبل" }
       ],
+      barbells: [],
       cables: [
         { en: "Cable Face Pull", fr: "Face Pull Poulie", ar: "سحب للوجه كابل" },
         { en: "Single Arm Rear Delt Fly", fr: "Oiseau Unilatéral Poulie", ar: "رفرفة خلفي فردي كابل" },
@@ -286,12 +304,14 @@ const db: Record<string, Record<string, { weightlifting: Translation[], cables: 
   },
   "Legs": {
     "Quads": {
-      weightlifting: [
-        { en: "Back Squat", fr: "Squat Arrière", ar: "سكوات خلفي" },
-        { en: "Front Squat", fr: "Squat Avant", ar: "سكوات أمامي" },
-        { en: "Bulgarian Split Squat", fr: "Squat Bulgare", ar: "سكوات بلغاري" },
+      dumbbells: [
         { en: "Goblet Squat", fr: "Goblet Squat", ar: "جوبلت سكوات" },
-        { en: "Walking Lunges (DB)", fr: "Fentes Marchées", ar: "طعن بالمشي" }
+        { en: "Walking Lunges (DB)", fr: "Fentes Marchées", ar: "طعن بالمشي" },
+        { en: "Bulgarian Split Squat", fr: "Squat Bulgare", ar: "سكوات بلغاري" }
+      ],
+      barbells: [
+        { en: "Back Squat", fr: "Squat Arrière", ar: "سكوات خلفي" },
+        { en: "Front Squat", fr: "Squat Avant", ar: "سكوات أمامي" }
       ],
       cables: [
         { en: "Cable Squat", fr: "Squat Poulie", ar: "سكوات كابل" },
@@ -313,12 +333,14 @@ const db: Record<string, Record<string, { weightlifting: Translation[], cables: 
       ]
     },
     "Hamstrings": {
-      weightlifting: [
+      dumbbells: [
+        { en: "DB RDL", fr: "RDL Haltères", ar: "رفعة رومانية دمبل" },
+        { en: "Lying Leg Curl (DB)", fr: "Leg Curl Haltère", ar: "رفرفة أرجل خلفي دمبل" }
+      ],
+      barbells: [
         { en: "Romanian Deadlift", fr: "Soulevé de Terre Roumain", ar: "رفعة رومانية" },
         { en: "Stiff Leg Deadlift", fr: "DL Jambes Tendues", ar: "رفعة أرجل مستقيمة" },
-        { en: "Sumo Deadlift", fr: "Deadlift Sumo", ar: "رفعة مميتة سومو" },
-        { en: "Lying Leg Curl (DB)", fr: "Leg Curl Haltère", ar: "رفرفة أرجل خلفي دمبل" },
-        { en: "DB RDL", fr: "RDL Haltères", ar: "رفعة رومانية دمبل" }
+        { en: "Sumo Deadlift", fr: "Deadlift Sumo", ar: "رفعة مميتة سومو" }
       ],
       cables: [
         { en: "Cable Pull Through", fr: "Pull Through Poulie", ar: "سحب كابل خلفي" },
@@ -340,12 +362,14 @@ const db: Record<string, Record<string, { weightlifting: Translation[], cables: 
       ]
     },
     "Glutes": {
-      weightlifting: [
-        { en: "Barbell Hip Thrust", fr: "Hip Thrust Barre", ar: "دفع الحوض بالبار" },
-        { en: "Barbell Glute Bridge", fr: "Pont de Fessiers Barre", ar: "جسر الألوية بالبار" },
+      dumbbells: [
         { en: "Sumo Squat (DB)", fr: "Squat Sumo Haltère", ar: "سكوات سومو دمبل" },
         { en: "Weighted Step Ups", fr: "Step-ups Lestés", ar: "صعود الدرج بأوزان" },
         { en: "Weighted Lunges", fr: "Fentes Lestées", ar: "طعن بأوزان" }
+      ],
+      barbells: [
+        { en: "Barbell Hip Thrust", fr: "Hip Thrust Barre", ar: "دفع الحوض بالبار" },
+        { en: "Barbell Glute Bridge", fr: "Pont de Fessiers Barre", ar: "جسر الألوية بالبار" }
       ],
       cables: [
         { en: "Cable Glute Kickback", fr: "Kickback Poulie", ar: "ركلة كابل خلفية" },
@@ -365,12 +389,14 @@ const db: Record<string, Record<string, { weightlifting: Translation[], cables: 
       ]
     },
     "Calves": {
-      weightlifting: [
+      dumbbells: [
+        { en: "Dumbbell Calf Raise", fr: "Extensions Haltères", ar: "رفع السمانة بالدمبل" },
+        { en: "One Leg DB Calf Raise", fr: "Extensions Unilatérale", ar: "رفع سمانة فردي دمبل" }
+      ],
+      barbells: [
         { en: "Standing Calf Raise", fr: "Extensions Debout", ar: "رفع السمانة واقف" },
         { en: "Seated Calf Raise", fr: "Extensions Assis", ar: "رفع السمانة جالس" },
-        { en: "Dumbbell Calf Raise", fr: "Extensions Haltères", ar: "رفع السمانة بالدمبل" },
-        { en: "Barbell Calf Raise", fr: "Extensions Barre", ar: "رفع السمانة بالبار" },
-        { en: "One Leg DB Calf Raise", fr: "Extensions Unilatérale", ar: "رفع سمانة فردي دمبل" }
+        { en: "Barbell Calf Raise", fr: "Extensions Barre", ar: "رفع السمانة بالبار" }
       ],
       cables: [
         { en: "Cable Standing Calf Raise", fr: "Extensions Debout Poulie", ar: "سمانة كابل واقف" },
@@ -392,10 +418,12 @@ const db: Record<string, Record<string, { weightlifting: Translation[], cables: 
   },
   "Arms": {
     "Biceps": {
-      weightlifting: [
-        { en: "Barbell Curls", fr: "Curl Barre", ar: "تبادل بايسبس بار" },
+      dumbbells: [
         { en: "Dumbbell Curls", fr: "Curl Haltères", ar: "تبادل بايسبس دمبل" },
         { en: "Hammer Curls", fr: "Curl Marteau", ar: "بايسبس مطرقة" }
+      ],
+      barbells: [
+        { en: "Barbell Curls", fr: "Curl Barre", ar: "تبادل بايسبس بار" }
       ],
       cables: [
         { en: "Standing Cable Curl", fr: "Curl Poulie Debout", ar: "تبادل كابل واقف" }
@@ -409,7 +437,8 @@ const db: Record<string, Record<string, { weightlifting: Translation[], cables: 
       ]
     },
     "Triceps": {
-      weightlifting: [
+      dumbbells: [],
+      barbells: [
         { en: "Close Grip Bench Press", fr: "DC Serré", ar: "بنش برس ضيق" },
         { en: "Skull Crushers", fr: "Skull Crushers", ar: "طحن الجمجمة" }
       ],
@@ -426,7 +455,8 @@ const db: Record<string, Record<string, { weightlifting: Translation[], cables: 
       ]
     },
     "Forearms": {
-      weightlifting: [
+      dumbbells: [],
+      barbells: [
         { en: "Barbell Wrist Curls", fr: "Flexion Poignets Barre", ar: "ثني الرسغ بالبار" }
       ],
       cables: [],
@@ -440,9 +470,10 @@ const db: Record<string, Record<string, { weightlifting: Translation[], cables: 
   },
   "Core": {
     "Abs": {
-      weightlifting: [
+      dumbbells: [
         { en: "Weighted Crunches", fr: "Crunch Lesté", ar: "طحن بوزن" }
       ],
+      barbells: [],
       cables: [
         { en: "Cable Crunches", fr: "Crunch Poulie", ar: "طحن كابل" }
       ],
@@ -458,7 +489,8 @@ const db: Record<string, Record<string, { weightlifting: Translation[], cables: 
   },
   "Cardio": {
     "High Intensity": {
-      weightlifting: [],
+      dumbbells: [],
+      barbells: [],
       cables: [],
       bodyweight: [
         { en: "Burpees", fr: "Burpees", ar: "بربيز" },
@@ -470,7 +502,8 @@ const db: Record<string, Record<string, { weightlifting: Translation[], cables: 
       machines: []
     },
     "Endurance": {
-      weightlifting: [],
+      dumbbells: [],
+      barbells: [],
       cables: [],
       bodyweight: [
         { en: "Running (Outdoors)", fr: "Course à Pied", ar: "الجري" },
@@ -494,7 +527,8 @@ export const getExerciseDatabase = (lang: Language): ExerciseDatabase => {
     localizedDB[majorCategory] = {};
     Object.keys(db[majorCategory]).forEach(subCategory => {
       localizedDB[majorCategory][subCategory] = {
-        weightlifting: db[majorCategory][subCategory].weightlifting.map(ex => ex[lang] || ex['en']),
+        dumbbells: db[majorCategory][subCategory].dumbbells.map(ex => ex[lang] || ex['en']),
+        barbells: db[majorCategory][subCategory].barbells.map(ex => ex[lang] || ex['en']),
         cables: db[majorCategory][subCategory].cables.map(ex => ex[lang] || ex['en']),
         bodyweight: db[majorCategory][subCategory].bodyweight.map(ex => ex[lang] || ex['en']),
         machines: db[majorCategory][subCategory].machines.map(ex => ex[lang] || ex['en'])
@@ -567,7 +601,8 @@ export const getSubMuscleForExercise = (exerciseName: string): string => {
   for (const major of Object.values(db)) {
     for (const [subGroup, categories] of Object.entries(major)) {
       const allExercises = [
-        ...categories.weightlifting,
+        ...categories.dumbbells,
+        ...categories.barbells,
         ...categories.cables,
         ...categories.bodyweight,
         ...categories.machines
@@ -584,7 +619,8 @@ export const getMuscleForExercise = (exerciseName: string): string => {
   for (const [muscle, subGroups] of Object.entries(db)) {
     for (const subGroup of Object.values(subGroups)) {
       const allExercises = [
-        ...subGroup.weightlifting,
+        ...subGroup.dumbbells,
+        ...subGroup.barbells,
         ...subGroup.cables,
         ...subGroup.bodyweight,
         ...subGroup.machines

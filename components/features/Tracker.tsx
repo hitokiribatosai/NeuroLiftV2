@@ -887,7 +887,7 @@ export const Tracker: React.FC = () => {
                       // Global search across all muscles
                       Object.keys(exercisesByMuscle).forEach(muscle => {
                         Object.keys(exercisesByMuscle[muscle]).forEach(subGroup => {
-                          (['machines', 'weightlifting', 'cables', 'bodyweight'] as const).forEach(category => {
+                          (['machines', 'dumbbells', 'barbells', 'cables', 'bodyweight'] as const).forEach(category => {
                             const exercises = exercisesByMuscle[muscle][subGroup][category] || [];
                             const normalize = (str: string) => str.toLowerCase().replace(/[^a-z0-9]/g, '');
                             exercises.filter(ex => normalize(ex).includes(normalize(searchQuery))).forEach(ex => {
@@ -978,7 +978,7 @@ export const Tracker: React.FC = () => {
                       {Object.keys(exercisesByMuscle[majorMuscle] || {}).map(subGroup => {
                         // Collect ALL exercises for this sub-group across all categories
                         const allExercises: string[] = [];
-                        (['machines', 'weightlifting', 'cables', 'bodyweight'] as const).forEach(cat => {
+                        (['machines', 'dumbbells', 'barbells', 'cables', 'bodyweight'] as const).forEach(cat => {
                           const exs = exercisesByMuscle[majorMuscle]?.[subGroup]?.[cat] || [];
                           exs.forEach(ex => { if (!allExercises.includes(ex)) allExercises.push(ex); });
                         });
